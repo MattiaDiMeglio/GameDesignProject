@@ -31,8 +31,11 @@ public class GameObjectFactory {
         return player;
     }
 
-    public GameObject makeEnemy(){
-        EnemyGameObject enemy = new EnemyGameObject(gameWorld);
+    public GameObject makeEnemy(int worldX, int worldY){
+        Random random = new Random();
+        EnemyGameObject enemy = new EnemyGameObject(gameWorld,
+                random.nextInt(AssetManager.background.getWidth()),
+                random.nextInt(AssetManager.background.getHeight()));
         CharacterBodyComponent bodyComponent = new CharacterBodyComponent(40, 40,
                 gameWorld.toMetersXLength(AssetManager.enemy.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.enemy.getHeight()),
@@ -44,10 +47,9 @@ public class GameObjectFactory {
         return enemy;
     }
 
-    public GameObject makeWall(){
+    public GameObject makeWall(int worldX, int worldY){
         Random random = new Random();
-        WallGameObject wall = new WallGameObject(random.nextInt(AssetManager.background.getWidth()),
-                random.nextInt(AssetManager.background.getHeight()), gameWorld);
+        WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
                 gameWorld.toMetersXLength(AssetManager.wall.getWidth()),

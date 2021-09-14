@@ -14,6 +14,7 @@ import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 //Gestione degli elementi in gioco
 public class GameWorld {
@@ -38,6 +39,7 @@ public class GameWorld {
 
     //for the touch and the raycast
     private Fixture touchedFixture;
+    private Fixture rayCastFixture;
     private Body castedBody;
     private QueryCallback touchQueryCallback = new TouchQueryCallback();
 
@@ -68,8 +70,11 @@ public class GameWorld {
         //JUST FOR TESTING, creates a player and some GO
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
-        addGameObject(gameObjectFactory.makeEnemy());
-        addGameObject(gameObjectFactory.makeWall());
+        Random random = new Random();
+        EnemyGameObject enemyGameObject =(EnemyGameObject) addGameObject(gameObjectFactory.makeEnemy(random.nextInt(AssetManager.background.getWidth()),
+                random.nextInt(AssetManager.background.getHeight())));
+        addGameObject(gameObjectFactory.makeWall(enemyGameObject.worldX,
+                enemyGameObject.worldY + 50));
     }
 
     //Game World update, calls the world step, then responds to touch events
@@ -96,20 +101,19 @@ public class GameWorld {
                             RayCastCallback rayCastCallback = new RayCastCallback(){
                                 @Override
                                 public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-                                        Object userData = fixture.getBody().getUserData();
-                                        if(userData != null){
-                                           PhysicsComponent castedGO = (PhysicsComponent) userData;
-                                           if(castedGO.name.equals(touchedGO.name)){
-                                               gameScreen.removeDrawable((DrawableComponent)castedGO.getOwner().getComponent(ComponentType.Drawable));
-                                               removeGameObject(castedGO.getOwner());
-
-                                           }
-                                        }
-                                    return 1;
+                                    rayCastFixture = fixture;
+                                    return fraction;//stops at the first hit/
                                 }
                             };
-                            world.rayCast(rayCastCallback,playerBody.getPositionX(), playerBody.getPositionY(),
+                            world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
                                     touchedBody.getPositionX(), touchedBody.getPositionY());
+                            if(rayCastFixture != null){
+                                Body castedBody = rayCastFixture.getBody();
+                                PhysicsComponent casteduserData =(PhysicsComponent) castedBody.getUserData();
+                                if(casteduserData != null){
+                                    Log.d("raycast", "castedObject " + casteduserData.name);
+                                }
+                            }
 
                         }
                     }

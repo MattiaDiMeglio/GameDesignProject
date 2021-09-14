@@ -10,13 +10,13 @@ public class EnemyGameObject extends GameObject {
     private PixMapComponent drawableComponent;
     private CharacterBodyComponent characterBodyComponent;
 
-    public EnemyGameObject(GameWorld gameWorld){
+    public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){
         this.gameWorld = gameWorld;
         this.name = "Enemy";
         Random random = new Random();
         //gives the enemy a random position on the background
-        this.worldX = random.nextInt(AssetManager.background.getWidth());
-        this.worldY = random.nextInt(AssetManager.background.getHeight());
+        this.worldX = worldX;
+        this.worldY = worldY;
         Log.d("Enemy", "worldx: " + this.worldX + " WorldY: " + this.worldY);
     }
 

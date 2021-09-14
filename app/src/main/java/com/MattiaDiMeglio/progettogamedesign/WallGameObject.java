@@ -6,7 +6,7 @@ public class WallGameObject extends GameObject {
     private StaticBodyComponent staticBodyComponent;
 
 
-    public WallGameObject(int worldX, int worldY, GameWorld gameWorld){
+    public WallGameObject(GameWorld gameWorld, int worldX, int worldY){
         this.worldX = worldX;
         this.worldY = worldY;
         this.gameWorld = gameWorld;
