@@ -18,6 +18,7 @@ public class PixMapComponent extends DrawableComponent {
         this.pixmap = pixmap;
         this.x = x - (pixmap.getWidth()/2);
         this.y = y - (pixmap.getHeight()/2);
+        this.canBeDrawn = true;
     }
 
     //centers the position to the pixmap cent

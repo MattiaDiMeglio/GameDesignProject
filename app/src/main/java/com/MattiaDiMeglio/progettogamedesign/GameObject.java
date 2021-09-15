@@ -22,6 +22,8 @@ public class GameObject {
 
     public void updatePosition(int x, int y){};
 
+    public void outOfView(){}
+
     public Component getComponent(ComponentType componentType){
         return components.get(componentType);
     }

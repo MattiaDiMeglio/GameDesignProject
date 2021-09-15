@@ -5,6 +5,7 @@ import com.badlogic.androidgames.framework.Graphics;
 //drawables
 abstract class DrawableComponent extends Component{
     protected int x, y;
+    protected boolean canBeDrawn;
     @Override
     public ComponentType getType() {
         return ComponentType.Drawable;

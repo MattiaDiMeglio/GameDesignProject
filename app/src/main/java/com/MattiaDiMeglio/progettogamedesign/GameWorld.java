@@ -73,78 +73,38 @@ public class GameWorld {
         Random random = new Random();
         EnemyGameObject enemyGameObject =(EnemyGameObject) addGameObject(gameObjectFactory.makeEnemy(random.nextInt(AssetManager.background.getWidth()),
                 random.nextInt(AssetManager.background.getHeight())));
-        addGameObject(gameObjectFactory.makeWall(enemyGameObject.worldX,
+        WallGameObject wall = (WallGameObject) addGameObject(gameObjectFactory.makeWall(enemyGameObject.worldX,
                 enemyGameObject.worldY + 50));
+        addGameObject(gameObjectFactory.makeDoor(wall, wall.worldX - 10, wall.worldY));
     }
 
     //Game World update, calls the world step, then responds to touch events
-    public void update(float elapsedTime, List<Input.TouchEvent> touchEvents){
+    public synchronized void update(float elapsedTime, List<Input.TouchEvent> touchEvents){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         for(Input.TouchEvent touchEvent : touchEvents){//for each touchevent
             if(touchEvent.type == Input.TouchEvent.TOUCH_DOWN){//if it's a touch down
-                //gets the physics coordinates of the touch down
-                float touchx = toMetersX(toPixelsTouchX(touchEvent.x));
-                float touchy = toMetersY(toPixelsTouchY(touchEvent.y));
-                //check if the user touched a fixture
-                world.queryAABB(touchQueryCallback, touchx - 0.5f, touchy - 0.5f,
-                        touchx + 0.5f, touchy + 0.5f);
-                if(touchedFixture != null){//if they have
-                    //we get the body and the suerdata
-                    Body touchedBody = touchedFixture.getBody();
-                    Object userData = touchedBody.getUserData();
-                    if(userData != null){//if there are any
-                        PhysicsComponent touchedGO = (PhysicsComponent) userData;
-                        Log.d("touchevent", "'touched game object " + touchedGO.name);
-                        if(touchedGO.name.equals("Enemy")){//if the user touched an enemy
-                            CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
-                            //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
-                            RayCastCallback rayCastCallback = new RayCastCallback(){
-                                @Override
-                                public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-                                    rayCastFixture = fixture;
-                                    return fraction;//stops at the first hit/
-                                }
-                            };
-                            world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
-                                    touchedBody.getPositionX(), touchedBody.getPositionY());
-                            if(rayCastFixture != null){
-                                Body castedBody = rayCastFixture.getBody();
-                                PhysicsComponent casteduserData =(PhysicsComponent) castedBody.getUserData();
-                                if(casteduserData != null){
-                                    Log.d("raycast", "castedObject " + casteduserData.name);
-                                }
-                            }
-
-                        }
-                    }
-                    touchedFixture = null;
-                } else {// if the user doens't touch a fixture, we move the world
-                    float resultX = checkGridX(touchx);
-                    float resultY = checkGridY(touchy);
-                    Log.d("touchedBox", "point.x = " + resultX
-                            + ", " + resultY);
-                    gameScreen.setWorldDestination((int) toPixelsYLength(resultX), (int) toPixelsYLength(resultY));
-                    //player.updatePosition((int)toPixelsX(resultX), (int)toPixelsY(resultY));
-                }
+               checkTouched(touchEvent);
             }
         }
         for (GameObject gameObject: gameObjects) {//then for each game object
             if(!gameObject.name.equals("Player")){//if it's not a player
                 if(isInView(gameObject)){//we check is it's in view
                     DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
-                    if(!gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
+                    if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
                         //inits the position of the GO in view
                         gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
                                 (int) (inViewPositionY(gameObject.worldY)));
                         gameScreen.addDrawable(component);
                     }
-                    } else { //if they're not in view we remove the drawable
-                        if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable)))
-                            gameScreen.removeDrawable((DrawableComponent)gameObject.getComponent(ComponentType.Drawable));
+                } else { //if they're not in view we remove the drawable
+                    if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
+                        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
+                        gameObject.outOfView();
+                    }
+
                 }
             }
         }
-
     }
 
     //methods to add and remove GO
@@ -156,6 +116,85 @@ public class GameWorld {
     public synchronized void removeGameObject(GameObject gameObject){
         if(gameObjects.contains(gameObject)){
             gameObjects.remove(gameObject);
+        }
+    }
+
+    private void checkTouched(Input.TouchEvent touchEvent){
+        //gets the physics coordinates of the touch down
+        float touchx = toMetersX(toPixelsTouchX(touchEvent.x));
+        float touchy = toMetersY(toPixelsTouchY(touchEvent.y));
+        //check if the user touched a fixture
+        world.queryAABB(touchQueryCallback, touchx - 0.1f, touchy - 0.1f,
+                touchx + 0.1f, touchy + 0.1f);
+        if(touchedFixture != null){//if they have
+            //we get the body and the suerdata
+            Body touchedBody = touchedFixture.getBody();
+            Object userData = touchedBody.getUserData();
+            if(userData != null){//if there are any
+                PhysicsComponent touchedGO = (PhysicsComponent) userData;
+                Log.d("Touched", "touched: " + touchedGO.name);
+                switch (touchedGO.name){
+                    case "Enemy"://touched an enemy
+                        checkRaycast(touchedBody);
+                        break;
+                    case "Door"://touched a door
+                        //open door
+                        break;
+                    case "Player"://touched the player character
+                        //reload?
+                        break;
+                    case "Wall"://touched a wall
+                        checkRaycast(touchedBody);
+                        break;
+                    default:
+                        Log.d("TouchEvent", "touched object with no name");
+                        break;
+                }
+            }
+            touchedFixture = null;
+        } else {// if the user doens't touch a fixture, we move the world
+            float resultX = checkGridX(touchx);
+            float resultY = checkGridY(touchy);
+            Log.d("touchedBox", "point.x = " + resultX
+                    + ", " + resultY);
+            gameScreen.setWorldDestination((int) toPixelsYLength(resultX), (int) toPixelsYLength(resultY));
+            //player.updatePosition((int)toPixelsX(resultX), (int)toPixelsY(resultY));
+        }
+    }
+    private void checkRaycast(Body touchedBody){
+        CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
+        //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
+        RayCastCallback rayCastCallback = new RayCastCallback(){
+            @Override
+            public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
+                rayCastFixture = fixture;
+                return fraction;//stops at the first hit/
+            }
+        };
+        world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
+                touchedBody.getPositionX(), touchedBody.getPositionY());
+        if(rayCastFixture != null){
+            Body castedBody = rayCastFixture.getBody();
+            PhysicsComponent casteduserData =(PhysicsComponent) castedBody.getUserData();
+            if(casteduserData != null){
+                Log.d("Raycast", "hit : " + casteduserData.name);
+                switch(casteduserData.name){
+                    case "Enemy"://raycast met an enemy first
+                        EnemyGameObject enemyGameObject = (EnemyGameObject) casteduserData.getOwner();
+                        enemyGameObject.killed();
+                        //destroy enemy
+                        break;
+                    case "Wall"://met a wall
+                        //hit wall
+                        break;
+                    case "Door"://met a door
+                        //open door
+                        break;
+                    default:
+                        Log.d("RaycastEvent", "raycast object with no name");
+                        break;
+                }
+            }
         }
     }
 

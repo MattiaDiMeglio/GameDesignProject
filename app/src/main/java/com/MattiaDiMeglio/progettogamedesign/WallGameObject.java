@@ -26,6 +26,8 @@ public class WallGameObject extends GameObject {
                 gameWorld.toMetersY(touchY));
     }
 
-
-
+    @Override
+    public void outOfView() {
+        staticBodyComponent.setTrasform(40, 40);
+    }
 }

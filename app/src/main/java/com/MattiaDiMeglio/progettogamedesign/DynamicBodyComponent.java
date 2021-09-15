@@ -10,14 +10,15 @@ import com.google.fpl.liquidfun.World;
 //dynamic bodyes
 public class DynamicBodyComponent extends PhysicsComponent{
     private Body body;
-    int width, height;
+    float width, height;
     float x, y;
 
-    public DynamicBodyComponent(float x, float y, int width, int height, World world){
+    public DynamicBodyComponent(float x, float y, float width, float height, World world, String name){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.name = name;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.setPosition(x, y);
@@ -25,6 +26,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
 
         body = world.createBody(bodyDef);
         body.setSleepingAllowed(false);
+        body.setUserData(this);
 
         PolygonShape box = new PolygonShape();
         box.setAsBox(width, height);

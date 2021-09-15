@@ -63,10 +63,18 @@ public class GameObjectFactory {
     }
 
     //TODO not actually implemented, created a wall with a door
-    public GameObject makeDoor(float x, float y, float angle){
-        DoorGameObject door = new DoorGameObject(123, 123);
+    public GameObject makeDoor(WallGameObject wall, int x, int y){
+        PixMapComponent wallPixmap = (PixMapComponent) wall.getComponent(ComponentType.Drawable);
+        StaticBodyComponent wallBody = (StaticBodyComponent) wall.getComponent(ComponentType.Physics);
+        DoorGameObject door = new DoorGameObject(x, y, wall);
 
+        DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(wallBody.x, wallBody.y,
+                gameWorld.toMetersXLength(AssetManager.wall.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.wall.getHeight()), world, door.name);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.door, -100, -100);
 
+        door.addComponent(dynamicBodyComponent);
+        door.addComponent(pixMapComponent);
         return door;
     }
 }

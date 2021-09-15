@@ -9,6 +9,7 @@ public class EnemyGameObject extends GameObject {
     private GameWorld gameWorld;
     private PixMapComponent drawableComponent;
     private CharacterBodyComponent characterBodyComponent;
+    protected boolean killed = false;
 
     public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){
         this.gameWorld = gameWorld;
@@ -34,5 +35,13 @@ public class EnemyGameObject extends GameObject {
                 gameWorld.toMetersY(touchY));
     }
 
+    @Override
+    public void outOfView() {
+        characterBodyComponent.setTransform(40, 40);
+    }
 
+    public void killed(){
+        drawableComponent.pixmap = AssetManager.enemyKilled;
+        killed = true;
+    }
 }

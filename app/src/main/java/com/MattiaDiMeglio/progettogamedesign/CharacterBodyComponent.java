@@ -73,4 +73,9 @@ public class CharacterBodyComponent extends PhysicsComponent{
         graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height) , Color.WHITE);
     }
 
+    public void destroy(){
+        body.destroyFixture(body.getFixtureList());
+        body.delete();
+    }
+
 }
