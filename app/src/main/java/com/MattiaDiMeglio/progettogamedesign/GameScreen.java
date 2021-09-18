@@ -25,6 +25,8 @@ public class GameScreen extends Screen {
     Graphics graphics;
     List<DrawableComponent> drawables;
     GameState gameState = GameState.Ready;
+    Box physicalSize, screenSize;
+
 
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -36,13 +38,15 @@ public class GameScreen extends Screen {
     float verticalFactor = 30f/20f;
     //player looking direction
     float initialPlayerLookX, initialPlayerLookY;
+    boolean onBorders = false;
+    float scale;
 
     public GameScreen(Game game, int width, int height) {
         super(game);
         graphics = game.getGraphics();//we get the graphics from the framework, to draw on screen
         //world sizes
-        Box physicalSize = new Box(XMIN, YMIN, XMAX, YMAX),
-                screenSize   = new Box(0, 0, width,height);
+        physicalSize = new Box(XMIN, YMIN, XMAX, YMAX);
+        screenSize   = new Box(0, 0, width,height);
         //list of active drawables
         drawables = new ArrayList<DrawableComponent>();
         gameWorld = new GameWorld(this, physicalSize, screenSize);//creates a new GameWorld
@@ -77,7 +81,8 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         graphics.clear(Color.WHITE);
         //Background and other objects movements
-        worldMovement();//we move the world
+        //if(!onBorders)
+           // worldMovement();//we move the world
         //draw the background
         graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX, (int)currentBackgroundY);
         //draw the grid
@@ -98,7 +103,8 @@ public class GameScreen extends Screen {
                 drawable.Draw(graphics);
             }
             //for testing, draws the player body
-            gameWorld.player.draw(graphics, gameWorld);
+           // gameWorld.player.draw(graphics, gameWorld);
+          //  gameWorld.door.draw(graphics, gameWorld);
         }
     }
 
@@ -128,23 +134,34 @@ public class GameScreen extends Screen {
     }
 
 
-    public void setWorldDestination(int x, int y){
+    public boolean setWorldDestination(int x, int y){
         destinationX -= x;
         destinationY -= y;
+        onBorders = false;
         //check that we don't move outside the background boundaries
-        if(destinationX > 0){destinationX = 0;}
-        if(destinationY > 0){destinationY = 0;}
+        if(destinationX > 0){
+            destinationX = 0;
+            onBorders = true;
+        }
+        if(destinationY > 0){
+            destinationY = 0;
+            onBorders = true;
+        }
         if(destinationX < -(AssetManager.background.getWidth() - graphics.getWidth())){
             destinationX = -(AssetManager.background.getWidth() - graphics.getWidth());
+            onBorders = true;
         }
         if(destinationY < - (AssetManager.background.getHeight() - graphics.getHeight())){
             destinationY = - (AssetManager.background.getHeight() - graphics.getHeight());
+            onBorders = true;
         }
         percentage = 0f;//reset the percentage for lerp
+        scale =  (orizontalFactor/Math.abs(x+y));
         Log.d("Destination", "x: " + destinationX + " y: " + destinationY);
+        return onBorders;
     }
 
-    //lerpx and lerp y
+    //lerp x and lerp y
     public int movementX(float startingX, float destinationX, float percentage){
         return (int) (startingX + percentage * (destinationX - startingX));
     }
@@ -154,22 +171,28 @@ public class GameScreen extends Screen {
 
     //we move the background and all the drawables but the player
     public void worldMovement(){
-        if(percentage < 1 && currentBackgroundX != destinationX || currentBackgroundY != destinationY) {
-            percentage += 0.1f;
+        if(!onBorders && percentage < 1 && currentBackgroundX != destinationX || currentBackgroundY != destinationY) {
+            percentage += scale;
             float vX, vY;
             currentBackgroundX = movementX(currentBackgroundX, destinationX, percentage);
             currentBackgroundY = movementY(currentBackgroundY, destinationY, percentage);
             for (DrawableComponent drawable : drawables) {
                 GameObject gameObject = drawable.owner;
-                if (gameObject.name != "Player"){
+                if (!gameObject.name.equals("Player")){
                     gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
                             (int) (gameWorld.inViewPositionY(gameObject.worldY)));
+                }else{
+                    PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
+                    //TODO reverse move player
+                    gameObject.updatePosition(movementY(drawableComponent.getPositionX() + drawableComponent.pixmap.getWidth()/2,graphics.getWidth()/2, percentage),
+                            movementY(drawable.getPositionY() + drawableComponent.pixmap.getHeight()/2, graphics.getHeight()/2, percentage));
+
                 }
             }
         }
     }
 
-    //not actually implemented, rotates the player to face the destination
+    //TODO not actually implemented, rotates the player to face the destination
     public void rotatePlayer(){
         //unico modo veloce è usare una spritesheet
         float x = destinationX - initialPlayerLookX;

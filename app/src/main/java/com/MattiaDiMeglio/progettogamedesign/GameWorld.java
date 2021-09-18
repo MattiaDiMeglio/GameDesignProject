@@ -19,12 +19,13 @@ import java.util.Random;
 //Gestione degli elementi in gioco
 public class GameWorld {
     private Game game;
-    private World world;
+    protected World world;
     private TouchHandler touchHandler;
     private List<GameObject> gameObjects;
-    private GameObjectFactory gameObjectFactory;
-    private GameScreen gameScreen;
+    private final GameObjectFactory gameObjectFactory;
+    private final GameScreen gameScreen;
     protected PlayerGameObject player;
+    protected DoorGameObject door;
 
     //AndroidGraphics buffer
     int bufferWidth, bufferHeight;
@@ -32,7 +33,7 @@ public class GameWorld {
     final Box physicalSize, screenSize, currentView;
 
     //physics sim parameter
-    private static final float TIME_STEP = 1 /50f;
+    private static final float TIME_STEP = 1 /60f;
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATION = 3;
     private static final int PARTICLE_ITERATION = 3;
@@ -41,7 +42,7 @@ public class GameWorld {
     private Fixture touchedFixture;
     private Fixture rayCastFixture;
     private Body castedBody;
-    private QueryCallback touchQueryCallback = new TouchQueryCallback();
+    private final QueryCallback touchQueryCallback = new TouchQueryCallback();
 
     //to get the touched fixture
     private class TouchQueryCallback extends QueryCallback
@@ -75,36 +76,25 @@ public class GameWorld {
                 random.nextInt(AssetManager.background.getHeight())));
         WallGameObject wall = (WallGameObject) addGameObject(gameObjectFactory.makeWall(enemyGameObject.worldX,
                 enemyGameObject.worldY + 50));
-        addGameObject(gameObjectFactory.makeDoor(wall, wall.worldX - 10, wall.worldY));
+        door = (DoorGameObject)addGameObject(gameObjectFactory.makeDoor(wall, wall.worldX - AssetManager.wall.getWidth(), wall.worldY));
     }
 
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(float elapsedTime, List<Input.TouchEvent> touchEvents){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
+        DynamicBodyComponent body = (DynamicBodyComponent) door.getComponent(ComponentType.Physics);
+        Log.d("door", "x: " + body.x + " y:" + body.y);
         for(Input.TouchEvent touchEvent : touchEvents){//for each touchevent
             if(touchEvent.type == Input.TouchEvent.TOUCH_DOWN){//if it's a touch down
                checkTouched(touchEvent);
             }
         }
-        for (GameObject gameObject: gameObjects) {//then for each game object
-            if(!gameObject.name.equals("Player")){//if it's not a player
-                if(isInView(gameObject)){//we check is it's in view
-                    DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
-                    if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
-                        //inits the position of the GO in view
-                        gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
-                                (int) (inViewPositionY(gameObject.worldY)));
-                        gameScreen.addDrawable(component);
-                    }
-                } else { //if they're not in view we remove the drawable
-                    if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
-                        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
-                        gameObject.outOfView();
-                    }
-
-                }
-            }
+        for(GameObject gameObject : gameObjects){
+            gameObject.update();
         }
+
+        if(!player.canMove())
+            gameScreen.worldMovement();
     }
 
     //methods to add and remove GO
@@ -138,7 +128,12 @@ public class GameWorld {
                         checkRaycast(touchedBody);
                         break;
                     case "Door"://touched a door
-                        //open door
+                        DoorGameObject door = (DoorGameObject) touchedGO.getOwner();
+                        Vec2 force = new Vec2();
+                        force.set(0, 20000);
+                        Vec2 point = new Vec2();
+                        point.set(0,0);
+                        door.applyForce(force, point);
                         break;
                     case "Player"://touched the player character
                         //reload?
@@ -157,10 +152,33 @@ public class GameWorld {
             float resultY = checkGridY(touchy);
             Log.d("touchedBox", "point.x = " + resultX
                     + ", " + resultY);
-            gameScreen.setWorldDestination((int) toPixelsYLength(resultX), (int) toPixelsYLength(resultY));
-            //player.updatePosition((int)toPixelsX(resultX), (int)toPixelsY(resultY));
+            //if(onBorders)
+            //TODO spostare prima il player e calcolare la posizione del mondo in modo da centrare il giocatore
+            player.setDestination((int)toPixelsX(resultX), (int)toPixelsY(resultY));
+           // CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) player.getComponent(ComponentType.Physics);
+            gameScreen.setWorldDestination((int)(toPixelsXLength(touchx)),
+                    (int) toPixelsXLength(touchy));
+            for (GameObject gameObject: gameObjects) {//then for each game object
+                if(!gameObject.name.equals("Player")){//if it's not a player
+                    if(isInView(gameObject)){//we check is it's in view
+                        DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
+                        if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
+                            //inits the position of the GO in view
+                            gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
+                                    (int) (inViewPositionY(gameObject.worldY)));
+                            gameScreen.addDrawable(component);
+                        }
+                    } else { //if they're not in view we remove the drawable
+                        if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
+                            gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
+                            gameObject.outOfView();
+                        }
+                    }
+                }
+            }
         }
     }
+
     private void checkRaycast(Body touchedBody){
         CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
@@ -226,10 +244,11 @@ public class GameWorld {
 
     //to check if a GO is in view, based on it's world coordinates
     private boolean isInView(GameObject gameObject){
-        if(gameObject.worldX > -gameScreen.getBackgroundX()
-                && gameObject.worldX < -(gameScreen.currentBackgroundX - bufferWidth)
-                && gameObject.worldY > - gameScreen.getBackgroundY()
-                && gameObject.worldY < -((gameScreen.currentBackgroundY) - bufferHeight)){
+        PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
+        if(gameObject.worldX + (drawableComponent.pixmap.getWidth()/2) > -gameScreen.getBackgroundX()
+                && gameObject.worldX - (drawableComponent.pixmap.getWidth()/2) < -(gameScreen.currentBackgroundX - bufferWidth)
+                && gameObject.worldY + (drawableComponent.pixmap.getHeight()/2) > - gameScreen.getBackgroundY()
+                && gameObject.worldY - (drawableComponent.pixmap.getHeight()/2) < -((gameScreen.currentBackgroundY) - bufferHeight)){
             return true;
         }
         return false;
@@ -248,8 +267,8 @@ public class GameWorld {
     public float toPixelsXLength(float x){return x/currentView.width*bufferWidth;}
     public float toPixelsYLength(float y){return y/currentView.height*bufferHeight;}
 
-    public float toMetersXLength(float x){return x*currentView.width/bufferWidth;}
-    public float toMetersYLength(float y){return y* currentView.height/bufferHeight;}
+    public float toMetersXLength(float x){return x *currentView.width/bufferWidth;}
+    public float toMetersYLength(float y){return y * currentView.height/bufferHeight;}
 
     public float toPixelsTouchX(float x){return x / (gameScreen.graphics.getWidth()/screenSize.width);}
     public float toPixelsTouchY(float y){return y / (gameScreen.graphics.getHeight()/screenSize.height);}

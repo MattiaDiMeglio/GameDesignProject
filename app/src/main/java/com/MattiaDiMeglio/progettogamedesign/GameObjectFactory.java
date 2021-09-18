@@ -22,12 +22,14 @@ public class GameObjectFactory {
                 gameWorld.toMetersXLength(AssetManager.player.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.player.getHeight()),
                 world, player.name);
-
+        ControllableComponent controllableComponent = new ControllableComponent();
 
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
 
+
         player.addComponent(body);
         player.addComponent(pixmap);
+        player.addComponent(controllableComponent);
         return player;
     }
 
@@ -66,7 +68,7 @@ public class GameObjectFactory {
     public GameObject makeDoor(WallGameObject wall, int x, int y){
         PixMapComponent wallPixmap = (PixMapComponent) wall.getComponent(ComponentType.Drawable);
         StaticBodyComponent wallBody = (StaticBodyComponent) wall.getComponent(ComponentType.Physics);
-        DoorGameObject door = new DoorGameObject(x, y, wall);
+        DoorGameObject door = new DoorGameObject(gameWorld, x, y, wall);
 
         DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(wallBody.x, wallBody.y,
                 gameWorld.toMetersXLength(AssetManager.wall.getWidth()),
@@ -75,6 +77,7 @@ public class GameObjectFactory {
 
         door.addComponent(dynamicBodyComponent);
         door.addComponent(pixMapComponent);
+        //door.makeJoint();
         return door;
     }
 }

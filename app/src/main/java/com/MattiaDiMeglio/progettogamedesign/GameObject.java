@@ -27,4 +27,6 @@ public class GameObject {
     public Component getComponent(ComponentType componentType){
         return components.get(componentType);
     }
+
+    public void update(){}
 }

@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.google.fpl.liquidfun.RevoluteJointDef;
+
 public class WallGameObject extends GameObject {
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;
@@ -20,10 +22,19 @@ public class WallGameObject extends GameObject {
 
         drawableComponent.setPosition(x, y);
 
-        float touchX = gameWorld.toPixelsTouchX(x);
-        float touchY = gameWorld.toPixelsTouchY(y);
-        staticBodyComponent.setTrasform(gameWorld.toMetersX(touchX),
-                gameWorld.toMetersY(touchY));
+        float physX = gameWorld.toPixelsTouchX(x);
+        float physY = gameWorld.toPixelsTouchY(y);
+        staticBodyComponent.setTrasform(gameWorld.toMetersX(physX),
+                gameWorld.toMetersY(physY));
+    }
+
+    @Override
+    public void update() {
+        drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
+        staticBodyComponent = (StaticBodyComponent) this.getComponent(ComponentType.Physics);
+
+        drawableComponent.setPosition((int) gameWorld.toPixelsX(staticBodyComponent.getPositionX()),
+                (int)gameWorld.toPixelsY(staticBodyComponent.getPositionY()));
     }
 
     @Override

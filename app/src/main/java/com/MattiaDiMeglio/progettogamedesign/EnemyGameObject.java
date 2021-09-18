@@ -36,6 +36,15 @@ public class EnemyGameObject extends GameObject {
     }
 
     @Override
+    public void update() {
+        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+        characterBodyComponent = (CharacterBodyComponent) components.get(ComponentType.Physics);
+
+        drawableComponent.setPosition((int)gameWorld.toPixelsX(characterBodyComponent.getPositionX()),
+                (int)gameWorld.toPixelsY(characterBodyComponent.getPositionY()));
+    }
+
+    @Override
     public void outOfView() {
         characterBodyComponent.setTransform(40, 40);
     }

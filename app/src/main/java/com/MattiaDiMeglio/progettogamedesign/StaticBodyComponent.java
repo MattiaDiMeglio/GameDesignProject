@@ -47,6 +47,13 @@ public class StaticBodyComponent extends PhysicsComponent{
         body.setTransform(x, y, angle);
     }
 
+    public Body getBody(){return body;}
+
+    public float getPositionX(){return body.getPositionX();}
+    public float getPositionY(){return body.getPositionY();}
+    public float getWidth(){return width;}
+    public float getHeight(){return height;}
+
     @Override
     public void update() {
 
