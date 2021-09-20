@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -34,22 +35,29 @@ public class GameScreen extends Screen {
     int destinationX = 0, destinationY = 0, currentBackgroundX = 0, currentBackgroundY = 0;
     float percentage = 0f;//movement percentage to lerp
     //division factor for the grid
-    float orizontalFactor = 20f/13f;
-    float verticalFactor = 30f/20f;
+    float orizontalFactor;
+    float verticalFactor;
     //player looking direction
     float initialPlayerLookX, initialPlayerLookY;
-    boolean onBorders = false;
+    boolean onBorderX = false, onBorderY = false;
     float scale;
+    Context context;
 
-    public GameScreen(Game game, int width, int height) {
+
+    public GameScreen(Game game, int width, int height, Context context) {
         super(game);
+        this.context = context;
+
         graphics = game.getGraphics();//we get the graphics from the framework, to draw on screen
         //world sizes
         physicalSize = new Box(XMIN, YMIN, XMAX, YMAX);
         screenSize   = new Box(0, 0, width,height);
         //list of active drawables
         drawables = new ArrayList<DrawableComponent>();
-        gameWorld = new GameWorld(this, physicalSize, screenSize);//creates a new GameWorld
+        gameWorld = new GameWorld(this, context, physicalSize, screenSize);//creates a new GameWorld
+
+        orizontalFactor = gameWorld.toMetersXLength(AssetManager.player.getWidth());// 20f/13f;
+        verticalFactor = gameWorld.toMetersYLength(AssetManager.player.getHeight());// 30f/20f;
 
         //initial direction
         initialPlayerLookY = graphics.getHeight();
@@ -104,7 +112,7 @@ public class GameScreen extends Screen {
             }
             //for testing, draws the player body
            // gameWorld.player.draw(graphics, gameWorld);
-          //  gameWorld.door.draw(graphics, gameWorld);
+            gameWorld.door.draw(graphics, gameWorld);
         }
     }
 
@@ -134,31 +142,35 @@ public class GameScreen extends Screen {
     }
 
 
-    public boolean setWorldDestination(int x, int y){
+    public void setWorldDestination(int x, int y){
         destinationX -= x;
         destinationY -= y;
-        onBorders = false;
+        onBorderX = false;
+        onBorderY = false;
         //check that we don't move outside the background boundaries
         if(destinationX > 0){
             destinationX = 0;
-            onBorders = true;
+            if(currentBackgroundX == destinationX)
+                onBorderX = true;
         }
         if(destinationY > 0){
             destinationY = 0;
-            onBorders = true;
+            if(currentBackgroundY == destinationY)
+                onBorderY = true;
         }
         if(destinationX < -(AssetManager.background.getWidth() - graphics.getWidth())){
             destinationX = -(AssetManager.background.getWidth() - graphics.getWidth());
-            onBorders = true;
+            if(currentBackgroundX == destinationX)
+                onBorderX = true;
         }
         if(destinationY < - (AssetManager.background.getHeight() - graphics.getHeight())){
             destinationY = - (AssetManager.background.getHeight() - graphics.getHeight());
-            onBorders = true;
+            if(currentBackgroundY == destinationY)
+                onBorderY = true;
         }
         percentage = 0f;//reset the percentage for lerp
         scale =  (orizontalFactor/Math.abs(x+y));
         Log.d("Destination", "x: " + destinationX + " y: " + destinationY);
-        return onBorders;
     }
 
     //lerp x and lerp y
@@ -171,22 +183,24 @@ public class GameScreen extends Screen {
 
     //we move the background and all the drawables but the player
     public void worldMovement(){
-        if(!onBorders && percentage < 1 && currentBackgroundX != destinationX || currentBackgroundY != destinationY) {
+        if(/*!onBorders &&*/ percentage < 1 && (currentBackgroundX != destinationX || currentBackgroundY != destinationY)) {
             percentage += scale;
             float vX, vY;
-            currentBackgroundX = movementX(currentBackgroundX, destinationX, percentage);
-            currentBackgroundY = movementY(currentBackgroundY, destinationY, percentage);
+            if(!onBorderX)
+                currentBackgroundX = movementX(currentBackgroundX, destinationX, percentage);
+            if(!onBorderY)
+                currentBackgroundY = movementY(currentBackgroundY, destinationY, percentage);
             for (DrawableComponent drawable : drawables) {
                 GameObject gameObject = drawable.owner;
                 if (!gameObject.name.equals("Player")){
                     gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
                             (int) (gameWorld.inViewPositionY(gameObject.worldY)));
                 }else{
+                    PlayerGameObject player = (PlayerGameObject)gameObject;
                     PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
-                    //TODO reverse move player
-                    gameObject.updatePosition(movementY(drawableComponent.getPositionX() + drawableComponent.pixmap.getWidth()/2,graphics.getWidth()/2, percentage),
-                            movementY(drawable.getPositionY() + drawableComponent.pixmap.getHeight()/2, graphics.getHeight()/2, percentage));
-
+                    player.reverseWorldMovement(movementX(drawableComponent.getPositionX() + drawableComponent.pixmap.getWidth()/2,graphics.getWidth()/2, percentage),
+                            movementY(drawable.getPositionY() + drawableComponent.pixmap.getHeight()/2, graphics.getHeight()/2, percentage),
+                            onBorderX, onBorderY);
                 }
             }
         }

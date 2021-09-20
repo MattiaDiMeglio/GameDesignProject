@@ -7,6 +7,7 @@ public class AssetManager {
     public static Pixmap player;
     public static Pixmap enemy;
     public static Pixmap enemyKilled;
-    public static Pixmap wall;
+    public static Pixmap horizontalWall;
+    public static Pixmap verticalWall;
     public static Pixmap door;
 }

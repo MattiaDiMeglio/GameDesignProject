@@ -27,7 +27,7 @@ public class ProgettoGameDesign extends AndroidGame {
             height = getWindowManager().getDefaultDisplay().getHeight();
             width = getWindowManager().getDefaultDisplay().getWidth();
         }
-        return new LoadingScreen(this, width, height);
+        return new LoadingScreen(this, width, height, getApplicationContext());
     }
 
     @Override

@@ -40,6 +40,15 @@ public class PlayerGameObject extends GameObject {
         float touchY = gameWorld.toPixelsTouchY(y);
         characterBodyComponent.setTransform(gameWorld.toMetersX(touchX),
                 gameWorld.toMetersY(touchY));
+    }
+    public void reverseWorldMovement(int x, int y, boolean onBorderX, boolean onBorderY){
+        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+        int destX = x, destY = y;
+        if(onBorderX)
+            destX = drawableComponent.getPositionX() + drawableComponent.pixmap.getWidth()/2;
+        if(onBorderY)
+            destY = drawableComponent.getPositionY() + drawableComponent.pixmap.getHeight()/2;
+        updatePosition(destX, destY);
 
     }
 

@@ -17,6 +17,7 @@ public class DoorGameObject extends GameObject {
     private GameWorld gameWorld;
     private DrawableComponent drawableComponent;
     private DynamicBodyComponent dynamicBodyComponent;
+    Joint joint;
 
     public DoorGameObject(GameWorld gameWorld, int worldX, int worldY, WallGameObject wall){
         this.gameWorld = gameWorld;
@@ -33,9 +34,9 @@ public class DoorGameObject extends GameObject {
         jointDef.setBodyA(dynamicBodyComponent.getBody());
         jointDef.setBodyB(staticBodyComponent.getBody());
         jointDef.setLocalAnchorA(dynamicBodyComponent.width/2, 0);
-        jointDef.setLocalAnchorB(-staticBodyComponent.getWidth()/2, 0);
+        jointDef.setLocalAnchorB(-(staticBodyComponent.getWidth()/2), 0);
 
-        Joint joint = gameWorld.world.createJoint(jointDef);
+        joint = gameWorld.world.createJoint(jointDef);
 
         jointDef.delete();
     }

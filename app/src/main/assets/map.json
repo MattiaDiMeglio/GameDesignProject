@@ -1,0 +1,18 @@
+{
+    "walls":[
+        {"type":"horizontal", "worldx":82, "worldy":273},
+        {"type":"horizontal", "worldx":166, "worldy":273},
+        {"type":"horizontal", "worldx":250, "worldy":273},
+        {"type":"vertical", "worldx":397, "worldy":84},
+        {"type":"vertical", "worldx":397, "worldy":168},
+        {"type":"vertical", "worldx":397, "worldy":252}
+    ],
+    "enemys":[
+        {"worldx":"122", "worldy":"123"},
+        {"worldx":"122", "worldy":"123"},
+        {"worldx":"122", "worldy":"123"},
+        {"worldx":"122", "worldy":"123"},
+        {"worldx":"122", "worldy":"123"},
+        {"worldx":"122", "worldy":"123"}
+    ]
+}

@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.content.Context;
 import android.text.method.Touch;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -19,12 +20,14 @@ public class MainMenuScreen extends Screen {
     Graphics graphics;
     int x, y, width, height;
     boolean touched = false;
+    Context context;
 
-    public MainMenuScreen(Game game, int width, int height) {
+    public MainMenuScreen(Game game, int width, int height, Context context) {
         super(game);
         TAG = "mainmenu";
         this.width = width;
         this.height = height;
+        this.context = context;
     }
 
     //for now just goes to the gamescreen
@@ -34,7 +37,7 @@ public class MainMenuScreen extends Screen {
         //List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         //game.getInput().getKeyEvents();
         //int length = touchEvents.size();
-        game.setScreen(new GameScreen(game, width, height));
+        game.setScreen(new GameScreen(game, width, height, context));
     }
 
     @Override

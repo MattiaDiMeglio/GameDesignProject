@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
@@ -30,6 +31,8 @@ public class GameWorld {
     //AndroidGraphics buffer
     int bufferWidth, bufferHeight;
 
+    Context context;
+
     final Box physicalSize, screenSize, currentView;
 
     //physics sim parameter
@@ -53,13 +56,14 @@ public class GameWorld {
         }
     }
 
-    public GameWorld(GameScreen gameScreen, Box physicalSize, Box screenSize){
+    public GameWorld(GameScreen gameScreen, Context context, Box physicalSize, Box screenSize){
         //sizes
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
         this.currentView = physicalSize;
         this.gameScreen = gameScreen;//the main game screen
         this.world = new World(0, 0);//new phyisics world
+        this.context = context;
 
         gameObjects = new ArrayList<GameObject>();//list of active game objects
         gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
@@ -74,16 +78,16 @@ public class GameWorld {
         Random random = new Random();
         EnemyGameObject enemyGameObject =(EnemyGameObject) addGameObject(gameObjectFactory.makeEnemy(random.nextInt(AssetManager.background.getWidth()),
                 random.nextInt(AssetManager.background.getHeight())));
-        WallGameObject wall = (WallGameObject) addGameObject(gameObjectFactory.makeWall(enemyGameObject.worldX,
+        MapManager mapManager = new MapManager(this, gameObjectFactory, context);
+        WallGameObject wall = (WallGameObject) addGameObject(gameObjectFactory.makeHorizontalWall(enemyGameObject.worldX,
                 enemyGameObject.worldY + 50));
-        door = (DoorGameObject)addGameObject(gameObjectFactory.makeDoor(wall, wall.worldX - AssetManager.wall.getWidth(), wall.worldY));
+        door = (DoorGameObject)addGameObject(gameObjectFactory.makeDoor(wall, wall.worldX - AssetManager.horizontalWall.getWidth(), wall.worldY));
     }
 
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(float elapsedTime, List<Input.TouchEvent> touchEvents){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         DynamicBodyComponent body = (DynamicBodyComponent) door.getComponent(ComponentType.Physics);
-        Log.d("door", "x: " + body.x + " y:" + body.y);
         for(Input.TouchEvent touchEvent : touchEvents){//for each touchevent
             if(touchEvent.type == Input.TouchEvent.TOUCH_DOWN){//if it's a touch down
                checkTouched(touchEvent);
@@ -91,8 +95,23 @@ public class GameWorld {
         }
         for(GameObject gameObject : gameObjects){
             gameObject.update();
+            if(!gameObject.name.equals("Player")){//if it's not a player
+                if(isInView(gameObject)){//we check is it's in view
+                    DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
+                    if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
+                        //inits the position of the GO in view
+                        gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
+                                (int) (inViewPositionY(gameObject.worldY)));
+                        gameScreen.addDrawable(component);
+                    }
+                } else { //if they're not in view we remove the drawable
+                    if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
+                        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
+                        gameObject.outOfView();
+                    }
+                }
+            }
         }
-
         if(!player.canMove())
             gameScreen.worldMovement();
     }
@@ -147,35 +166,16 @@ public class GameWorld {
                 }
             }
             touchedFixture = null;
-        } else {// if the user doens't touch a fixture, we move the world
+        } else {// if the user doesn't touch a fixture, we move the world
             float resultX = checkGridX(touchx);
             float resultY = checkGridY(touchy);
             Log.d("touchedBox", "point.x = " + resultX
                     + ", " + resultY);
-            //if(onBorders)
             //TODO spostare prima il player e calcolare la posizione del mondo in modo da centrare il giocatore
             player.setDestination((int)toPixelsX(resultX), (int)toPixelsY(resultY));
            // CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) player.getComponent(ComponentType.Physics);
             gameScreen.setWorldDestination((int)(toPixelsXLength(touchx)),
                     (int) toPixelsXLength(touchy));
-            for (GameObject gameObject: gameObjects) {//then for each game object
-                if(!gameObject.name.equals("Player")){//if it's not a player
-                    if(isInView(gameObject)){//we check is it's in view
-                        DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
-                        if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
-                            //inits the position of the GO in view
-                            gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
-                                    (int) (inViewPositionY(gameObject.worldY)));
-                            gameScreen.addDrawable(component);
-                        }
-                    } else { //if they're not in view we remove the drawable
-                        if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
-                            gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
-                            gameObject.outOfView();
-                        }
-                    }
-                }
-            }
         }
     }
 

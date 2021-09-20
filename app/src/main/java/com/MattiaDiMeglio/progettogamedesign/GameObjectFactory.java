@@ -1,6 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import com.badlogic.androidgames.framework.Pixmap;
 import com.google.fpl.liquidfun.World;
 
 import java.util.Random;
@@ -49,15 +48,28 @@ public class GameObjectFactory {
         return enemy;
     }
 
-    public GameObject makeWall(int worldX, int worldY){
-        Random random = new Random();
+    public GameObject makeHorizontalWall(int worldX, int worldY){
         WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.wall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.wall.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.horizontalWall.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.horizontalWall.getHeight()),
                 world, wall.name);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.wall, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.horizontalWall, -100, -100);
+
+        wall.addComponent(staticBodyComponent);
+        wall.addComponent(pixMapComponent);
+        return wall;
+    }
+
+    public GameObject makeVerticalWall(int worldX, int worldY){
+        WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
+
+        StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
+                gameWorld.toMetersXLength(AssetManager.verticalWall.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.verticalWall.getHeight()),
+                world, wall.name);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.verticalWall, -100, -100);
 
         wall.addComponent(staticBodyComponent);
         wall.addComponent(pixMapComponent);
@@ -71,8 +83,8 @@ public class GameObjectFactory {
         DoorGameObject door = new DoorGameObject(gameWorld, x, y, wall);
 
         DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(wallBody.x, wallBody.y,
-                gameWorld.toMetersXLength(AssetManager.wall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.wall.getHeight()), world, door.name);
+                gameWorld.toMetersXLength(AssetManager.horizontalWall.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.horizontalWall.getHeight())/2, world, door.name);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.door, -100, -100);
 
         door.addComponent(dynamicBodyComponent);
