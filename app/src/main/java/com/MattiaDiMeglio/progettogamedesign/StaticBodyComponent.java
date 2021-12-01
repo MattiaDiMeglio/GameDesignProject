@@ -9,9 +9,7 @@ import com.google.fpl.liquidfun.World;
 
 public class StaticBodyComponent extends PhysicsComponent{
     private Body body;
-    private float width , height ;
-    float x, y, angle;
-
+    float angle;
     public StaticBodyComponent(float x, float y, float angle, float width, float height, World world, String name){
         this.x = x;
         this.y = y;
@@ -49,10 +47,6 @@ public class StaticBodyComponent extends PhysicsComponent{
 
     public Body getBody(){return body;}
 
-    public float getPositionX(){return body.getPositionX();}
-    public float getPositionY(){return body.getPositionY();}
-    public float getWidth(){return width;}
-    public float getHeight(){return height;}
 
     @Override
     public void update() {

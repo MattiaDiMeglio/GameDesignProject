@@ -30,11 +30,11 @@ public class WallGameObject extends GameObject {
 
     @Override
     public void update() {
-        drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
+      /*  drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
         staticBodyComponent = (StaticBodyComponent) this.getComponent(ComponentType.Physics);
 
         drawableComponent.setPosition((int) gameWorld.toPixelsX(staticBodyComponent.getPositionX()),
-                (int)gameWorld.toPixelsY(staticBodyComponent.getPositionY()));
+                (int)gameWorld.toPixelsY(staticBodyComponent.getPositionY()));*/
     }
 
     @Override

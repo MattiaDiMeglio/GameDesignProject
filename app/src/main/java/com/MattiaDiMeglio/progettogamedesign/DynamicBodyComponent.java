@@ -14,8 +14,7 @@ import com.google.fpl.liquidfun.World;
 //dynamic bodyes
 public class DynamicBodyComponent extends PhysicsComponent{
     private Body body;
-    float width, height;
-    float x, y;
+
 
     public DynamicBodyComponent(float x, float y, float width, float height, World world, String name){
         this.x = x;
@@ -61,10 +60,6 @@ public class DynamicBodyComponent extends PhysicsComponent{
 
     public Body getBody(){return body;}
 
-    public float getX(){return body.getPositionX();}
-    public float getY(){return body.getPositionY();}
-    public float getWidth(){return width;}
-    public float getHeight(){return height;}
 
     public void applyForce(Vec2 force, Vec2 point){
         body.applyForce(force, point, true);

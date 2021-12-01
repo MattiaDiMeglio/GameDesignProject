@@ -46,8 +46,8 @@ public class DoorGameObject extends GameObject {
         drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
 
-        drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getX()),
-                (int)gameWorld.toPixelsY(dynamicBodyComponent.getY()));
+        drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
+                (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
     }
 
     @Override

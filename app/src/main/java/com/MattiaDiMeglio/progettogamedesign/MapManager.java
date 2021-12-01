@@ -6,19 +6,17 @@ public class MapManager {
 
     private GameWorld gameWorld;
     private GameObjectFactory gameObjectFactory;
+    private JSonParser jSonParser;
     Context context;
 
     public MapManager(GameWorld gameWorld, GameObjectFactory gameObjectFactory, Context context){
         this.gameWorld = gameWorld;
         this.gameObjectFactory = gameObjectFactory;
         this.context = context;
-
-        makeOuterWalls();
-        JSonParser jSonParser = new JSonParser(context);
-        jSonParser.parseWalls(this);
+        jSonParser = new JSonParser(context, this);
     }
 
-    private void makeOuterWalls(){
+    public void makeWalls(){
         int number = (int) AssetManager.background.getWidth() / AssetManager.horizontalWall.getWidth();
         for(int i = 0; i < number + 1; i++){
             gameWorld.addGameObject(gameObjectFactory.makeHorizontalWall(AssetManager.horizontalWall.getWidth()/2 + i * AssetManager.horizontalWall.getWidth(),
@@ -34,6 +32,8 @@ public class MapManager {
             gameWorld.addGameObject(gameObjectFactory.makeVerticalWall(AssetManager.background.getWidth() - AssetManager.verticalWall.getWidth()/2,
                     AssetManager.verticalWall.getHeight()/2 + i * AssetManager.verticalWall.getHeight()));
         }
+
+        jSonParser.parseWalls();
     }
 
     public void makeWall(String type, int worldX, int worldY){
@@ -43,6 +43,22 @@ public class MapManager {
                 break;
             case "vertical":
                 gameWorld.addGameObject(gameObjectFactory.makeVerticalWall(worldX, worldY));
+                break;
+            case "horizontalHalf":
+                gameWorld.addGameObject(gameObjectFactory.makeHorizontalHalfWall(worldX, worldY));
+                break;
+            case "verticalHalf":
+                gameWorld.addGameObject(gameObjectFactory.makeVerticalHalfWall(worldX, worldY));
+            default:
+                break;
         }
+    }
+
+    public void makeEnemies(){
+        jSonParser.parseEnemies();
+    }
+
+    public void makeEnemy(int worldX, int worldY){
+        gameWorld.addGameObject(gameObjectFactory.makeEnemy(worldX, worldY));
     }
 }

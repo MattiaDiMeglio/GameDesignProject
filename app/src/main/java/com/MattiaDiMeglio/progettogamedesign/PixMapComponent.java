@@ -6,8 +6,6 @@ import com.badlogic.androidgames.framework.Pixmap;
 
 public class PixMapComponent extends DrawableComponent {
     Pixmap pixmap;
-    int x;
-    int y;
     @Override
     public void setOwner(GameObject owner) {
         this.owner = owner;
@@ -42,7 +40,4 @@ public class PixMapComponent extends DrawableComponent {
         g.drawPixmap(pixmap, x, y);
     }
 
-    public void Rotate(Graphics g){
-
-    }
 }

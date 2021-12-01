@@ -22,7 +22,7 @@ public class GameScreen extends Screen {
         Paused,
         GameOver
     }
-    GameWorld gameWorld;
+    static GameWorld gameWorld;
     Graphics graphics;
     List<DrawableComponent> drawables;
     GameState gameState = GameState.Ready;
@@ -42,6 +42,7 @@ public class GameScreen extends Screen {
     boolean onBorderX = false, onBorderY = false;
     float scale;
     Context context;
+    int playerx = 0, playery = 0, targetx = 0, targety = 0;
 
 
     public GameScreen(Game game, int width, int height, Context context) {
@@ -63,6 +64,9 @@ public class GameScreen extends Screen {
         initialPlayerLookY = graphics.getHeight();
         initialPlayerLookX = 0;
     }
+
+
+
 
     //gamescreen update, calls the gameworld update
     @Override
@@ -94,7 +98,9 @@ public class GameScreen extends Screen {
         //draw the background
         graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX, (int)currentBackgroundY);
         //draw the grid
-        float i = XMIN;
+        graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
+                (int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(15), Color.WHITE);
+       /* float i = XMIN;
         while(i < XMAX){
             graphics.drawRect((int)gameWorld.toPixelsX(i), 0, 2, gameWorld.bufferHeight, Color.BLACK);
             i += orizontalFactor;
@@ -103,7 +109,7 @@ public class GameScreen extends Screen {
         while(i < YMAX) {
             graphics.drawRect(0, (int) gameWorld.toPixelsY(i), gameWorld.bufferWidth, 2, Color.BLACK);
             i += verticalFactor;
-        }
+        }*/
         //graphics.drawRect(resultx, resulty,(int) gameWorld.toPixelsXLength(0.5f),(int)gameWorld.toPixelsYLength(0.5f), Color.BLACK );
         //draw the drawables
         if(!drawables.isEmpty()) {
@@ -111,8 +117,34 @@ public class GameScreen extends Screen {
                 drawable.Draw(graphics);
             }
             //for testing, draws the player body
-           // gameWorld.player.draw(graphics, gameWorld);
-            gameWorld.door.draw(graphics, gameWorld);
+            //gameWorld.player.draw(graphics, gameWorld);
+           // gameWorld.door.draw(graphics, gameWorld);
+           // for(GameObject gameObject : gameWorld.gameObjects){
+             //   PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
+            //    int color = Color.WHITE;
+           //     switch (comp.name) {
+          //         case "Enemy":
+          //              color = Color.RED;
+          //              break;
+         //           case "Wall":
+         //               color = Color.GREEN;
+        //                break;
+       //             case "HalfWall":
+        //                color = Color.CYAN;
+         //               break;
+       //             case "Player":
+        //                color = Color.BLUE;
+        //                break;
+       //         }
+         //       graphics.drawRect((int)(gameWorld.toPixelsX(comp.getPositionX()) - gameWorld.toPixelsXLength(comp.getWidth())),
+       //                (int) (gameWorld.toPixelsY(comp.getPositionY()) - gameWorld.toPixelsYLength(comp.getHeight()/2)),
+     //                   (int) gameWorld.toPixelsXLength(comp.getWidth()),
+       //                 (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
+       //         gameWorld.player.draw(graphics, gameWorld);
+            //}
+            graphics.drawLine(playerx, playery, targetx , targety, Color.WHITE);
+
+
         }
     }
 
@@ -143,8 +175,10 @@ public class GameScreen extends Screen {
 
 
     public void setWorldDestination(int x, int y){
-        destinationX -= x;
-        destinationY -= y;
+        float supx = x / orizontalFactor;
+        float supy = y / verticalFactor;
+        destinationX -= supx * orizontalFactor;
+        destinationY -= supy * verticalFactor;
         onBorderX = false;
         onBorderY = false;
         //check that we don't move outside the background boundaries

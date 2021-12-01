@@ -28,15 +28,13 @@ public class MainMenuScreen extends Screen {
         this.width = width;
         this.height = height;
         this.context = context;
+        graphics = game.getGraphics();
+
     }
 
     //for now just goes to the gamescreen
     @Override
     public void update(float deltaTime) {
-        graphics = game.getGraphics();
-        //List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        //game.getInput().getKeyEvents();
-        //int length = touchEvents.size();
         game.setScreen(new GameScreen(game, width, height, context));
     }
 

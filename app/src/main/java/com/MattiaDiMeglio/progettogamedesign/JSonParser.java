@@ -13,9 +13,11 @@ import java.io.InputStream;
 public class JSonParser {
     String jsonFile;
     Context context;
+    MapManager mapManager;
 
-    public JSonParser(Context context){
+    public JSonParser(Context context, MapManager mapManager){
         this.context = context;
+        this.mapManager = mapManager;
         AssetManager assetManager = context.getAssets();
         try {
             InputStream inputStream = assetManager.open("map.json");
@@ -31,7 +33,7 @@ public class JSonParser {
 
     }
 
-    public void parseWalls(MapManager mapManager){
+    public void parseWalls(){
         try {
             JSONObject jsonObject = new JSONObject(jsonFile);
             JSONArray walls = jsonObject.getJSONArray("walls");
@@ -42,7 +44,19 @@ public class JSonParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    public void parseEnemies(){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonFile);
+            JSONArray enemies = jsonObject.getJSONArray("enemies");
+            for(int i = 0; i < enemies.length(); i++){
+                JSONObject enemy = enemies.getJSONObject(i);
+                mapManager.makeEnemy(enemy.getInt("worldx"),enemy.getInt("worldy"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

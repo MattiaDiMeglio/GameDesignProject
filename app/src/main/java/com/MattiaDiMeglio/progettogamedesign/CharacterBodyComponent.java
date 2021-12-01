@@ -17,8 +17,7 @@ import com.google.fpl.liquidfun.World;
 //kinematic bodys, used for player and enemies
 public class CharacterBodyComponent extends PhysicsComponent{
     private Body body;
-    private float width, height;
-    private float x, y;
+
 
     //needs a world position, sizes, the physical world and a name
     public CharacterBodyComponent(float x, float y, float width, float height, World world, String name){
@@ -62,9 +61,6 @@ public class CharacterBodyComponent extends PhysicsComponent{
         body.setTransform(x, y, body.getAngle());
     }
 
-    //geters for x and y
-    public float getPositionX(){return body.getPositionX(); }
-    public float getPositionY(){return body.getPositionY();}
 
     //just for testing, draws the body
     public void draw(Graphics graphics, GameWorld gameWorld){

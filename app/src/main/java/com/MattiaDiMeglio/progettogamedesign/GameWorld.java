@@ -1,12 +1,15 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
+import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.impl.TouchHandler;
 import com.google.fpl.liquidfun.Body;
+import com.google.fpl.liquidfun.Draw;
 import com.google.fpl.liquidfun.Fixture;
 import com.google.fpl.liquidfun.QueryCallback;
 import com.google.fpl.liquidfun.RayCastCallback;
@@ -15,18 +18,18 @@ import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 //Gestione degli elementi in gioco
 public class GameWorld {
     private Game game;
     protected World world;
     private TouchHandler touchHandler;
-    private List<GameObject> gameObjects;
+    protected List<GameObject> gameObjects;
     private final GameObjectFactory gameObjectFactory;
     private final GameScreen gameScreen;
     protected PlayerGameObject player;
     protected DoorGameObject door;
+    Draw draw;
 
     //AndroidGraphics buffer
     int bufferWidth, bufferHeight;
@@ -75,19 +78,14 @@ public class GameWorld {
         //JUST FOR TESTING, creates a player and some GO
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
-        Random random = new Random();
-        EnemyGameObject enemyGameObject =(EnemyGameObject) addGameObject(gameObjectFactory.makeEnemy(random.nextInt(AssetManager.background.getWidth()),
-                random.nextInt(AssetManager.background.getHeight())));
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
-        WallGameObject wall = (WallGameObject) addGameObject(gameObjectFactory.makeHorizontalWall(enemyGameObject.worldX,
-                enemyGameObject.worldY + 50));
-        door = (DoorGameObject)addGameObject(gameObjectFactory.makeDoor(wall, wall.worldX - AssetManager.horizontalWall.getWidth(), wall.worldY));
+        mapManager.makeWalls();
+        mapManager.makeEnemies();
     }
 
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(float elapsedTime, List<Input.TouchEvent> touchEvents){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        DynamicBodyComponent body = (DynamicBodyComponent) door.getComponent(ComponentType.Physics);
         for(Input.TouchEvent touchEvent : touchEvents){//for each touchevent
             if(touchEvent.type == Input.TouchEvent.TOUCH_DOWN){//if it's a touch down
                checkTouched(touchEvent);
@@ -122,11 +120,7 @@ public class GameWorld {
         return gameObject;
     }
 
-    public synchronized void removeGameObject(GameObject gameObject){
-        if(gameObjects.contains(gameObject)){
-            gameObjects.remove(gameObject);
-        }
-    }
+    public synchronized void removeGameObject(GameObject gameObject){gameObjects.remove(gameObject);}
 
     private void checkTouched(Input.TouchEvent touchEvent){
         //gets the physics coordinates of the touch down
@@ -144,6 +138,13 @@ public class GameWorld {
                 Log.d("Touched", "touched: " + touchedGO.name);
                 switch (touchedGO.name){
                     case "Enemy"://touched an enemy
+                        DrawableComponent playerd = (DrawableComponent)player.getComponent(ComponentType.Drawable);
+                        DrawableComponent enemyd = (DrawableComponent)touchedGO.getOwner().getComponent(ComponentType.Drawable);
+                        gameScreen.playerx = playerd.getPositionX() + AssetManager.player.getWidth()/2;
+                        gameScreen.playery = playerd.getPositionY() + AssetManager.player.getHeight()/2;
+                        gameScreen.targetx = enemyd.getPositionX() + AssetManager.enemy.getWidth()/2;
+                        gameScreen.targety = enemyd.getPositionY() + AssetManager.enemy.getHeight()/2;
+
                         checkRaycast(touchedBody);
                         break;
                     case "Door"://touched a door
@@ -160,6 +161,9 @@ public class GameWorld {
                     case "Wall"://touched a wall
                         checkRaycast(touchedBody);
                         break;
+                    case "HalfWall":
+                        checkRaycast(touchedBody);
+                        break;
                     default:
                         Log.d("TouchEvent", "touched object with no name");
                         break;
@@ -167,15 +171,15 @@ public class GameWorld {
             }
             touchedFixture = null;
         } else {// if the user doesn't touch a fixture, we move the world
-            float resultX = checkGridX(touchx);
-            float resultY = checkGridY(touchy);
+            float resultX = touchx;//checkGridX(touchx);
+            float resultY = touchy;//checkGridY(touchy);
             Log.d("touchedBox", "point.x = " + resultX
                     + ", " + resultY);
             //TODO spostare prima il player e calcolare la posizione del mondo in modo da centrare il giocatore
             player.setDestination((int)toPixelsX(resultX), (int)toPixelsY(resultY));
            // CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) player.getComponent(ComponentType.Physics);
             gameScreen.setWorldDestination((int)(toPixelsXLength(touchx)),
-                    (int) toPixelsXLength(touchy));
+                    (int) toPixelsYLength(touchy));
         }
     }
 
@@ -186,7 +190,15 @@ public class GameWorld {
             @Override
             public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
                 rayCastFixture = fixture;
-                return fraction;//stops at the first hit/
+                Body castedBody = fixture.getBody();
+                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+
+
+       //         if(casteduserData.name.equals("HalfWall")){
+         //           return -1;
+            //    } else {
+                    return fraction;//stops at the first hit/
+              //  }
             }
         };
         world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
@@ -207,6 +219,14 @@ public class GameWorld {
                         break;
                     case "Door"://met a door
                         //open door
+                        break;
+                    case "HalfWall":
+                        Object userData = touchedBody.getUserData();
+                        PhysicsComponent touchedGO = (PhysicsComponent) userData;
+                        if (touchedGO.name.equals("Enemy")){
+                            enemyGameObject = (EnemyGameObject) touchedGO.getOwner();
+                            enemyGameObject.killed();
+                        }
                         break;
                     default:
                         Log.d("RaycastEvent", "raycast object with no name");
@@ -267,7 +287,7 @@ public class GameWorld {
     public float toPixelsXLength(float x){return x/currentView.width*bufferWidth;}
     public float toPixelsYLength(float y){return y/currentView.height*bufferHeight;}
 
-    public float toMetersXLength(float x){return x *currentView.width/bufferWidth;}
+    public float toMetersXLength(float x){return x * currentView.width/bufferWidth;}
     public float toMetersYLength(float y){return y * currentView.height/bufferHeight;}
 
     public float toPixelsTouchX(float x){return x / (gameScreen.graphics.getWidth()/screenSize.width);}
