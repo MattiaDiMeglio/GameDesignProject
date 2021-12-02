@@ -22,15 +22,16 @@ public class PlayerGameObject extends GameObject {
     }
 
     @Override
-    public void update() {
+    public void update() {//update
+        //for now it just advances the player movement. TODO si pu; cambiare per il cambio di sistema di movimento
         controllableComponent = (ControllableComponent)components.get(ComponentType.Controllable);
         drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
         if(canMove)
-           canMove = controllableComponent.moveCharacter(drawableComponent.pixmap, drawableComponent.getPositionX(), drawableComponent.getPositionY());
+           canMove = controllableComponent.moveCharacter();
     }
 
     @Override
-    public void updatePosition(int x, int y){
+    public void updatePosition(int x, int y){//set the GO position//TODO cambiare
         drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
         characterBodyComponent = (CharacterBodyComponent) components.get(ComponentType.Physics);
 
@@ -41,6 +42,7 @@ public class PlayerGameObject extends GameObject {
         characterBodyComponent.setTransform(gameWorld.toMetersX(touchX),
                 gameWorld.toMetersY(touchY));
     }
+    //when the world moves the player moves in reverse to it to stay on center //TODO si puó levare, sempre per gli stessi motivi
     public void reverseWorldMovement(int x, int y, boolean onBorderX, boolean onBorderY){
         drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
         int destX = x, destY = y;
@@ -61,7 +63,7 @@ public class PlayerGameObject extends GameObject {
                 ", " + characterBodyComponent.getPositionY());
     }
 
-    public void setDestination(int x, int y){
+    public void setDestination(int x, int y){//sets the movement destination TODO si puó togliere
         controllableComponent = (ControllableComponent)components.get(ComponentType.Controllable);
         controllableComponent.setDestination(x, y);
         canMove = true;

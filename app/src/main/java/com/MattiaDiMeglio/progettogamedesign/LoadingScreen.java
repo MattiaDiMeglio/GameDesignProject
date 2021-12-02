@@ -5,6 +5,7 @@ import android.content.Context;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Screen;
+//the loading screen. Just loads the pixmaps for now
 
 public class LoadingScreen extends Screen {
     int width, height;
@@ -21,6 +22,7 @@ public class LoadingScreen extends Screen {
     public void update(float deltaTime) {
         Graphics graphics = game.getGraphics();
 
+        //loads the pixmaps
         AssetManager.background = graphics.newPixmap("Background.png", Graphics.PixmapFormat.RGB565);
         AssetManager.player = graphics.newPixmap("testCharacter.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.enemy = graphics.newPixmap("testEnemy.png", Graphics.PixmapFormat.ARGB4444);
@@ -31,6 +33,7 @@ public class LoadingScreen extends Screen {
         AssetManager.verticalHalfWall = graphics.newPixmap("testWallVerticalHalf.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.door = graphics.newPixmap("testDoor.png", Graphics.PixmapFormat.ARGB4444);
 
+        //sets the next screen
         game.setScreen(new MainMenuScreen(game, width, height, context));
     }
 

@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+//general component class for every physics component
 abstract class PhysicsComponent extends Component{
     public String name;
     float x, y;

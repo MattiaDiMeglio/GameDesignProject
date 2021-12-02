@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+//just a json parser. Retrieves everything from the map file and calls
+//called by the map manager
 
 public class JSonParser {
     String jsonFile;
@@ -35,10 +37,11 @@ public class JSonParser {
 
     public void parseWalls(){
         try {
-            JSONObject jsonObject = new JSONObject(jsonFile);
-            JSONArray walls = jsonObject.getJSONArray("walls");
+            JSONObject jsonObject = new JSONObject(jsonFile);//in the file
+            JSONArray walls = jsonObject.getJSONArray("walls");//checks the walls array
             for(int i = 0; i < walls.length(); i++){
-                JSONObject wall = walls.getJSONObject(i);
+                JSONObject wall = walls.getJSONObject(i);//for each one
+                //calls the map manager to make a new wall TODO map manager chiama questo che chiama map manager. Si puó pulire
                 mapManager.makeWall(wall.getString("type"), wall.getInt("worldx"), wall.getInt("worldy"));
             }
         } catch (JSONException e) {
@@ -48,10 +51,11 @@ public class JSonParser {
 
     public void parseEnemies(){
         try {
-            JSONObject jsonObject = new JSONObject(jsonFile);
-            JSONArray enemies = jsonObject.getJSONArray("enemies");
+            JSONObject jsonObject = new JSONObject(jsonFile);//in the file
+            JSONArray enemies = jsonObject.getJSONArray("enemies");//checks the enemies array
             for(int i = 0; i < enemies.length(); i++){
-                JSONObject enemy = enemies.getJSONObject(i);
+                JSONObject enemy = enemies.getJSONObject(i);//for eachone
+                //calls the map manager to make a new enemy
                 mapManager.makeEnemy(enemy.getInt("worldx"),enemy.getInt("worldy"));
             }
         } catch (JSONException e) {

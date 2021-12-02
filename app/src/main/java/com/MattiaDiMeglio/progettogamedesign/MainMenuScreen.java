@@ -15,6 +15,7 @@ import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
 
+//main menu screen. Not yet implemented
 public class MainMenuScreen extends Screen {
     String TAG;
     Graphics graphics;

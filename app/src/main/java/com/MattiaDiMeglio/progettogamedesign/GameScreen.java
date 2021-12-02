@@ -15,6 +15,7 @@ import java.util.List;
 
 
 //The main game screen
+//everything graphical and the actual touch input is implemented here
 public class GameScreen extends Screen {
     enum GameState {//game states
         Ready,
@@ -22,7 +23,7 @@ public class GameScreen extends Screen {
         Paused,
         GameOver
     }
-    static GameWorld gameWorld;
+    static GameWorld gameWorld;//GW
     Graphics graphics;
     List<DrawableComponent> drawables;
     GameState gameState = GameState.Ready;
@@ -41,7 +42,7 @@ public class GameScreen extends Screen {
     float initialPlayerLookX, initialPlayerLookY;
     boolean onBorderX = false, onBorderY = false;
     float scale;
-    Context context;
+    Context context;//android context
     int playerx = 0, playery = 0, targetx = 0, targety = 0;
 
 
@@ -79,7 +80,7 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running:
-                gameWorld.update(deltaTime, touchEvents);
+                gameWorld.update(deltaTime, touchEvents);//if the game is running update the gameworld
                 break;
             case Paused:
                 break;
@@ -142,7 +143,7 @@ public class GameScreen extends Screen {
        //                 (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
        //         gameWorld.player.draw(graphics, gameWorld);
             //}
-            graphics.drawLine(playerx, playery, targetx , targety, Color.WHITE);
+           // graphics.drawLine(playerx, playery, targetx , targety, Color.WHITE);
 
 
         }
@@ -174,6 +175,8 @@ public class GameScreen extends Screen {
     }
 
 
+    //TODO adattare per il nuovo sistema di movimento
+    //sets the destination for the world movement. It moves the map and all the GO other than the player
     public void setWorldDestination(int x, int y){
         float supx = x / orizontalFactor;
         float supy = y / verticalFactor;

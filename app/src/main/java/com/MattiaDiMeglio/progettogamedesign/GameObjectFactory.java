@@ -15,16 +15,18 @@ public class GameObjectFactory {
         this.world = world;
     }
 
-
+//playerGO factory TODO piazzare tutte le posizioni basandosi sul worldpos
     public GameObject makePlayer(float x, float y){
-        PlayerGameObject player = new PlayerGameObject(gameWorld);
+        PlayerGameObject player = new PlayerGameObject(gameWorld);//new player GO
+        //new physics component for playerGO
         CharacterBodyComponent body = new CharacterBodyComponent(gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)),
                 gameWorld.toMetersY(gameWorld.toPixelsTouchY(y)),
                 gameWorld.toMetersXLength(AssetManager.player.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.player.getHeight()),
                 world, player.name);
-        ControllableComponent controllableComponent = new ControllableComponent();
+        ControllableComponent controllableComponent = new ControllableComponent();//new controllable component
 
+        //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
         Log.d("Player creation", "GivenPos: " + x + ", " + y +
                 "  body position: " + gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)) +
@@ -39,6 +41,7 @@ public class GameObjectFactory {
         return player;
     }
 
+    //enemy factory
     public GameObject makeEnemy(int worldX, int worldY){
         EnemyGameObject enemy = new EnemyGameObject(gameWorld, worldX, worldY);
         CharacterBodyComponent bodyComponent = new CharacterBodyComponent(40, 40,
@@ -52,6 +55,7 @@ public class GameObjectFactory {
         return enemy;
     }
 
+    //horizontal wall factory
     public GameObject makeHorizontalWall(int worldX, int worldY){
         WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
@@ -66,6 +70,7 @@ public class GameObjectFactory {
         return wall;
     }
 
+    //horizontal half wall (the ones you can shoot through
     public GameObject makeHorizontalHalfWall(int worldX, int worldY){
         HalfWallGameObject wall = new HalfWallGameObject(gameWorld, worldX, worldY);
 
@@ -80,6 +85,7 @@ public class GameObjectFactory {
         return wall;
     }
 
+    //vertical wall
     public GameObject makeVerticalWall(int worldX, int worldY){
         WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
@@ -94,6 +100,7 @@ public class GameObjectFactory {
         return wall;
     }
 
+    //vertical half wall
     public GameObject makeVerticalHalfWall(int worldX, int worldY){
         HalfWallGameObject wall = new HalfWallGameObject(gameWorld, worldX, worldY);
 

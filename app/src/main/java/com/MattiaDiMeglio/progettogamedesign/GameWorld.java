@@ -90,9 +90,9 @@ public class GameWorld {
             if(touchEvent.type == Input.TouchEvent.TOUCH_DOWN){//if it's a touch down
                checkTouched(touchEvent);
             }
-        }
-        for(GameObject gameObject : gameObjects){
-            gameObject.update();
+        }//TODO probabilmente da rifare, dato il cambio del sistema di movimento
+        for(GameObject gameObject : gameObjects){//for each GO
+            gameObject.update();//update TODO probabilmente inutile
             if(!gameObject.name.equals("Player")){//if it's not a player
                 if(isInView(gameObject)){//we check is it's in view
                     DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
@@ -122,7 +122,7 @@ public class GameWorld {
 
     public synchronized void removeGameObject(GameObject gameObject){gameObjects.remove(gameObject);}
 
-    private void checkTouched(Input.TouchEvent touchEvent){
+    private void checkTouched(Input.TouchEvent touchEvent){//check what the player touched
         //gets the physics coordinates of the touch down
         float touchx = toMetersX(toPixelsTouchX(touchEvent.x));
         float touchy = toMetersY(toPixelsTouchY(touchEvent.y));
@@ -175,7 +175,7 @@ public class GameWorld {
             float resultY = touchy;//checkGridY(touchy);
             Log.d("touchedBox", "point.x = " + resultX
                     + ", " + resultY);
-            //TODO spostare prima il player e calcolare la posizione del mondo in modo da centrare il giocatore
+            //TODO da rifare dato il cambio di sistema
             player.setDestination((int)toPixelsX(resultX), (int)toPixelsY(resultY));
            // CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) player.getComponent(ComponentType.Physics);
             gameScreen.setWorldDestination((int)(toPixelsXLength(touchx)),
@@ -183,13 +183,13 @@ public class GameWorld {
         }
     }
 
-    private void checkRaycast(Body touchedBody){
+    private void checkRaycast(Body touchedBody){//does the raycast callback
         CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback(){
             @Override
             public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-                rayCastFixture = fixture;
+                rayCastFixture = fixture;//raycast callback
                 Body castedBody = fixture.getBody();
                 PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
 
@@ -202,11 +202,11 @@ public class GameWorld {
             }
         };
         world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
-                touchedBody.getPositionX(), touchedBody.getPositionY());
-        if(rayCastFixture != null){
-            Body castedBody = rayCastFixture.getBody();
-            PhysicsComponent casteduserData =(PhysicsComponent) castedBody.getUserData();
-            if(casteduserData != null){
+                touchedBody.getPositionX(), touchedBody.getPositionY());//calls the raycast
+        if(rayCastFixture != null){//if the ray met a fixture
+            Body castedBody = rayCastFixture.getBody();//we get the body
+            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
+            if(casteduserData != null){//if there's user data
                 Log.d("Raycast", "hit : " + casteduserData.name);
                 switch(casteduserData.name){
                     case "Enemy"://raycast met an enemy first
@@ -236,6 +236,7 @@ public class GameWorld {
         }
     }
 
+    //TODO si possono levare direttamente dato il cambio di sistema
     //we report every touch to the center of the nearest grid block
     public float checkGridX(float x){
         float i = physicalSize.xmin;

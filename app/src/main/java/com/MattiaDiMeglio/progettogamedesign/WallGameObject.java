@@ -2,6 +2,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import com.google.fpl.liquidfun.RevoluteJointDef;
 
+//the wallGO
 public class WallGameObject extends GameObject {
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;

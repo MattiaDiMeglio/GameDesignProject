@@ -4,19 +4,19 @@ import android.util.Log;
 
 import java.util.Random;
 
-//the enemies
+//the enemyGo
 public class EnemyGameObject extends GameObject {
-    private GameWorld gameWorld;
-    private PixMapComponent drawableComponent;
+    private GameWorld gameWorld;//the gameWorld,
+    private PixMapComponent drawableComponent;//component saved for simplicity
     private CharacterBodyComponent characterBodyComponent;
-    protected boolean killed = false;
+    protected boolean killed = false;//has it been killed?
 
-    public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){
-        this.gameWorld = gameWorld;
-        this.name = "Enemy";
-        Random random = new Random();
+    public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){//constructor
+        this.gameWorld = gameWorld;//gw
+        this.name = "Enemy";//name
+        Random random = new Random();//?TODO probabilmente rimasuglio, vedere se si puó levare
         //gives the enemy a random position on the background
-        this.worldX = worldX;
+        this.worldX = worldX;//worldPos are the GO position on the map
         this.worldY = worldY;
         Log.d("Enemy", "worldx: " + this.worldX + " WorldY: " + this.worldY);
     }
@@ -44,7 +44,7 @@ public class EnemyGameObject extends GameObject {
                 (int)gameWorld.toPixelsY(characterBodyComponent.getPositionY()));
     }
 
-    @Override
+    @Override//puts enemy out of view
     public void outOfView() {
         characterBodyComponent.setTransform(40, 40);
     }

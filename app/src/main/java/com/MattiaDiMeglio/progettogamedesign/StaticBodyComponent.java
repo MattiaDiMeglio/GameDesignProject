@@ -6,7 +6,7 @@ import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
 import com.google.fpl.liquidfun.World;
-
+//the physics component for the elements that never move (walls
 public class StaticBodyComponent extends PhysicsComponent{
     private Body body;
     float angle;

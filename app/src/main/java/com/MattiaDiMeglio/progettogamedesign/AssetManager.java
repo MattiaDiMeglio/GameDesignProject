@@ -2,6 +2,10 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import com.badlogic.androidgames.framework.Pixmap;
 
+//static class cointaining all the pixmap of the game
+//they're loaded once in the loadingScreen and can be used everywhere without instanciating
+//the class
+
 public class AssetManager {
     public static Pixmap background;
     public static Pixmap player;

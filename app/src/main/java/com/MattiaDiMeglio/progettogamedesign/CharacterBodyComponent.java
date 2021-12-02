@@ -13,18 +13,20 @@ import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
-
-//kinematic bodys, used for player and enemies
+//extends the physics component so that it can be used as one
+//the character body is a kinematic body
+//from jliquidfun
 public class CharacterBodyComponent extends PhysicsComponent{
     private Body body;
 
 
     //needs a world position, sizes, the physical world and a name
     public CharacterBodyComponent(float x, float y, float width, float height, World world, String name){
-        this.x = x;
+        this.x = x;//physical position
         this.y = y;
-        this.width = width;
+        this.width = width;//physical sizes
         this.height = height;
+        this.name = name;
 
         //body definition
         BodyDef bodyDef = new BodyDef();
@@ -34,13 +36,14 @@ public class CharacterBodyComponent extends PhysicsComponent{
         body = world.createBody(bodyDef);
 
         //userdata
-        this.name = name;
+        //needed for the raycast
         body.setUserData(this);
 
         //fixture
         PolygonShape box = new PolygonShape();
         box.setAsBox(width, height);
 
+        //fixturedef
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(box);
         body.createFixture(fixtureDef);

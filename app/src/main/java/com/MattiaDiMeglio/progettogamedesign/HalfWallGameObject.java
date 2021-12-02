@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+//an halfwall is just a wall you can shoot through, like an half cover?
+//it's basically a wall
 public class HalfWallGameObject extends GameObject{
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;

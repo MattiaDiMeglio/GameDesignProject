@@ -7,9 +7,9 @@ import java.util.Map;
 
 //the GO main class
 public class GameObject {
-    protected Map<ComponentType, Component> components;
-    protected String name;
-    protected int worldX, worldY;
+    protected Map<ComponentType, Component> components;//the list of components
+    protected String name;//object name
+    protected int worldX, worldY;//position on the map
 
     public void addComponent(Component component) {
         if (components == null){

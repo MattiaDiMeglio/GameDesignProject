@@ -5,9 +5,9 @@ enum ComponentType {Physics, Joint, AI, Drawable, Controllable, Health, Weapon}
 abstract class Component {
     protected GameObject owner;
 
-    public abstract ComponentType getType();
+    public abstract ComponentType getType();//all component need to return their type
     public void setOwner(GameObject owner){
         this.owner = owner;
-    };
-    public GameObject getOwner(){return owner;}
+    }// all component have an owner
+    public GameObject getOwner(){return owner;}//return the owner
 }
