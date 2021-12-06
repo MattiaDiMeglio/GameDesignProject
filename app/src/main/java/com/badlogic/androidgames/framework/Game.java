@@ -2,6 +2,8 @@ package com.badlogic.androidgames.framework;
 
 import com.badlogic.androidgames.framework.impl.AndroidFastRenderView;
 
+import io.github.controlwear.virtual.joystick.android.JoystickView;
+
 public interface Game {
     public Input getInput();
 
@@ -18,4 +20,6 @@ public interface Game {
     public Screen getStartScreen();
 
     public AndroidFastRenderView getRenderView();
+
+    public JoystickView getJoystickView();
 }

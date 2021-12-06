@@ -36,6 +36,7 @@ public class GameScreen extends Screen {
     GameState gameState = GameState.Ready;
     Box physicalSize, screenSize;
     AndroidFastRenderView renderView;
+    JoystickView joystickView;
 
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -72,7 +73,17 @@ public class GameScreen extends Screen {
         initialPlayerLookX = 0;
         renderView = game.getRenderView();
 
-
+        joystickView = game.getJoystickView();
+        joystickView.setOnMoveListener(new JoystickView.OnMoveListener() {
+            @Override
+            public void onMove(int angle, int strength) {
+                Log.i("Game Screen", "angle: " + angle + "°");
+                Log.i("Game Screen", "strength: " + strength + "%");
+                Log.i("Game Screen", "vector: " + String.format("x%03d,y%03d",
+                        joystickView.getNormalizedX(),
+                        joystickView.getNormalizedY()));
+            }
+        });
     }
 
 
@@ -96,6 +107,7 @@ public class GameScreen extends Screen {
             case GameOver:
                 break;
         }
+
     }
 
     //the methods to draw on screen

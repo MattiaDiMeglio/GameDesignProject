@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
+import android.graphics.Color;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Window;
@@ -30,6 +31,7 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
+    JoystickView joystickView;
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -62,7 +64,13 @@ public abstract class AndroidGame extends Activity implements Game {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,  RelativeLayout.LayoutParams.MATCH_PARENT);
         relativeLayout.setLayoutParams(layoutParams);
         relativeLayout.addView(renderView);
-        JoystickView joystickView = new JoystickView(this);
+
+        joystickView = new JoystickView(this);
+        joystickView.setButtonColor(Color.RED);
+        joystickView.setBackgroundColor(Color.BLACK);
+        joystickView.setBackgroundSizeRatio(0.2f);
+        joystickView.setButtonSizeRatio(0.1f);
+
         relativeLayout.addView(joystickView);
 
         setContentView(relativeLayout);
@@ -128,4 +136,6 @@ public abstract class AndroidGame extends Activity implements Game {
     public Screen getCurrentScreen() {
         return screen;
     }
+
+    public JoystickView getJoystickView() { return joystickView; }
 }
