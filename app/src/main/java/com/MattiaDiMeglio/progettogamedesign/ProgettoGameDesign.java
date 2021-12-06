@@ -11,6 +11,8 @@ import android.view.WindowMetrics;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.impl.AndroidGame;
 
+import io.github.controlwear.virtual.joystick.android.JoystickView;
+
 //then entry point
 public class ProgettoGameDesign extends AndroidGame {
     public int height, width;
@@ -27,6 +29,7 @@ public class ProgettoGameDesign extends AndroidGame {
             height = getWindowManager().getDefaultDisplay().getHeight();
             width = getWindowManager().getDefaultDisplay().getWidth();
         }
+
         return new LoadingScreen(this, width, height, getApplicationContext());
     }
 
@@ -36,7 +39,6 @@ public class ProgettoGameDesign extends AndroidGame {
         //loads the libs
         System.loadLibrary("liquidfun");
         System.loadLibrary("liquidfun_jni");
-
         //fullscreen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             final WindowInsetsController controller = getWindow().getInsetsController();

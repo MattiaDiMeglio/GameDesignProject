@@ -32,6 +32,11 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    @Override
     public Pixmap newPixmap(String fileName, PixmapFormat format) {
         Config config = null;
         if (format == PixmapFormat.RGB565)

@@ -1,5 +1,7 @@
 package com.badlogic.androidgames.framework;
 
+import android.graphics.Canvas;
+
 public interface Graphics {
     public static enum PixmapFormat {
         ARGB8888, ARGB4444, RGB565
@@ -23,4 +25,6 @@ public interface Graphics {
     public int getWidth();
 
     public int getHeight();
+
+    public Canvas getCanvas();
 }

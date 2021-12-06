@@ -3,15 +3,22 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewManager;
+import android.view.ViewParent;
+import android.widget.TextView;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+import com.badlogic.androidgames.framework.impl.AndroidFastRenderView;
 import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 
 //The main game screen
@@ -28,7 +35,7 @@ public class GameScreen extends Screen {
     List<DrawableComponent> drawables;
     GameState gameState = GameState.Ready;
     Box physicalSize, screenSize;
-
+    AndroidFastRenderView renderView;
 
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -60,10 +67,12 @@ public class GameScreen extends Screen {
 
         orizontalFactor = gameWorld.toMetersXLength(AssetManager.player.getWidth());// 20f/13f;
         verticalFactor = gameWorld.toMetersYLength(AssetManager.player.getHeight());// 30f/20f;
-
         //initial direction
         initialPlayerLookY = graphics.getHeight();
         initialPlayerLookX = 0;
+        renderView = game.getRenderView();
+
+
     }
 
 

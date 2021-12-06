@@ -11,6 +11,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.FileIO;
@@ -18,6 +19,8 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+
+import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 public abstract class AndroidGame extends Activity implements Game {
     AndroidFastRenderView renderView;
@@ -54,7 +57,15 @@ public abstract class AndroidGame extends Activity implements Game {
         audio = new AndroidAudio(this);
         input = new AndroidInput(this, renderView, scaleX, scaleY);
         screen = getStartScreen();
-        setContentView(renderView);
+
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,  RelativeLayout.LayoutParams.MATCH_PARENT);
+        relativeLayout.setLayoutParams(layoutParams);
+        relativeLayout.addView(renderView);
+        JoystickView joystickView = new JoystickView(this);
+        relativeLayout.addView(joystickView);
+
+        setContentView(relativeLayout);
         
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
@@ -110,7 +121,10 @@ public abstract class AndroidGame extends Activity implements Game {
         screen.update(0);
         this.screen = screen;
     }
-    
+
+    @Override
+    public AndroidFastRenderView getRenderView(){return renderView;}
+
     public Screen getCurrentScreen() {
         return screen;
     }
