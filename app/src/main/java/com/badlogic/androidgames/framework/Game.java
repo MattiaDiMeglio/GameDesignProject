@@ -20,6 +20,6 @@ public interface Game {
     public Screen getStartScreen();
 
     public AndroidFastRenderView getRenderView();
-
+//
     public JoystickView getJoystickView();
 }

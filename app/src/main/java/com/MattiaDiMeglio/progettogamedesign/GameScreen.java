@@ -37,7 +37,7 @@ public class GameScreen extends Screen {
     Box physicalSize, screenSize;
     AndroidFastRenderView renderView;
     JoystickView joystickView;
-
+//
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
     //background coordinates to move the world

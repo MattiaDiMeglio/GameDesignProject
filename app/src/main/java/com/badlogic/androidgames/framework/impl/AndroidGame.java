@@ -70,7 +70,7 @@ public abstract class AndroidGame extends Activity implements Game {
         joystickView.setBackgroundColor(Color.BLACK);
         joystickView.setBackgroundSizeRatio(0.2f);
         joystickView.setButtonSizeRatio(0.1f);
-
+//
         relativeLayout.addView(joystickView);
 
         setContentView(relativeLayout);
