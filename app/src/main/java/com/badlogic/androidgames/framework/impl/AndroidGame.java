@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.graphics.Color;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -68,9 +70,18 @@ public abstract class AndroidGame extends Activity implements Game {
         joystickView = new JoystickView(this);
         joystickView.setButtonColor(Color.RED);
         joystickView.setBackgroundColor(Color.BLACK);
-        joystickView.setBackgroundSizeRatio(0.2f);
-        joystickView.setButtonSizeRatio(0.1f);
-//
+        //joystickView.setBackgroundSizeRatio(0.2f);
+        //joystickView.setButtonSizeRatio(0.1f);
+
+        int left = 50;
+        int top = 100;
+        int right = 0;
+        int bottom = 0;
+
+        RelativeLayout.LayoutParams joystickParams=new RelativeLayout.LayoutParams(300,300);
+        joystickParams.setMargins(left,top,right,bottom);
+        joystickView.setLayoutParams(joystickParams);
+
         relativeLayout.addView(joystickView);
 
         setContentView(relativeLayout);
