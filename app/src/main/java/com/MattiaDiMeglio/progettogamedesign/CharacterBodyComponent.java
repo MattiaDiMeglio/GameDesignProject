@@ -1,17 +1,13 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 
 import com.badlogic.androidgames.framework.Graphics;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
-import com.google.fpl.liquidfun.Fixture;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
-import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
 //extends the physics component so that it can be used as one
 //the character body is a kinematic body
@@ -58,11 +54,17 @@ public class CharacterBodyComponent extends PhysicsComponent{
     public void update() {}
 
     //position update
-    public void setTransform(float x, float y){
+    public void setTransform(float x, float y, int angle){
+        this.x = x;
+        this.y = y;
+        body.setTransform(x, y, angle);
+    }
+
+    public void setTrasform(float x, float y){
         this.x = x;
         this.y = y;
         body.setTransform(x, y, body.getAngle());
-    }
+    };
 
 
     //just for testing, draws the body

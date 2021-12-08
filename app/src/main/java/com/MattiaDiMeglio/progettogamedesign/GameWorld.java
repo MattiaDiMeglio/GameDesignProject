@@ -275,6 +275,11 @@ public class GameWorld {
         return false;
     }
 
+    //called by gamescreen, calls movement in playergo
+    public void movePlayer(int normalizedX, int normalizedY, int angle, int strength, float deltaTime){
+        player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
+    }
+
     //conversion methods
     public int inViewPositionX(float worldX){return(int) worldX + (gameScreen.currentBackgroundX);}
     public int inViewPositionY(float worldY){return(int) worldY + (gameScreen.currentBackgroundY);}

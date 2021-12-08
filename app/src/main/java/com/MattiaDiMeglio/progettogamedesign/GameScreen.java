@@ -52,6 +52,7 @@ public class GameScreen extends Screen {
     float scale;
     Context context;//android context
     int playerx = 0, playery = 0, targetx = 0, targety = 0;
+    int x = 50, y = 50, jangle = 0, jstrength = 0;
 
 
     public GameScreen(Game game, int width, int height, Context context) {
@@ -82,6 +83,10 @@ public class GameScreen extends Screen {
                 Log.i("Game Screen", "vector: " + String.format("x%03d,y%03d",
                         joystickView.getNormalizedX(),
                         joystickView.getNormalizedY()));
+                x = joystickView.getNormalizedX();
+                y = joystickView.getNormalizedY();
+                jangle = angle;
+                jstrength = strength;
             }
         });
     }
@@ -100,6 +105,7 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running:
+                gameWorld.movePlayer(x, y, jstrength, jangle, deltaTime);
                 gameWorld.update(deltaTime, touchEvents);//if the game is running update the gameworld
                 break;
             case Paused:
@@ -139,7 +145,7 @@ public class GameScreen extends Screen {
                 drawable.Draw(graphics);
             }
             //for testing, draws the player body
-            //gameWorld.player.draw(graphics, gameWorld);
+            gameWorld.player.draw(graphics, gameWorld);
            // gameWorld.door.draw(graphics, gameWorld);
            // for(GameObject gameObject : gameWorld.gameObjects){
              //   PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);

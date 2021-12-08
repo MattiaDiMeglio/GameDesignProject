@@ -4,10 +4,6 @@ import android.util.Log;
 
 import com.badlogic.androidgames.framework.Graphics;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 //the player GO
 public class PlayerGameObject extends GameObject {
     private GameWorld gameWorld;
@@ -24,15 +20,14 @@ public class PlayerGameObject extends GameObject {
     @Override
     public void update() {//update
         //for now it just advances the player movement. TODO si pu; cambiare per il cambio di sistema di movimento
-        controllableComponent = (ControllableComponent)components.get(ComponentType.Controllable);
-        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
-        if(canMove)
-           canMove = controllableComponent.moveCharacter();
+        //controllableComponent = (ControllableComponent)components.get(ComponentType.Controllable);
+        //drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+        //if(canMove)
+           //canMove = controllableComponent.moveCharacter(x, y, angle, strength);
     }
 
-    @Override
-    public void updatePosition(int x, int y){//set the GO position//TODO cambiare
-        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+    public void updatePosition(int x, int y, int angle, int strength, float deltaTime){//set the GO position//TODO cambiare
+       /* drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
         characterBodyComponent = (CharacterBodyComponent) components.get(ComponentType.Physics);
 
         drawableComponent.setPosition(x, y);
@@ -40,7 +35,10 @@ public class PlayerGameObject extends GameObject {
         float touchX = gameWorld.toPixelsTouchX(x);
         float touchY = gameWorld.toPixelsTouchY(y);
         characterBodyComponent.setTransform(gameWorld.toMetersX(touchX),
-                gameWorld.toMetersY(touchY));
+                gameWorld.toMetersY(touchY));*/
+
+        controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
+        controllableComponent.moveCharacter(x, y, angle, strength, deltaTime);
     }
     //when the world moves the player moves in reverse to it to stay on center //TODO si puó levare, sempre per gli stessi motivi
     public void reverseWorldMovement(int x, int y, boolean onBorderX, boolean onBorderY){

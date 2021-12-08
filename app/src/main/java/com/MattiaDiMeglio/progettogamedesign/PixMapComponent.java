@@ -30,11 +30,11 @@ public class PixMapComponent extends DrawableComponent {
 
     @Override
     public int getPositionX(){
-        return x;
+        return x + (pixmap.getWidth()/2);
     }
     @Override
     public int getPositionY(){
-        return y;
+        return y + (pixmap.getHeight()/2);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import com.badlogic.androidgames.framework.Pixmap;
 
 //component that controls a game object movement
@@ -11,6 +13,12 @@ public class ControllableComponent extends Component {
     int destX, destY;//destination
     int currX, currY;
     float percentage = 1;//percentage of the lerp
+    int movementDistance = 5;//pixels
+    GameWorld gameWorld;
+
+    public ControllableComponent(GameWorld gameWorld) {
+        this.gameWorld = gameWorld;
+    }
 
     @Override
     public ComponentType getType() {
@@ -23,28 +31,25 @@ public class ControllableComponent extends Component {
         percentage = 0;
     }
 
-    //lerp of the movement TODO modificare per funzionare con gli stick analogici
-    public boolean moveCharacter(){
+    //New movement system
+    public void moveCharacter(int x, int y, int angle, int strength, float deltaTime){
+
         PixMapComponent pixmapComp = (PixMapComponent) owner.getComponent(ComponentType.Drawable);//gets the drawable component as ref for the movement
         Pixmap pixmap1 = pixmapComp.pixmap;//gets the actual pixmap
-        int currentX = pixmapComp.getPositionX();//pixmap position
-        int currentY = pixmapComp.getPositionY();
-        if(percentage < 1 && currentX != destX || currentY != destY){//if where not ad the destination and percentage is < 1
-            if(currentX == destX) { //if where're already on destX it doesn't change
-                currX = currentX;
-            } else {
-                currX = currentX + pixmap1.getWidth() / 2;//otherwise we change it
-            }
-            if(currentY == destY){//as before
-                currY = currentY;
-            } else {
-                currY = currentY + pixmap1.getHeight() / 2;
-            }
-            percentage += 0.1f;//update the percentage
-            //update pos
-            owner.updatePosition((int)(currX + percentage * (destX - currX)),
-                    (int)(currY + percentage * (destY - currY)));
-        }
-        return (percentage < 1);
+        int currentGX = pixmapComp.getPositionX();//pixmap position
+        int currentGY = pixmapComp.getPositionY();
+        CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) owner.getComponent(ComponentType.Physics);
+
+
+        float normalizedX = (float) x-50;
+        float normalizedY = (float) y-50;
+
+        currentGX +=(int)((movementDistance * normalizedX)  * deltaTime);
+        currentGY +=(int)((movementDistance * normalizedY) * deltaTime);
+        Log.d("Controller", "x " + currentGX + " y: " + currentGY);
+        pixmapComp.setPosition(currentGX, currentGY);
+        float currentPX = gameWorld.toMetersX(gameWorld.toPixelsTouchX(currentGX));
+        float currentPY = gameWorld.toMetersY(gameWorld.toPixelsTouchY(currentGY));
+        characterBodyComponent.setTransform(currentPX, currentPY, angle);
     }
 }

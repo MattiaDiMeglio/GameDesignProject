@@ -31,7 +31,7 @@ public class EnemyGameObject extends GameObject {
 
         float touchX = gameWorld.toPixelsTouchX(x);
         float touchY = gameWorld.toPixelsTouchY(y);
-        characterBodyComponent.setTransform(gameWorld.toMetersX(touchX),
+        characterBodyComponent.setTrasform(gameWorld.toMetersX(touchX),
                 gameWorld.toMetersY(touchY));
     }
 
@@ -46,7 +46,7 @@ public class EnemyGameObject extends GameObject {
 
     @Override//puts enemy out of view
     public void outOfView() {
-        characterBodyComponent.setTransform(40, 40);
+        characterBodyComponent.setTrasform(40, 40);
     }
 
     public void killed(){

@@ -24,7 +24,7 @@ public class GameObjectFactory {
                 gameWorld.toMetersXLength(AssetManager.player.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.player.getHeight()),
                 world, player.name);
-        ControllableComponent controllableComponent = new ControllableComponent();//new controllable component
+        ControllableComponent controllableComponent = new ControllableComponent(gameWorld);//new controllable component
 
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
