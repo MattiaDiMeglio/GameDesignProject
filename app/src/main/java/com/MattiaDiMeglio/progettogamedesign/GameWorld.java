@@ -23,7 +23,6 @@ import java.util.List;
 public class GameWorld {
     private Game game;
     protected World world;
-    private TouchHandler touchHandler;
     protected List<GameObject> gameObjects;
     private final GameObjectFactory gameObjectFactory;
     private final GameScreen gameScreen;
@@ -84,13 +83,9 @@ public class GameWorld {
     }
 
     //Game World update, calls the world step, then responds to touch events
-    public synchronized void update(float elapsedTime, List<Input.TouchEvent> touchEvents){
+    public synchronized void update(int x, int y, float elapsedTime){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        for(Input.TouchEvent touchEvent : touchEvents){//for each touchevent
-            if(touchEvent.type == Input.TouchEvent.TOUCH_DOWN){//if it's a touch down
-               checkTouched(touchEvent);
-            }
-        }//TODO probabilmente da rifare, dato il cambio del sistema di movimento
+        //TODO probabilmente da rifare, dato il cambio del sistema di movimento
         for(GameObject gameObject : gameObjects){//for each GO
             gameObject.update();//update TODO probabilmente inutile
             if(!gameObject.name.equals("Player")){//if it's not a player
@@ -110,8 +105,7 @@ public class GameWorld {
                 }
             }
         }
-        if(!player.canMove())
-            gameScreen.worldMovement();
+        gameScreen.setWorldDestination(x, y, elapsedTime);
     }
 
     //methods to add and remove GO
@@ -121,67 +115,6 @@ public class GameWorld {
     }
 
     public synchronized void removeGameObject(GameObject gameObject){gameObjects.remove(gameObject);}
-
-    private void checkTouched(Input.TouchEvent touchEvent){//check what the player touched
-        //gets the physics coordinates of the touch down
-        float touchx = toMetersX(toPixelsTouchX(touchEvent.x));
-        float touchy = toMetersY(toPixelsTouchY(touchEvent.y));
-        //check if the user touched a fixture
-        world.queryAABB(touchQueryCallback, touchx - 0.1f, touchy - 0.1f,
-                touchx + 0.1f, touchy + 0.1f);
-        if(touchedFixture != null){//if they have
-            //we get the body and the suerdata
-            Body touchedBody = touchedFixture.getBody();
-            Object userData = touchedBody.getUserData();
-            if(userData != null){//if there are any
-                PhysicsComponent touchedGO = (PhysicsComponent) userData;
-                Log.d("Touched", "touched: " + touchedGO.name);
-                switch (touchedGO.name){
-                    case "Enemy"://touched an enemy
-                        DrawableComponent playerd = (DrawableComponent)player.getComponent(ComponentType.Drawable);
-                        DrawableComponent enemyd = (DrawableComponent)touchedGO.getOwner().getComponent(ComponentType.Drawable);
-                        gameScreen.playerx = playerd.getPositionX() + AssetManager.player.getWidth()/2;
-                        gameScreen.playery = playerd.getPositionY() + AssetManager.player.getHeight()/2;
-                        gameScreen.targetx = enemyd.getPositionX() + AssetManager.enemy.getWidth()/2;
-                        gameScreen.targety = enemyd.getPositionY() + AssetManager.enemy.getHeight()/2;
-
-                        checkRaycast(touchedBody);
-                        break;
-                    case "Door"://touched a door
-                        DoorGameObject door = (DoorGameObject) touchedGO.getOwner();
-                        Vec2 force = new Vec2();
-                        force.set(0, 20000);
-                        Vec2 point = new Vec2();
-                        point.set(0,0);
-                        door.applyForce(force, point);
-                        break;
-                    case "Player"://touched the player character
-                        //reload?
-                        break;
-                    case "Wall"://touched a wall
-                        checkRaycast(touchedBody);
-                        break;
-                    case "HalfWall":
-                        checkRaycast(touchedBody);
-                        break;
-                    default:
-                        Log.d("TouchEvent", "touched object with no name");
-                        break;
-                }
-            }
-            touchedFixture = null;
-        } else {// if the user doesn't touch a fixture, we move the world
-            float resultX = touchx;//checkGridX(touchx);
-            float resultY = touchy;//checkGridY(touchy);
-            Log.d("touchedBox", "point.x = " + resultX
-                    + ", " + resultY);
-            //TODO da rifare dato il cambio di sistema
-            player.setDestination((int)toPixelsX(resultX), (int)toPixelsY(resultY));
-           // CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) player.getComponent(ComponentType.Physics);
-            gameScreen.setWorldDestination((int)(toPixelsXLength(touchx)),
-                    (int) toPixelsYLength(touchy));
-        }
-    }
 
     private void checkRaycast(Body touchedBody){//does the raycast callback
         CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);

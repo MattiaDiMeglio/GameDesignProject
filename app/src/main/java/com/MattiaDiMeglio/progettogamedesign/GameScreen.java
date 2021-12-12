@@ -53,7 +53,7 @@ public class GameScreen extends Screen {
     Context context;//android context
     int playerx = 0, playery = 0, targetx = 0, targety = 0;
     int x = 50, y = 50, jangle = 0, jstrength = 0;
-
+    int movementDistance = 5;
 
     public GameScreen(Game game, int width, int height, Context context) {
         super(game);
@@ -78,11 +78,6 @@ public class GameScreen extends Screen {
         joystickView.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
-                Log.i("Game Screen", "angle: " + angle + "°");
-                Log.i("Game Screen", "strength: " + strength + "%");
-                Log.i("Game Screen", "vector: " + String.format("x%03d,y%03d",
-                        joystickView.getNormalizedX(),
-                        joystickView.getNormalizedY()));
                 x = joystickView.getNormalizedX();
                 y = joystickView.getNormalizedY();
                 jangle = angle;
@@ -91,22 +86,18 @@ public class GameScreen extends Screen {
         });
     }
 
-
-
-
     //gamescreen update, calls the gameworld update
     @Override
     public void update(float deltaTime) {
-        //gets all the touchevents
-        List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
         game.getInput().getKeyEvents();
+
         switch(gameState) {
             case Ready:
                 gameState = GameState.Running;
                 break;
             case Running:
                 gameWorld.movePlayer(x, y, jstrength, jangle, deltaTime);
-                gameWorld.update(deltaTime, touchEvents);//if the game is running update the gameworld
+                gameWorld.update(x, y, deltaTime);//if the game is running update the gameworld
                 break;
             case Paused:
                 break;
@@ -204,70 +195,59 @@ public class GameScreen extends Screen {
 
     //TODO adattare per il nuovo sistema di movimento
     //sets the destination for the world movement. It moves the map and all the GO other than the player
-    public void setWorldDestination(int x, int y){
-        float supx = x / orizontalFactor;
-        float supy = y / verticalFactor;
-        destinationX -= supx * orizontalFactor;
-        destinationY -= supy * verticalFactor;
+    public void setWorldDestination(int jx, int jy, float deltaTime){
+
+        float normalizedX = -((float) jx-50);
+        float normalizedY = -((float) jy-50);
+
+        destinationX = currentBackgroundX + (int)((movementDistance * normalizedX)  * deltaTime);
+        destinationY = currentBackgroundY + (int)((movementDistance * normalizedY) * deltaTime);
+
+        Log.d("setWorldDestination","curr x"+currentBackgroundX+"y"+currentBackgroundY);
+        Log.d("setWorldDestination","dest x"+destinationX+"y"+destinationY);
+
         onBorderX = false;
         onBorderY = false;
+
         //check that we don't move outside the background boundaries
         if(destinationX > 0){
             destinationX = 0;
-            if(currentBackgroundX == destinationX)
-                onBorderX = true;
+            onBorderX = true;
         }
         if(destinationY > 0){
             destinationY = 0;
-            if(currentBackgroundY == destinationY)
-                onBorderY = true;
+            onBorderY = true;
         }
         if(destinationX < -(AssetManager.background.getWidth() - graphics.getWidth())){
             destinationX = -(AssetManager.background.getWidth() - graphics.getWidth());
-            if(currentBackgroundX == destinationX)
-                onBorderX = true;
+            onBorderX = true;
         }
         if(destinationY < - (AssetManager.background.getHeight() - graphics.getHeight())){
             destinationY = - (AssetManager.background.getHeight() - graphics.getHeight());
-            if(currentBackgroundY == destinationY)
-                onBorderY = true;
+            onBorderY = true;
         }
-        percentage = 0f;//reset the percentage for lerp
-        scale =  (orizontalFactor/Math.abs(x+y));
-        Log.d("Destination", "x: " + destinationX + " y: " + destinationY);
-    }
 
-    //lerp x and lerp y
-    public int movementX(float startingX, float destinationX, float percentage){
-        return (int) (startingX + percentage * (destinationX - startingX));
-    }
-    public int movementY(float startingY, float destinationY, float percentage){
-        return (int) (startingY + percentage * (destinationY - startingY));
-    }
-
-    //we move the background and all the drawables but the player
-    public void worldMovement(){
-        if(/*!onBorders &&*/ percentage < 1 && (currentBackgroundX != destinationX || currentBackgroundY != destinationY)) {
-            percentage += scale;
-            float vX, vY;
+        if((currentBackgroundX != destinationX || currentBackgroundY != destinationY)) {
             if(!onBorderX)
-                currentBackgroundX = movementX(currentBackgroundX, destinationX, percentage);
+                currentBackgroundX = movementX(currentBackgroundX, normalizedX, deltaTime);
             if(!onBorderY)
-                currentBackgroundY = movementY(currentBackgroundY, destinationY, percentage);
+                currentBackgroundY = movementY(currentBackgroundY, normalizedY, deltaTime);
             for (DrawableComponent drawable : drawables) {
                 GameObject gameObject = drawable.owner;
                 if (!gameObject.name.equals("Player")){
                     gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
                             (int) (gameWorld.inViewPositionY(gameObject.worldY)));
-                }else{
-                    PlayerGameObject player = (PlayerGameObject)gameObject;
-                    PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
-                    player.reverseWorldMovement(movementX(drawableComponent.getPositionX() + drawableComponent.pixmap.getWidth()/2,graphics.getWidth()/2, percentage),
-                            movementY(drawable.getPositionY() + drawableComponent.pixmap.getHeight()/2, graphics.getHeight()/2, percentage),
-                            onBorderX, onBorderY);
                 }
             }
         }
+
+    }
+
+    public int movementX(float startingX, float normalizedX, float deltaTime){
+        return (int) (startingX + ((int)((movementDistance * normalizedX)  * deltaTime)));
+    }
+    public int movementY(float startingY, float normalizedY, float deltaTime){
+        return (int) (startingY + ((int)((movementDistance * normalizedY)  * deltaTime)));
     }
 
     //TODO not actually implemented, rotates the player to face the destination
