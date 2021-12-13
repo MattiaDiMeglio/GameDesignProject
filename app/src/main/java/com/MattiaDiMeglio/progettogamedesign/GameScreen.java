@@ -3,17 +3,11 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewManager;
-import android.view.ViewParent;
-import android.widget.TextView;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
-import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.impl.AndroidFastRenderView;
-import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +30,7 @@ public class GameScreen extends Screen {
     GameState gameState = GameState.Ready;
     Box physicalSize, screenSize;
     AndroidFastRenderView renderView;
-    JoystickView joystickView;
+    JoystickView leftJoystick, rightJoystick;
 //
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -52,7 +46,8 @@ public class GameScreen extends Screen {
     float scale;
     Context context;//android context
     int playerx = 0, playery = 0, targetx = 0, targety = 0;
-    int x = 50, y = 50, jangle = 0, jstrength = 0;
+    int leftX = 50, leftY = 50, leftAngle = 0, leftStrength = 0;
+    int rightX = 50, rightY = 50, rightAngle = 0, rightStrength = 0;
     int movementDistance = 5;
 
     public GameScreen(Game game, int width, int height, Context context) {
@@ -74,16 +69,27 @@ public class GameScreen extends Screen {
         initialPlayerLookX = 0;
         renderView = game.getRenderView();
 
-        joystickView = game.getJoystickView();
-        joystickView.setOnMoveListener(new JoystickView.OnMoveListener() {
+        leftJoystick = game.getLeftJoystick();
+        leftJoystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
-                x = joystickView.getNormalizedX();
-                y = joystickView.getNormalizedY();
-                jangle = angle;
-                jstrength = strength;
+                leftX = leftJoystick.getNormalizedX();
+                leftY = leftJoystick.getNormalizedY();
+                leftAngle = angle;
+                leftStrength = strength;
             }
         });
+
+        /*rightJoystick = game.getRightJoystick();
+        rightJoystick.setOnMoveListener(new JoystickView.OnMoveListener() {
+            @Override
+            public void onMove(int angle, int strength) {
+                rightX = rightJoystick.getNormalizedX();
+                rightY = rightJoystick.getNormalizedY();
+                rightAngle = angle;
+                rightStrength = strength;
+            }
+        });*/
     }
 
     //gamescreen update, calls the gameworld update
@@ -96,8 +102,8 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running:
-                gameWorld.movePlayer(x, y, jstrength, jangle, deltaTime);
-                gameWorld.update(x, y, deltaTime);//if the game is running update the gameworld
+                gameWorld.movePlayer(leftX, leftY, leftStrength, leftAngle, deltaTime);
+                gameWorld.update(leftX, leftY, deltaTime);//if the game is running update the gameworld
                 break;
             case Paused:
                 break;

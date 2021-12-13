@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.graphics.Color;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -33,7 +31,8 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-    JoystickView joystickView;
+    JoystickView leftJ;
+    JoystickView rightJ;
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -49,7 +48,7 @@ public abstract class AndroidGame extends Activity implements Game {
         int frameBufferHeight = isLandscape ? 320 : 480;
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
-        
+
         float scaleX = (float) frameBufferWidth
                 / getWindowManager().getDefaultDisplay().getWidth();
         float scaleY = (float) frameBufferHeight
@@ -67,9 +66,9 @@ public abstract class AndroidGame extends Activity implements Game {
         relativeLayout.setLayoutParams(layoutParams);
         relativeLayout.addView(renderView);
 
-        joystickView = new JoystickView(this);
-        joystickView.setButtonColor(Color.RED);
-        joystickView.setBackgroundColor(Color.BLACK);
+        leftJ = new JoystickView(this);
+        leftJ.setButtonColor(Color.RED);
+        leftJ.setBackgroundColor(Color.BLACK);
         //joystickView.setBackgroundSizeRatio(0.2f);
         //joystickView.setButtonSizeRatio(0.1f);
 
@@ -78,14 +77,29 @@ public abstract class AndroidGame extends Activity implements Game {
         int right = 0;
         int bottom = 0;
 
-        RelativeLayout.LayoutParams joystickParams=new RelativeLayout.LayoutParams(300,300);
-        joystickParams.setMargins(left,top,right,bottom);
-        joystickView.setLayoutParams(joystickParams);
+        RelativeLayout.LayoutParams leftjParams=new RelativeLayout.LayoutParams(300,300);
+        leftjParams.setMargins(left,top,right,bottom);
+        leftJ.setLayoutParams(leftjParams);
 
-        relativeLayout.addView(joystickView);
+        relativeLayout.addView(leftJ);
+
+        rightJ = new JoystickView(this);
+        rightJ.setButtonColor(Color.YELLOW);
+        rightJ.setBackgroundColor(Color.BLACK);
+        //joystickView.setBackgroundSizeRatio(0.2f);
+        //joystickView.setButtonSizeRatio(0.1f);
+
+        //int left = 50;
+        int rTop = 1800;
+
+        RelativeLayout.LayoutParams rightjParams=new RelativeLayout.LayoutParams(300,300);
+        rightjParams.setMargins(left,rTop,right,bottom);
+        rightJ.setLayoutParams(rightjParams);
+
+        relativeLayout.addView(rightJ);
 
         setContentView(relativeLayout);
-        
+
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
     }
@@ -148,5 +162,7 @@ public abstract class AndroidGame extends Activity implements Game {
         return screen;
     }
 
-    public JoystickView getJoystickView() { return joystickView; }
+    public JoystickView getLeftJoystick() { return leftJ; }
+
+    public JoystickView getRightJoystick() { return leftJ; }
 }
