@@ -25,11 +25,7 @@ public class ControllableComponent extends Component {
         return ComponentType.Controllable;
     }
 
-    public void setDestination(int x, int y){//init of the movement TODO probabilmente inutile
-        destX = x;
-        destY = y;
-        percentage = 0;
-    }
+
 
     //New movement system
     public void moveCharacter(int x, int y, int angle, int strength, float deltaTime){

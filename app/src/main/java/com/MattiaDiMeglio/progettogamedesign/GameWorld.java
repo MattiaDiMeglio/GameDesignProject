@@ -85,7 +85,6 @@ public class GameWorld {
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(int x, int y, float elapsedTime){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        //TODO probabilmente da rifare, dato il cambio del sistema di movimento
         for(GameObject gameObject : gameObjects){//for each GO
             gameObject.update();//update TODO probabilmente inutile
             if(!gameObject.name.equals("Player")){//if it's not a player
@@ -167,33 +166,6 @@ public class GameWorld {
                 }
             }
         }
-    }
-
-    //TODO si possono levare direttamente dato il cambio di sistema
-    //we report every touch to the center of the nearest grid block
-    public float checkGridX(float x){
-        float i = physicalSize.xmin;
-        float sup  = i;
-        while(i < (physicalSize.xmax + 0.1f)){
-            if(x >= sup && x < i){
-                return sup + (gameScreen.orizontalFactor/2);
-            }
-            sup = i;
-            i += gameScreen.orizontalFactor;
-        }
-        return 0f;
-    }
-    public float checkGridY(float y){
-        float i = physicalSize.ymin;
-        float sup = i;
-        while(i < physicalSize.ymax + 0.1f){
-            if(y >= sup && y < i){
-                return sup + (gameScreen.verticalFactor/2);
-            }
-            sup = i;
-            i += gameScreen.verticalFactor;
-        }
-        return 0f;
     }
 
     //to check if a GO is in view, based on it's world coordinates

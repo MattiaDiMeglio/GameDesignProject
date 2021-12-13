@@ -63,7 +63,7 @@ public class PlayerGameObject extends GameObject {
 
     public void setDestination(int x, int y){//sets the movement destination TODO si puó togliere
         controllableComponent = (ControllableComponent)components.get(ComponentType.Controllable);
-        controllableComponent.setDestination(x, y);
+        //controllableComponent.setDestination(x, y);
         canMove = true;
     }
 

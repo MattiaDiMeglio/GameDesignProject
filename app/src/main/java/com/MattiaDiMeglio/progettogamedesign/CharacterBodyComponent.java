@@ -60,7 +60,7 @@ public class CharacterBodyComponent extends PhysicsComponent{
         body.setTransform(x, y, angle);
     }
 
-    public void setTrasform(float x, float y){
+    public void setTransform(float x, float y){
         this.x = x;
         this.y = y;
         body.setTransform(x, y, body.getAngle());

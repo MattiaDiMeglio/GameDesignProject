@@ -192,16 +192,14 @@ public class GameScreen extends Screen {
             drawables.remove(drawable);
     }
 
-
-    //TODO adattare per il nuovo sistema di movimento
     //sets the destination for the world movement. It moves the map and all the GO other than the player
     public void setWorldDestination(int jx, int jy, float deltaTime){
 
         float normalizedX = -((float) jx-50);
         float normalizedY = -((float) jy-50);
 
-        destinationX = currentBackgroundX + (int)((movementDistance * normalizedX)  * deltaTime);
-        destinationY = currentBackgroundY + (int)((movementDistance * normalizedY) * deltaTime);
+        destinationX = currentBackgroundX + (int)((gameWorld.toPixelsTouchX(movementDistance) * normalizedX)  * deltaTime);
+        destinationY = currentBackgroundY + (int)((gameWorld.toPixelsTouchY(movementDistance) * normalizedY) * deltaTime);
 
         Log.d("setWorldDestination","curr x"+currentBackgroundX+"y"+currentBackgroundY);
         Log.d("setWorldDestination","dest x"+destinationX+"y"+destinationY);
