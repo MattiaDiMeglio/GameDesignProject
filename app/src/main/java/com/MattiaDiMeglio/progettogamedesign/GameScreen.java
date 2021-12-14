@@ -70,6 +70,8 @@ public class GameScreen extends Screen {
         renderView = game.getRenderView();
 
         leftJoystick = game.getLeftJoystick();
+        rightJoystick = game.getRightJoystick();
+
         leftJoystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
@@ -80,7 +82,6 @@ public class GameScreen extends Screen {
             }
         });
 
-        /*rightJoystick = game.getRightJoystick();
         rightJoystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
@@ -89,7 +90,7 @@ public class GameScreen extends Screen {
                 rightAngle = angle;
                 rightStrength = strength;
             }
-        });*/
+        });
     }
 
     //gamescreen update, calls the gameworld update
@@ -207,8 +208,8 @@ public class GameScreen extends Screen {
         destinationX = currentBackgroundX + (int)((gameWorld.toPixelsTouchX(movementDistance) * normalizedX)  * deltaTime);
         destinationY = currentBackgroundY + (int)((gameWorld.toPixelsTouchY(movementDistance) * normalizedY) * deltaTime);
 
-        Log.d("setWorldDestination","curr x"+currentBackgroundX+"y"+currentBackgroundY);
-        Log.d("setWorldDestination","dest x"+destinationX+"y"+destinationY);
+        //Log.d("setWorldDestination","curr x"+currentBackgroundX+"y"+currentBackgroundY);
+        //Log.d("setWorldDestination","dest x"+destinationX+"y"+destinationY);
 
         onBorderX = false;
         onBorderY = false;

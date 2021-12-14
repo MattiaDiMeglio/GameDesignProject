@@ -42,7 +42,7 @@ public class ControllableComponent extends Component {
 
         currentGX +=(int)((movementDistance * normalizedX)  * deltaTime);
         currentGY +=(int)((movementDistance * normalizedY) * deltaTime);
-        Log.d("Controller", "x " + currentGX + " y: " + currentGY);
+        //Log.d("Controller", "x " + currentGX + " y: " + currentGY);
         pixmapComp.setPosition(currentGX, currentGY);
         float currentPX = gameWorld.toMetersX(gameWorld.toPixelsTouchX(currentGX));
         float currentPY = gameWorld.toMetersY(gameWorld.toPixelsTouchY(currentGY));

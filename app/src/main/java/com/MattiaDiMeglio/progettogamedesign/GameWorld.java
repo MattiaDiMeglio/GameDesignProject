@@ -76,6 +76,10 @@ public class GameWorld {
 
         //JUST FOR TESTING, creates a player and some GO
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
+
+        GunComponent playerGun = new GunComponent();
+        player.setWeapon(playerGun);
+
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
         mapManager.makeWalls();

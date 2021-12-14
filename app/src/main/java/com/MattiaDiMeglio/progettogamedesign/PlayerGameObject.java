@@ -12,6 +12,8 @@ public class PlayerGameObject extends GameObject {
     private ControllableComponent controllableComponent;
     protected boolean canMove = false;
 
+    public WeaponComponent playerWeapon;
+
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
         this.name = "Player";
@@ -74,5 +76,9 @@ public class PlayerGameObject extends GameObject {
     }
 
     public boolean canMove(){return canMove;}
+
+    public void setWeapon(WeaponComponent weapon){
+        playerWeapon = weapon;
+    }
 
 }

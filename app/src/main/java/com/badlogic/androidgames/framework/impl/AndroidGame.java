@@ -164,5 +164,5 @@ public abstract class AndroidGame extends Activity implements Game {
 
     public JoystickView getLeftJoystick() { return leftJ; }
 
-    public JoystickView getRightJoystick() { return leftJ; }
+    public JoystickView getRightJoystick() { return rightJ; }
 }
