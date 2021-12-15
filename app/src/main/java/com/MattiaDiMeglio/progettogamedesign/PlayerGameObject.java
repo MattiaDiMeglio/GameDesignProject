@@ -81,4 +81,6 @@ public class PlayerGameObject extends GameObject {
         playerWeapon = weapon;
     }
 
+    public WeaponComponent getPlayerWeapon() {return playerWeapon;}
+
 }

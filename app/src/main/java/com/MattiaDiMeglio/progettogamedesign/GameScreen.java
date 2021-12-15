@@ -48,6 +48,9 @@ public class GameScreen extends Screen {
     int playerx = 0, playery = 0, targetx = 0, targety = 0;
     int leftX = 50, leftY = 50, leftAngle = 0, leftStrength = 0;
     int rightX = 50, rightY = 50, rightAngle = 0, rightStrength = 0;
+    boolean isShooting = false;
+    int oldAngle = 0;
+    int oldStrength = 0;
     int movementDistance = 5;
 
     public GameScreen(Game game, int width, int height, Context context) {
@@ -89,9 +92,17 @@ public class GameScreen extends Screen {
                 rightY = rightJoystick.getNormalizedY();
                 rightAngle = angle;
                 rightStrength = strength;
+
+                if(!(rightX == 50 && rightY == 50)){
+                    oldAngle = angle;
+                    oldStrength = strength;
+                }
+                else isShooting = true;
+
             }
         });
-    }
+
+        }
 
     //gamescreen update, calls the gameworld update
     @Override
@@ -102,9 +113,14 @@ public class GameScreen extends Screen {
             case Ready:
                 gameState = GameState.Running;
                 break;
-            case Running:
+            case Running: //if the game is running update the gameworld
                 gameWorld.movePlayer(leftX, leftY, leftStrength, leftAngle, deltaTime);
-                gameWorld.update(leftX, leftY, deltaTime);//if the game is running update the gameworld
+                if(isShooting){
+                    gameWorld.update(leftX, leftY, deltaTime, oldAngle, oldStrength, isShooting);
+                    isShooting = false;
+                }
+
+                else gameWorld.update(leftX, leftY, deltaTime, rightAngle, rightStrength, isShooting);
                 break;
             case Paused:
                 break;
@@ -168,8 +184,8 @@ public class GameScreen extends Screen {
        //                 (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
        //         gameWorld.player.draw(graphics, gameWorld);
             //}
-           // graphics.drawLine(playerx, playery, targetx , targety, Color.WHITE);
-
+            if(rightStrength > 0)
+           graphics.drawLine(playerx, playery, targetx , targety, Color.RED);
 
         }
     }
@@ -253,6 +269,13 @@ public class GameScreen extends Screen {
     }
     public int movementY(float startingY, float normalizedY, float deltaTime){
         return (int) (startingY + ((int)((movementDistance * normalizedY)  * deltaTime)));
+    }
+
+    public void setLineCoordinates(int px, int py, int aimLineX, int aimLineY){
+        playerx = px;
+        playery = py;
+        targetx = px + aimLineX;
+        targety = py + aimLineY;
     }
 
     //TODO not actually implemented, rotates the player to face the destination

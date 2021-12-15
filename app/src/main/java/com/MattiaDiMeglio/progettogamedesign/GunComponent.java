@@ -5,7 +5,7 @@ public class GunComponent extends WeaponComponent{
     public GunComponent(){
         mag = 10;
         bullets = mag;
-        range = 3;
+        range = 5.0f;
     }
 
     @Override

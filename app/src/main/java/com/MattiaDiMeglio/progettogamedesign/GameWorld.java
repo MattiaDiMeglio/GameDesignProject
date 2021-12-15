@@ -87,7 +87,7 @@ public class GameWorld {
     }
 
     //Game World update, calls the world step, then responds to touch events
-    public synchronized void update(int x, int y, float elapsedTime){
+    public synchronized void update(int x, int y, float elapsedTime, int rightAngle, int rightStrength, boolean isShooting){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         for(GameObject gameObject : gameObjects){//for each GO
             gameObject.update();//update TODO probabilmente inutile
@@ -108,18 +108,44 @@ public class GameWorld {
                 }
             }
         }
+
         gameScreen.setWorldDestination(x, y, elapsedTime);
+
+        if(rightStrength > 0){
+            float normalX = 0f;
+            float normalY = 0f;
+
+            float convAngle = (float) Math.toRadians(rightAngle);
+
+            float a = (float) Math.cos(convAngle);
+            float b = (float) Math.sin(convAngle);
+            float length = (float) Math.sqrt( (a*a) + (b*b) );
+            a /= length;
+            b /= length;
+
+            normalX = a;
+            normalY = -b;
+
+            float range = player.getPlayerWeapon().getRange();
+
+            float aimLineX = toPixelsXLength(range) * normalX;
+            float aimLineY = toPixelsXLength(range) * normalY;
+
+            PixMapComponent pixmapComp = (PixMapComponent) player.getComponent(ComponentType.Drawable);
+            int playerX = pixmapComp.getPositionX();
+            int playerY = pixmapComp.getPositionY();
+
+            gameScreen.setLineCoordinates(playerX, playerY, (int) aimLineX, (int) aimLineY);
+
+            if(isShooting){
+                player.getPlayerWeapon().shoot();
+                checkRaycast(aimLineX, aimLineY);
+            }
+
+        }
     }
 
-    //methods to add and remove GO
-    public synchronized GameObject addGameObject(GameObject gameObject){
-        gameObjects.add(gameObject);
-        return gameObject;
-    }
-
-    public synchronized void removeGameObject(GameObject gameObject){gameObjects.remove(gameObject);}
-
-    private void checkRaycast(Body touchedBody){//does the raycast callback
+    private void checkRaycast(float aimX, float aimY){//does the raycast callback
         CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback(){
@@ -137,8 +163,12 @@ public class GameWorld {
               //  }
             }
         };
+
+        float targetX = playerBody.getPositionX() + toMetersXLength(aimX);
+        float targetY = playerBody.getPositionY() + toMetersYLength(aimY);
+
         world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
-                touchedBody.getPositionX(), touchedBody.getPositionY());//calls the raycast
+                targetX, targetY);//calls the raycast
         if(rayCastFixture != null){//if the ray met a fixture
             Body castedBody = rayCastFixture.getBody();//we get the body
             PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
@@ -157,8 +187,8 @@ public class GameWorld {
                         //open door
                         break;
                     case "HalfWall":
-                        Object userData = touchedBody.getUserData();
-                        PhysicsComponent touchedGO = (PhysicsComponent) userData;
+                        //Object userData = touchedBody.getUserData();
+                        PhysicsComponent touchedGO = (PhysicsComponent) casteduserData;
                         if (touchedGO.name.equals("Enemy")){
                             enemyGameObject = (EnemyGameObject) touchedGO.getOwner();
                             enemyGameObject.killed();
@@ -168,9 +198,18 @@ public class GameWorld {
                         Log.d("RaycastEvent", "raycast object with no name");
                         break;
                 }
+                rayCastFixture = null;
             }
         }
     }
+
+    //methods to add and remove GO
+    public synchronized GameObject addGameObject(GameObject gameObject){
+        gameObjects.add(gameObject);
+        return gameObject;
+    }
+
+    public synchronized void removeGameObject(GameObject gameObject){gameObjects.remove(gameObject);}
 
     //to check if a GO is in view, based on it's world coordinates
     private boolean isInView(GameObject gameObject){

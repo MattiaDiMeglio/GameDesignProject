@@ -12,7 +12,6 @@ import com.badlogic.androidgames.framework.Pixmap;
 public class ControllableComponent extends Component {
     int destX, destY;//destination
     int currX, currY;
-    float percentage = 1;//percentage of the lerp
     int movementDistance = 5;//pixels
     GameWorld gameWorld;
 
