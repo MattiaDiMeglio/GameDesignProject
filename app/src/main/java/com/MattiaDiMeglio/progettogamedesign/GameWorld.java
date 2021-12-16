@@ -73,7 +73,7 @@ public class GameWorld {
         //JUST FOR TESTING, creates a player and some GO
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
 
-        GunComponent playerGun = new GunComponent();
+        ShotgunComponent playerGun = new ShotgunComponent();
         player.setPlayerWeapon(playerGun);
 
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
@@ -108,40 +108,24 @@ public class GameWorld {
         gameScreen.setWorldDestination(x, y, elapsedTime);
 
         if(rightStrength > 0){
-            float normalX = 0f;
-            float normalY = 0f;
 
-            float convAngle = (float) Math.toRadians(rightAngle);
-
-            float a = (float) Math.cos(convAngle);
-            float b = (float) Math.sin(convAngle);
-            float length = (float) Math.sqrt( (a*a) + (b*b) );
-            a /= length;
-            b /= length;
-
-            normalX = a;
-            normalY = -b;
-
-            float range = player.getPlayerWeapon().getRange();
-
-            float aimLineX = toPixelsXLength(range) * normalX;
-            float aimLineY = toPixelsXLength(range) * normalY;
+            WeaponComponent playerWeapon = player.getPlayerWeapon();
+            int lineAmt = playerWeapon.getLineAmt();
+            playerWeapon.aim(rightAngle,this);
 
             PixMapComponent pixmapComp = (PixMapComponent) player.getComponent(ComponentType.Drawable);
             int playerX = pixmapComp.getPositionX();
             int playerY = pixmapComp.getPositionY();
 
-            gameScreen.setLineCoordinates(playerX, playerY, (int) aimLineX, (int) aimLineY);
+            gameScreen.setLineCoordinates(lineAmt, playerX, playerY, playerWeapon.getAimLineX(), playerWeapon.getAimLineY());
 
-            if(isShooting){
-                player.getPlayerWeapon().shoot();
-                checkRaycast(aimLineX, aimLineY);
-            }
+            if(isShooting)
+                playerWeapon.shoot(this);
 
         }
     }
 
-    private void checkRaycast(float aimX, float aimY){//does the raycast callback
+    protected void checkRaycast(float aimX, float aimY){//does the raycast callback
         CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback(){
@@ -195,6 +179,7 @@ public class GameWorld {
                         break;
                 }
                 rayCastFixture = null;
+                Log.d("Raycast","Raycast terminato");
             }
         }
     }

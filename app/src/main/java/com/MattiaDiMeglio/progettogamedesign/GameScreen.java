@@ -45,12 +45,15 @@ public class GameScreen extends Screen {
     boolean onBorderX = false, onBorderY = false;
     float scale;
     Context context;//android context
-    int playerx = 0, playery = 0, targetx = 0, targety = 0;
+    int playerx = 0, playery = 0;
+    int[] targetx, targety;
+    int lineAmount = 0;
+
     int leftX = 50, leftY = 50, leftAngle = 0, leftStrength = 0;
-    int rightX = 50, rightY = 50, rightAngle = 0, rightStrength = 0;
+    int rightX = 50, rightY = 50, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
+
     boolean isShooting = false;
-    int oldAngle = 0;
-    int oldStrength = 0;
+
     int movementDistance = 5;
 
     public GameScreen(Game game, int width, int height, Context context) {
@@ -94,13 +97,16 @@ public class GameScreen extends Screen {
                 rightStrength = strength;
 
                 if(!(rightX == 50 && rightY == 50)){
-                    oldAngle = angle;
-                    oldStrength = strength;
+                    oldRightAngle = angle;
+                    oldRightStrength = strength;
                 }
                 else isShooting = true;
 
             }
         });
+
+        targetx = new int[10];
+        targety = new int[10];
 
         }
 
@@ -116,7 +122,7 @@ public class GameScreen extends Screen {
             case Running: //if the game is running update the gameworld
                 gameWorld.movePlayer(leftX, leftY, leftStrength, leftAngle, deltaTime);
                 if(isShooting){
-                    gameWorld.update(leftX, leftY, deltaTime, oldAngle, oldStrength, isShooting);
+                    gameWorld.update(leftX, leftY, deltaTime, oldRightAngle, oldRightStrength, isShooting);
                     isShooting = false;
                 }
 
@@ -184,9 +190,27 @@ public class GameScreen extends Screen {
        //                 (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
        //         gameWorld.player.draw(graphics, gameWorld);
             //}
-            if(rightStrength > 0)
-           graphics.drawLine(playerx, playery, targetx , targety, Color.RED);
+            if(rightStrength > 0){
+                drawAimLines();
+            }
+        }
+    }
 
+    public void setLineCoordinates(int lineAmt, int px, int py, float[] targX, float[] targY){
+
+        lineAmount = lineAmt;
+        playerx = px;
+        playery = py;
+
+        for(int i = 0; i < lineAmt; i++){
+            targetx[i] = (int)(targX[i] + px);
+            targety[i] = (int)(targY[i] + py);
+        }
+    }
+
+    public void drawAimLines(){
+        for(int i = 0; i < lineAmount ; i++){
+            graphics.drawLine(playerx, playery, targetx[i], targety[i], Color.RED);
         }
     }
 
@@ -269,13 +293,6 @@ public class GameScreen extends Screen {
     }
     public int movementY(float startingY, float normalizedY, float deltaTime){
         return (int) (startingY + ((int)((movementDistance * normalizedY)  * deltaTime)));
-    }
-
-    public void setLineCoordinates(int px, int py, int aimLineX, int aimLineY){
-        playerx = px;
-        playery = py;
-        targetx = px + aimLineX;
-        targety = py + aimLineY;
     }
 
     //TODO not actually implemented, rotates the player to face the destination
