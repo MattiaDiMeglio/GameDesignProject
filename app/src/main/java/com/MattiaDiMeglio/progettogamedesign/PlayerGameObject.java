@@ -77,7 +77,7 @@ public class PlayerGameObject extends GameObject {
 
     public boolean canMove(){return canMove;}
 
-    public void setWeapon(WeaponComponent weapon){
+    public void setPlayerWeapon(WeaponComponent weapon){
         playerWeapon = weapon;
     }
 

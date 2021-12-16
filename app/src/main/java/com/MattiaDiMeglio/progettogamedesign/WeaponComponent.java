@@ -8,21 +8,9 @@ abstract class WeaponComponent extends Component{
     int bullets; //attuale numero di proiettili
     float range; //portata dell'arma
 
-    public void shoot(){
-        Log.d("WeaponComponent","bullets =" +bullets);
-        Log.d("WeaponComponent","shooting");
-        bullets--;
-
-        if(bullets == 0)
-            reload();
-    }
-
-    public void reload(){
-        Log.d("WeaponComponent","reloading");
-        bullets = mag;
-    }
-
-    public float getRange() {return range;}
+    public abstract void shoot();
+    public abstract void reload();
+    public abstract float getRange();
 
     @Override
     public ComponentType getType() {

@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 public class GunComponent extends WeaponComponent{
 
     public GunComponent(){
@@ -9,8 +11,23 @@ public class GunComponent extends WeaponComponent{
     }
 
     @Override
-    public void reload() {
-        super.reload();
+    public void shoot() {
+        Log.d("GunComponent","bullets = " +bullets);
+        Log.d("GunComponent","shooting");
+        bullets--;
 
+        if(bullets == 0)
+            reload();
+    }
+
+    @Override
+    public void reload() {
+        Log.d("GunComponent","reloading");
+        bullets = mag;
+    }
+
+    @Override
+    public float getRange() {
+        return range;
     }
 }

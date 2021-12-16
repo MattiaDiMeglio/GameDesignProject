@@ -1,13 +1,9 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
-import com.badlogic.androidgames.framework.Graphics;
-import com.badlogic.androidgames.framework.Input;
-import com.badlogic.androidgames.framework.impl.TouchHandler;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Draw;
 import com.google.fpl.liquidfun.Fixture;
@@ -78,7 +74,7 @@ public class GameWorld {
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
 
         GunComponent playerGun = new GunComponent();
-        player.setWeapon(playerGun);
+        player.setPlayerWeapon(playerGun);
 
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
