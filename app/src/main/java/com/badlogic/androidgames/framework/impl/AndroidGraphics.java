@@ -127,6 +127,16 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
+    public void drawPixmap(Pixmap pixmap, int x, int y, float angle){
+        canvas.save();
+        int halfHeight = ((AndroidPixmap)pixmap).bitmap.getHeight()/2;
+        int halfWidth = ((AndroidPixmap)pixmap).bitmap.getWidth()/2;
+        canvas.rotate(-angle, x + halfWidth, y + halfHeight);
+        canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
+        canvas.restore();
+    }
+
+    @Override
     public int getWidth() {
         return frameBuffer.getWidth();
     }

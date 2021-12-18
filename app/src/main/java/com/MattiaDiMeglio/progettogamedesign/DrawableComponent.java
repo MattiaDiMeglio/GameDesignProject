@@ -14,6 +14,8 @@ abstract class DrawableComponent extends Component{
     public abstract void Draw(Graphics graphics);//draw the element
 
     public abstract void setPosition(int x, int y);//set pos
+
+    public abstract void setPosition(int x, int y, float angle);
     //getters
     public abstract int getPositionX();
 

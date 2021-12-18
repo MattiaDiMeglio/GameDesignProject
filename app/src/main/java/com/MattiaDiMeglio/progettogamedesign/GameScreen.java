@@ -120,7 +120,7 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running: //if the game is running update the gameworld
-                gameWorld.movePlayer(leftX, leftY, leftStrength, leftAngle, deltaTime);
+                gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
                 if(isShooting){
                     gameWorld.update(leftX, leftY, deltaTime, oldRightAngle, oldRightStrength, isShooting);
                     isShooting = false;
@@ -165,7 +165,7 @@ public class GameScreen extends Screen {
                 drawable.Draw(graphics);
             }
             //for testing, draws the player body
-            gameWorld.player.draw(graphics, gameWorld);
+            //gameWorld.player.draw(graphics, gameWorld);
            // gameWorld.door.draw(graphics, gameWorld);
            // for(GameObject gameObject : gameWorld.gameObjects){
              //   PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);

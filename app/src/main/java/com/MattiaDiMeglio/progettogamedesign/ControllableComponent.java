@@ -14,6 +14,7 @@ public class ControllableComponent extends Component {
     int currX, currY;
     int movementDistance = 5;//pixels
     GameWorld gameWorld;
+    float rightStickangle;
 
     public ControllableComponent(GameWorld gameWorld) {
         this.gameWorld = gameWorld;
@@ -42,9 +43,13 @@ public class ControllableComponent extends Component {
         currentGX +=(int)((movementDistance * normalizedX)  * deltaTime);
         currentGY +=(int)((movementDistance * normalizedY) * deltaTime);
         //Log.d("Controller", "x " + currentGX + " y: " + currentGY);
-        pixmapComp.setPosition(currentGX, currentGY);
+        pixmapComp.setPosition(currentGX, currentGY, angle);
         float currentPX = gameWorld.toMetersX(gameWorld.toPixelsTouchX(currentGX));
         float currentPY = gameWorld.toMetersY(gameWorld.toPixelsTouchY(currentGY));
-        characterBodyComponent.setTransform(currentPX, currentPY, angle);
+        characterBodyComponent.setTransform(currentPX, currentPY, (int)angle);
+    }
+
+    public void setAngle(float angle){
+        this.rightStickangle = angle;
     }
 }

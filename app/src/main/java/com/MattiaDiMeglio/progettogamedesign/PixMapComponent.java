@@ -7,6 +7,7 @@ import com.badlogic.androidgames.framework.Pixmap;
 //the component with the pixmap
 public class PixMapComponent extends DrawableComponent {
     Pixmap pixmap;
+    float angle = 0f;
     @Override
     public void setOwner(GameObject owner) {
         this.owner = owner;
@@ -23,9 +24,10 @@ public class PixMapComponent extends DrawableComponent {
 
     //centers the position to the pixmap cent
     @Override
-    public void setPosition(int x, int y){
+    public void setPosition(int x, int y, float angle){
         this.x = x - (pixmap.getWidth()/2);
         this.y = y - (pixmap.getHeight()/2);
+        this.angle = angle;
     }
 
     @Override
@@ -39,7 +41,13 @@ public class PixMapComponent extends DrawableComponent {
 
     @Override
     public void Draw(Graphics g) {
-        g.drawPixmap(pixmap, x, y);
+        g.drawPixmap(pixmap, x, y, angle);
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x - (pixmap.getWidth()/2);
+        this.y = y - (pixmap.getHeight()/2);
     }
 
 }
