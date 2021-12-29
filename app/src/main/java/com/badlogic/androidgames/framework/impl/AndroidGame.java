@@ -73,7 +73,7 @@ public abstract class AndroidGame extends Activity implements Game {
         //joystickView.setButtonSizeRatio(0.1f);
 
         int left = 50;
-        int top = 100;
+        int top = 400;
         int right = 0;
         int bottom = 0;
 
@@ -90,10 +90,10 @@ public abstract class AndroidGame extends Activity implements Game {
         //joystickView.setButtonSizeRatio(0.1f);
 
         //int left = 50;
-        int rTop = 1800;
+        int rleft = 1100;
 
         RelativeLayout.LayoutParams rightjParams=new RelativeLayout.LayoutParams(300,300);
-        rightjParams.setMargins(left,rTop,right,bottom);
+        rightjParams.setMargins(rleft,top,right,bottom);
         rightJ.setLayoutParams(rightjParams);
 
         relativeLayout.addView(rightJ);

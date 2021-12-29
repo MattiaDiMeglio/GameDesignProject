@@ -1,6 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.badlogic.androidgames.framework.Graphics;
 import com.google.fpl.liquidfun.Body;
@@ -8,6 +9,7 @@ import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
+import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
 //extends the physics component so that it can be used as one
 //the character body is a kinematic body
@@ -50,8 +52,11 @@ public class CharacterBodyComponent extends PhysicsComponent{
         fixtureDef.delete();
     }
 
-    @Override
-    public void update() {}
+    public void update(float normalizedX, float normalizedY, int angle) {
+        Vec2 velocity = new Vec2();
+        velocity.set(normalizedX * 2, normalizedY * 2);
+        body.setLinearVelocity(velocity);
+    }
 
     //position update
     public void setTransform(float x, float y, int angle){
@@ -79,4 +84,8 @@ public class CharacterBodyComponent extends PhysicsComponent{
         body.delete();
     }
 
+    @Override
+    public void update() {
+
+    }
 }

@@ -167,29 +167,29 @@ public class GameScreen extends Screen {
             //for testing, draws the player body
             //gameWorld.player.draw(graphics, gameWorld);
            // gameWorld.door.draw(graphics, gameWorld);
-           // for(GameObject gameObject : gameWorld.gameObjects){
-             //   PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
-            //    int color = Color.WHITE;
-           //     switch (comp.name) {
-          //         case "Enemy":
-          //              color = Color.RED;
-          //              break;
-         //           case "Wall":
-         //               color = Color.GREEN;
-        //                break;
-       //             case "HalfWall":
-        //                color = Color.CYAN;
-         //               break;
-       //             case "Player":
-        //                color = Color.BLUE;
-        //                break;
-       //         }
-         //       graphics.drawRect((int)(gameWorld.toPixelsX(comp.getPositionX()) - gameWorld.toPixelsXLength(comp.getWidth())),
-       //                (int) (gameWorld.toPixelsY(comp.getPositionY()) - gameWorld.toPixelsYLength(comp.getHeight()/2)),
-     //                   (int) gameWorld.toPixelsXLength(comp.getWidth()),
-       //                 (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
-       //         gameWorld.player.draw(graphics, gameWorld);
-            //}
+            for(GameObject gameObject : gameWorld.gameObjects){
+                PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
+                int color = Color.WHITE;
+                switch (comp.name) {
+                   case "Enemy":
+                        color = Color.RED;
+                        break;
+                    case "Wall":
+                        color = Color.GREEN;
+                       break;
+                    case "HalfWall":
+                        color = Color.CYAN;
+                        break;
+                    case "Player":
+                        color = Color.BLUE;
+                        break;
+                }
+                graphics.drawRect((int)(gameWorld.toPixelsX(comp.getPositionX()) - gameWorld.toPixelsXLength(comp.getWidth())),
+                     (int) (gameWorld.toPixelsY(comp.getPositionY()) - gameWorld.toPixelsYLength(comp.getHeight()/2)),
+                     (int) gameWorld.toPixelsXLength(comp.getWidth()),
+                        (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
+               gameWorld.player.draw(graphics, gameWorld);
+            }
             if(rightStrength > 0){
                 drawAimLines();
             }

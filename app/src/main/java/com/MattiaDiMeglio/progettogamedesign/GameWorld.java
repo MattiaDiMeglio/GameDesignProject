@@ -62,6 +62,7 @@ public class GameWorld {
         this.gameScreen = gameScreen;//the main game screen
         this.world = new World(0, 0);//new phyisics world
         this.context = context;
+        world.setContactListener(new PhysicsContactListener());
 
         gameObjects = new ArrayList<GameObject>();//list of active game objects
         gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO

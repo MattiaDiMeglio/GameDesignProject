@@ -37,8 +37,8 @@ public class ControllableComponent extends Component {
         CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) owner.getComponent(ComponentType.Physics);
 
 
-        float normalizedX = (float) x-50;
-        float normalizedY = (float) y-50;
+        float normalizedX = (float) (x-50) / 50;
+        float normalizedY = (float) (y-50) / 50;
 
         currentGX +=(int)((movementDistance * normalizedX)  * deltaTime);
         currentGY +=(int)((movementDistance * normalizedY) * deltaTime);
@@ -46,7 +46,8 @@ public class ControllableComponent extends Component {
         pixmapComp.setPosition(currentGX, currentGY, angle);
         float currentPX = gameWorld.toMetersX(gameWorld.toPixelsTouchX(currentGX));
         float currentPY = gameWorld.toMetersY(gameWorld.toPixelsTouchY(currentGY));
-        characterBodyComponent.setTransform(currentPX, currentPY, (int)angle);
+        //characterBodyComponent.setTransform(currentPX, currentPY, (int)angle);
+        characterBodyComponent.update(normalizedX, normalizedY, angle);
     }
 
     public void setAngle(float angle){
