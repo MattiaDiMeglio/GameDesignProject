@@ -1,5 +1,9 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.graphics.Color;
+
+import com.badlogic.androidgames.framework.Graphics;
+
 //general component class for every physics component
 abstract class PhysicsComponent extends Component{
     public String name;
@@ -11,6 +15,8 @@ abstract class PhysicsComponent extends Component{
     }
 
     public abstract void update();
+
+    public abstract void Draw(Graphics graphics, GameWorld gameWorld, int color);
 
     public float getPositionX(){return x;}
     public float getPositionY(){return y;}

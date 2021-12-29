@@ -184,11 +184,8 @@ public class GameScreen extends Screen {
                         color = Color.BLUE;
                         break;
                 }
-                graphics.drawRect((int)(gameWorld.toPixelsX(comp.getPositionX()) - gameWorld.toPixelsXLength(comp.getWidth())),
-                     (int) (gameWorld.toPixelsY(comp.getPositionY()) - gameWorld.toPixelsYLength(comp.getHeight()/2)),
-                     (int) gameWorld.toPixelsXLength(comp.getWidth()),
-                        (int) gameWorld.toPixelsYLength(comp.getHeight()), color);
-               gameWorld.player.draw(graphics, gameWorld);
+                comp.Draw(graphics, gameWorld, color);
+              // gameWorld.player.draw(graphics, gameWorld);
             }
             if(rightStrength > 0){
                 drawAimLines();

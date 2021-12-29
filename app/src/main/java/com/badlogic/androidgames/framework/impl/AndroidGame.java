@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.os.Build;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.RelativeLayout;
 
 import com.badlogic.androidgames.framework.Audio;
@@ -48,11 +51,23 @@ public abstract class AndroidGame extends Activity implements Game {
         int frameBufferHeight = isLandscape ? 320 : 480;
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
+        int height;
+        int width;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
+            height = windowMetrics.getBounds().height();
+            width = windowMetrics.getBounds().width();
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            height = getWindowManager().getDefaultDisplay().getHeight();
+            width = getWindowManager().getDefaultDisplay().getWidth();
+        }
         float scaleX = (float) frameBufferWidth
-                / getWindowManager().getDefaultDisplay().getWidth();
+                / width;
         float scaleY = (float) frameBufferHeight
-                / getWindowManager().getDefaultDisplay().getHeight();
+                / height;
 
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
@@ -73,7 +88,7 @@ public abstract class AndroidGame extends Activity implements Game {
         //joystickView.setButtonSizeRatio(0.1f);
 
         int left = 50;
-        int top = 400;
+        int top =  height - 300;
         int right = 0;
         int bottom = 0;
 
@@ -90,7 +105,7 @@ public abstract class AndroidGame extends Activity implements Game {
         //joystickView.setButtonSizeRatio(0.1f);
 
         //int left = 50;
-        int rleft = 1100;
+        int rleft = width - 500;
 
         RelativeLayout.LayoutParams rightjParams=new RelativeLayout.LayoutParams(300,300);
         rightjParams.setMargins(rleft,top,right,bottom);

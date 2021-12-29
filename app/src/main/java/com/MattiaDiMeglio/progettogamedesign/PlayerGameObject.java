@@ -72,7 +72,7 @@ public class PlayerGameObject extends GameObject {
 
     public void draw(Graphics graphics, GameWorld gameWorld){
         characterBodyComponent = (CharacterBodyComponent) getComponent(ComponentType.Physics);
-        characterBodyComponent.draw(graphics, gameWorld);
+        //characterBodyComponent.draw(graphics, gameWorld);
     }
 
     public boolean canMove(){return canMove;}

@@ -56,6 +56,8 @@ public class CharacterBodyComponent extends PhysicsComponent{
         Vec2 velocity = new Vec2();
         velocity.set(normalizedX * 2, normalizedY * 2);
         body.setLinearVelocity(velocity);
+        x = body.getPositionX();
+        y = body.getPositionY();
     }
 
     //position update
@@ -72,12 +74,7 @@ public class CharacterBodyComponent extends PhysicsComponent{
     };
 
 
-    //just for testing, draws the body
-    public void draw(Graphics graphics, GameWorld gameWorld){
-        int sx = (int) (gameWorld.toPixelsX(x) - (gameWorld.toPixelsXLength(width)/2));
-        int sy = (int) (gameWorld.toPixelsY(y) - (gameWorld.toPixelsYLength(height)/2));
-        graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height) , Color.WHITE);
-    }
+
 
     public void destroy(){
         body.destroyFixture(body.getFixtureList());
@@ -87,5 +84,12 @@ public class CharacterBodyComponent extends PhysicsComponent{
     @Override
     public void update() {
 
+    }
+
+    @Override
+    public void Draw(Graphics graphics, GameWorld gameWorld, int color) {
+        int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));
+        int sy = (int) (gameWorld.toPixelsY(body.getPositionY()) - (gameWorld.toPixelsYLength(height)/2));
+        graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height), color);
     }
 }

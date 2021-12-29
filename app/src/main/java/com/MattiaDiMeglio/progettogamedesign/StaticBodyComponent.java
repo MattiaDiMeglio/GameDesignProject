@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.badlogic.androidgames.framework.Graphics;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
@@ -51,6 +52,13 @@ public class StaticBodyComponent extends PhysicsComponent{
     @Override
     public void update() {
 
+    }
+
+    @Override
+    public void Draw(Graphics graphics, GameWorld gameWorld, int color) {
+        int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));
+        int sy = (int) (gameWorld.toPixelsY(body.getPositionY()) - (gameWorld.toPixelsYLength(height)/2));
+        graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height), color);
     }
 
 }
