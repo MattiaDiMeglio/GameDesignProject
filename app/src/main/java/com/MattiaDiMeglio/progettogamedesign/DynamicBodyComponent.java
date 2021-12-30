@@ -61,9 +61,6 @@ public class DynamicBodyComponent extends PhysicsComponent{
     }
 
     @Override
-    public void update() { }
-
-    @Override
     public void Draw(Graphics graphics, GameWorld gameWorld, int color) {
         int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));
         int sy = (int) (gameWorld.toPixelsY(body.getPositionY()) - (gameWorld.toPixelsYLength(height)/2));

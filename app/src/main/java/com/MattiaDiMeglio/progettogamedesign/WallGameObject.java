@@ -29,14 +29,7 @@ public class WallGameObject extends GameObject {
                 gameWorld.toMetersY(physY));
     }
 
-    @Override
-    public void update() {
-      /*  drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
-        staticBodyComponent = (StaticBodyComponent) this.getComponent(ComponentType.Physics);
 
-        drawableComponent.setPosition((int) gameWorld.toPixelsX(staticBodyComponent.getPositionX()),
-                (int)gameWorld.toPixelsY(staticBodyComponent.getPositionY()));*/
-    }
 
     @Override
     public void outOfView() {

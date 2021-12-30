@@ -9,6 +9,7 @@ import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
+import com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
 //extends the physics component so that it can be used as one
@@ -60,11 +61,14 @@ public class CharacterBodyComponent extends PhysicsComponent{
         y = body.getPositionY();
     }
 
+
+    //TODO Si possono anche levare, se vogliamo
     //position update
     public void setTransform(float x, float y, int angle){
         this.x = x;
         this.y = y;
         body.setTransform(x, y, angle);
+
     }
 
     public void setTransform(float x, float y){
@@ -81,10 +85,6 @@ public class CharacterBodyComponent extends PhysicsComponent{
         body.delete();
     }
 
-    @Override
-    public void update() {
-
-    }
 
     @Override
     public void Draw(Graphics graphics, GameWorld gameWorld, int color) {

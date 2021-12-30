@@ -14,11 +14,9 @@ public class EnemyGameObject extends GameObject {
     public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){//constructor
         this.gameWorld = gameWorld;//gw
         this.name = "Enemy";//name
-        Random random = new Random();//?TODO probabilmente rimasuglio, vedere se si puó levare
         //gives the enemy a random position on the background
         this.worldX = worldX;//worldPos are the GO position on the map
         this.worldY = worldY;
-        Log.d("Enemy", "worldx: " + this.worldX + " WorldY: " + this.worldY);
     }
 
     //updates the graphical and physical positions

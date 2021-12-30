@@ -31,7 +31,7 @@ public class GameScreen extends Screen {
     Box physicalSize, screenSize;
     AndroidFastRenderView renderView;
     JoystickView leftJoystick, rightJoystick;
-//
+
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
     //background coordinates to move the world
@@ -125,7 +125,6 @@ public class GameScreen extends Screen {
                     gameWorld.update(leftX, leftY, deltaTime, oldRightAngle, oldRightStrength, isShooting);
                     isShooting = false;
                 }
-
                 else gameWorld.update(leftX, leftY, deltaTime, rightAngle, rightStrength, isShooting);
                 break;
             case Paused:
@@ -140,56 +139,46 @@ public class GameScreen extends Screen {
     @Override
     public void present(float deltaTime) {
         graphics.clear(Color.WHITE);
-        //Background and other objects movements
-        //if(!onBorders)
-           // worldMovement();//we move the world
+
         //draw the background
         graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX, (int)currentBackgroundY);
         //draw the grid
         graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
                 (int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(15), Color.WHITE);
-       /* float i = XMIN;
-        while(i < XMAX){
-            graphics.drawRect((int)gameWorld.toPixelsX(i), 0, 2, gameWorld.bufferHeight, Color.BLACK);
-            i += orizontalFactor;
-        }
-        i = YMIN;
-        while(i < YMAX) {
-            graphics.drawRect(0, (int) gameWorld.toPixelsY(i), gameWorld.bufferWidth, 2, Color.BLACK);
-            i += verticalFactor;
-        }*/
-        //graphics.drawRect(resultx, resulty,(int) gameWorld.toPixelsXLength(0.5f),(int)gameWorld.toPixelsYLength(0.5f), Color.BLACK );
         //draw the drawables
         if(!drawables.isEmpty()) {
             for (DrawableComponent drawable : drawables) {
                 drawable.Draw(graphics);
             }
-            //for testing, draws the player body
-            //gameWorld.player.draw(graphics, gameWorld);
-           // gameWorld.door.draw(graphics, gameWorld);
-            for(GameObject gameObject : gameWorld.gameObjects){
-                PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
-                int color = Color.WHITE;
-                switch (comp.name) {
-                   case "Enemy":
-                        color = Color.RED;
-                        break;
-                    case "Wall":
-                        color = Color.GREEN;
-                       break;
-                    case "HalfWall":
-                        color = Color.CYAN;
-                        break;
-                    case "Player":
-                        color = Color.BLUE;
-                        break;
-                }
-                comp.Draw(graphics, gameWorld, color);
-              // gameWorld.player.draw(graphics, gameWorld);
-            }
+
             if(rightStrength > 0){
                 drawAimLines();
             }
+        }
+        //To test the body positions
+        //drawBodies();
+    }
+
+    private void drawBodies(){
+        //for testing, draws the player body
+        for(GameObject gameObject : gameWorld.gameObjects){
+            PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
+            int color = Color.WHITE;
+            switch (comp.name) {
+                case "Enemy":
+                    color = Color.RED;
+                    break;
+                case "Wall":
+                    color = Color.GREEN;
+                    break;
+                case "HalfWall":
+                    color = Color.CYAN;
+                    break;
+                case "Player":
+                    color = Color.BLUE;
+                    break;
+            }
+            comp.Draw(graphics, gameWorld, color);
         }
     }
 
@@ -245,8 +234,6 @@ public class GameScreen extends Screen {
         destinationX = currentBackgroundX + (int)((gameWorld.toPixelsTouchX(movementDistance) * normalizedX)  * deltaTime);
         destinationY = currentBackgroundY + (int)((gameWorld.toPixelsTouchY(movementDistance) * normalizedY) * deltaTime);
 
-        //Log.d("setWorldDestination","curr x"+currentBackgroundX+"y"+currentBackgroundY);
-        //Log.d("setWorldDestination","dest x"+destinationX+"y"+destinationY);
 
         onBorderX = false;
         onBorderY = false;
@@ -292,14 +279,6 @@ public class GameScreen extends Screen {
         return (int) (startingY + ((int)((movementDistance * normalizedY)  * deltaTime)));
     }
 
-    //TODO not actually implemented, rotates the player to face the destination
-    public void rotatePlayer(){
-        //unico modo veloce è usare una spritesheet
-        float x = destinationX - initialPlayerLookX;
-        float y = destinationY - initialPlayerLookY;
-        double angle = Math.toDegrees(Math.atan2(x, y));
-        drawables.get(0);
-    }
 
     //background x and y
     public float getBackgroundX(){return currentBackgroundX;}

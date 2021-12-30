@@ -17,7 +17,13 @@ public class GameObject {
         }
         component.setOwner(this);
         components.put(component.getType(), component);
-        Log.d("Debug", "lunghezza " + components.size());
+    }
+
+    public void removeComponent(ComponentType componentType){
+        if(components == null || componentType == null){
+            return;
+        }
+        components.remove(componentType);
     }
 
     public void updatePosition(int x, int y){};

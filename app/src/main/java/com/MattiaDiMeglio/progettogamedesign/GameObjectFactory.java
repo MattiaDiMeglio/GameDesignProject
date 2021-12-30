@@ -28,16 +28,14 @@ public class GameObjectFactory {
 
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
-        Log.d("Player creation", "GivenPos: " + x + ", " + y +
-                "  body position: " + gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)) +
-                ", " + gameWorld.toMetersY(gameWorld.toPixelsTouchY(y)) +
-                " body size: " + gameWorld.toMetersXLength(AssetManager.player.getWidth()) + ", " +
-                gameWorld.toMetersYLength(AssetManager.player.getHeight()) +
-                "  pixmapSize: " + AssetManager.player.getWidth() + ", " + AssetManager.player.getHeight());
+
+        ShotgunComponent shotgunComponent = new ShotgunComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
         player.addComponent(controllableComponent);
+        player.addComponent(shotgunComponent);
+
         return player;
     }
 

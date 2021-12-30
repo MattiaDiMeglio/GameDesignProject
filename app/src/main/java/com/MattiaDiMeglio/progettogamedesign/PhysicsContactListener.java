@@ -9,10 +9,11 @@ import com.google.fpl.liquidfun.Fixture;
 
 public class PhysicsContactListener extends ContactListener {
 
+
     @Override
     public void beginContact(Contact contact) {
-        super.beginContact(contact);
-
+        //super.beginContact(contact);
+        Log.d("collision", "Begin collision");
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
         Body bodyA = fixtureA.getBody();

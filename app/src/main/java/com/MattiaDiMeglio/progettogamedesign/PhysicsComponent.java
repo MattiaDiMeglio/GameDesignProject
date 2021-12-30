@@ -14,8 +14,6 @@ abstract class PhysicsComponent extends Component{
         return ComponentType.Physics;
     }
 
-    public abstract void update();
-
     public abstract void Draw(Graphics graphics, GameWorld gameWorld, int color);
 
     public float getPositionX(){return x;}

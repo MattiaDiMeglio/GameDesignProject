@@ -7,6 +7,8 @@ import com.badlogic.androidgames.framework.Game;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Draw;
 import com.google.fpl.liquidfun.Fixture;
+import com.google.fpl.liquidfun.ParticleSystem;
+import com.google.fpl.liquidfun.ParticleSystemDef;
 import com.google.fpl.liquidfun.QueryCallback;
 import com.google.fpl.liquidfun.RayCastCallback;
 import com.google.fpl.liquidfun.Vec2;
@@ -22,6 +24,7 @@ public class GameWorld {
     protected List<GameObject> gameObjects;
     private final GameObjectFactory gameObjectFactory;
     private final GameScreen gameScreen;
+    private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
     protected DoorGameObject door;
     Draw draw;
@@ -38,6 +41,10 @@ public class GameWorld {
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATION = 3;
     private static final int PARTICLE_ITERATION = 3;
+    ParticleSystem particleSystem;
+    private static final int MAXPARTICLECOUNT = 1000;
+    private static final float PARTICLE_RADIUS = 0.3f;
+
 
     //for the touch and the raycast
     private Fixture touchedFixture;
@@ -62,7 +69,13 @@ public class GameWorld {
         this.gameScreen = gameScreen;//the main game screen
         this.world = new World(0, 0);//new phyisics world
         this.context = context;
-        world.setContactListener(new PhysicsContactListener());
+        contactListener = new PhysicsContactListener();
+        world.setContactListener(contactListener);
+        ParticleSystemDef ps = new ParticleSystemDef();
+        particleSystem = world.createParticleSystem(ps);
+        particleSystem.setRadius(PARTICLE_RADIUS);
+        particleSystem.setMaxParticleCount(MAXPARTICLECOUNT);
+        ps.delete();
 
         gameObjects = new ArrayList<GameObject>();//list of active game objects
         gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
@@ -74,8 +87,6 @@ public class GameWorld {
         //JUST FOR TESTING, creates a player and some GO
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
 
-        ShotgunComponent playerGun = new ShotgunComponent();
-        player.setPlayerWeapon(playerGun);
 
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
@@ -86,25 +97,8 @@ public class GameWorld {
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(int x, int y, float elapsedTime, int rightAngle, int rightStrength, boolean isShooting){
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        for(GameObject gameObject : gameObjects){//for each GO
-            gameObject.update();//update TODO probabilmente inutile
-            if(!gameObject.name.equals("Player")){//if it's not a player
-                if(isInView(gameObject)){//we check is it's in view
-                    DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
-                    if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
-                        //inits the position of the GO in view
-                        gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
-                                (int) (inViewPositionY(gameObject.worldY)));
-                        gameScreen.addDrawable(component);
-                    }
-                } else { //if they're not in view we remove the drawable
-                    if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
-                        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
-                        gameObject.outOfView();
-                    }
-                }
-            }
-        }
+
+        checkOutOfBound();
 
         gameScreen.setWorldDestination(x, y, elapsedTime);
 
@@ -126,8 +120,31 @@ public class GameWorld {
         }
     }
 
+    private void checkOutOfBound(){
+        for(GameObject gameObject : gameObjects){//for each GO
+            //gameObject.update();//update TODO probabilmente inutile
+            if(!gameObject.name.equals("Player")){//if it's not a player
+                if(isInView(gameObject)){//we check is it's in view
+                    DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
+                    if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
+                        //inits the position of the GO in view
+                        gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
+                                (int) (inViewPositionY(gameObject.worldY)));
+                        gameScreen.addDrawable(component);
+                    }
+                } else { //if they're not in view we remove the drawable
+                    if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
+                        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
+                        gameObject.outOfView();
+                    }
+                }
+            }
+        }
+    }
+
     protected void checkRaycast(float aimX, float aimY){//does the raycast callback
         CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
+
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback(){
             @Override
@@ -135,13 +152,7 @@ public class GameWorld {
                 rayCastFixture = fixture;//raycast callback
                 Body castedBody = fixture.getBody();
                 PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-
-
-       //         if(casteduserData.name.equals("HalfWall")){
-         //           return -1;
-            //    } else {
-                    return fraction;//stops at the first hit/
-              //  }
+                return fraction;//stops at the first hit/
             }
         };
 

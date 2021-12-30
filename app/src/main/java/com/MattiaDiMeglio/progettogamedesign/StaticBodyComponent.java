@@ -48,12 +48,6 @@ public class StaticBodyComponent extends PhysicsComponent{
 
     public Body getBody(){return body;}
 
-
-    @Override
-    public void update() {
-
-    }
-
     @Override
     public void Draw(Graphics graphics, GameWorld gameWorld, int color) {
         int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));
