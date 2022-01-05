@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.fpl.liquidfun.World;
 
+import java.nio.file.Path;
 import java.util.Random;
 //the factory class to create the GO
 public class GameObjectFactory {
@@ -47,9 +48,11 @@ public class GameObjectFactory {
                 gameWorld.toMetersYLength(AssetManager.enemy.getHeight()),
                 world, enemy.name);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
+        PathfindingComponent pathfindingComponent = new PathfindingComponent();
 
         enemy.addComponent(bodyComponent);
         enemy.addComponent(pixMapComponent);
+        enemy.addComponent(pathfindingComponent);
         return enemy;
     }
 

@@ -44,9 +44,9 @@ public class ShotgunComponent extends WeaponComponent{
             float convAngle = (float) Math.toRadians(minAngle + i * angleOffset);
             float cosAngle = (float) Math.cos(convAngle);
             float sinAngle = (float) Math.sin(convAngle);
-            float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
+            /*float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
             cosAngle /= length;
-            sinAngle /= length;
+            sinAngle /= length;*/
 
             normalX = cosAngle;
             normalY = -sinAngle;

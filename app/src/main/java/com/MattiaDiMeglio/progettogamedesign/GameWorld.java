@@ -52,6 +52,11 @@ public class GameWorld {
     private Body castedBody;
     private final QueryCallback touchQueryCallback = new TouchQueryCallback();
 
+    //grid variables and parameters
+    GridManager levelGrid;
+    int gridSize = 4;
+    EnemyGameObject testEnemy; // pathfinding test
+
     //to get the touched fixture
     private class TouchQueryCallback extends QueryCallback
     {
@@ -92,6 +97,17 @@ public class GameWorld {
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
         mapManager.makeWalls();
         mapManager.makeEnemies();
+
+        gridSize = 4;
+        int levelWidth = (int) screenSize.width;
+        int levelHeight = (int) screenSize.height;
+
+        levelGrid = new GridManager(levelWidth, levelHeight, gridSize);
+        levelGrid.addObstacles(gameObjects, this);
+
+        int testEnemyX = 100, testEnemyY = 100;
+        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
+        addGameObject(testEnemy);
     }
 
     //Game World update, calls the world step, then responds to touch events
@@ -114,9 +130,10 @@ public class GameWorld {
 
             gameScreen.setLineCoordinates(lineAmt, playerX, playerY, playerWeapon.getAimLineX(), playerWeapon.getAimLineY());
 
-            if(isShooting)
+            if(isShooting){
                 playerWeapon.shoot(this);
-
+                moveTestEnemy(); // al momento dello sparo, il nemico si muove (test)
+            }
         }
     }
 
@@ -219,6 +236,14 @@ public class GameWorld {
     //called by gamescreen, calls movement in playergo
     public void movePlayer(int normalizedX, int normalizedY, int angle, int strength, float deltaTime){
         player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
+    }
+
+    public void moveTestEnemy(){
+        int targetX = 150, targetY = 100;
+        int alternativeX = 500, alternativeY = 100;
+        List<Node> path = testEnemy.pathfind(targetX, targetY, gridSize, levelGrid.getCells());
+        if(path != null)
+        testEnemy.moveEnemy(path);
     }
 
     //conversion methods

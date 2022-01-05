@@ -1,6 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-enum ComponentType {Physics, Joint, AI, Drawable, Controllable, Weapon}
+enum ComponentType {Physics, Joint, AI, Drawable, Controllable, Weapon, Pathfinder}
 //the component class for the entity component methods
 abstract class Component {
     protected GameObject owner;

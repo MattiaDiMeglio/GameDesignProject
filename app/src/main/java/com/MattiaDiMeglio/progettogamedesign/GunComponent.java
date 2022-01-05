@@ -40,17 +40,15 @@ public class GunComponent extends WeaponComponent{
         float convAngle = (float) Math.toRadians(angle);
         float cosAngle = (float) Math.cos(convAngle);
         float sinAngle = (float) Math.sin(convAngle);
-        float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
+        /*float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
         cosAngle /= length;
-        sinAngle /= length;
+        sinAngle /= length;*/
 
         normalX = cosAngle;
         normalY = -sinAngle;
 
         aimLineX[0] = gameWorld.toPixelsXLength(range) * normalX;
         aimLineY[0] = gameWorld.toPixelsYLength(range) * normalY;
-
-        Log.d("GunComponent","aimLineX[0] = "+aimLineX[0]+", aimLineY[0] = "+aimLineY[0]);
     }
 
     @Override
