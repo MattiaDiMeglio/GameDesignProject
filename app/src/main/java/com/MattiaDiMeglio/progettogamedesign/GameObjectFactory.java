@@ -20,7 +20,7 @@ public class GameObjectFactory {
     public GameObject makePlayer(float x, float y){
         PlayerGameObject player = new PlayerGameObject(gameWorld);//new player GO
         //new physics component for playerGO
-        CharacterBodyComponent body = new CharacterBodyComponent(gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)),
+        DynamicBodyComponent body = new DynamicBodyComponent(gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)),
                 gameWorld.toMetersY(gameWorld.toPixelsTouchY(y)),
                 gameWorld.toMetersXLength(AssetManager.player.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.player.getHeight()),
@@ -30,7 +30,7 @@ public class GameObjectFactory {
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
 
-        ShotgunComponent shotgunComponent = new ShotgunComponent();
+        GunComponent shotgunComponent = new GunComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);

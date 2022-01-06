@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 abstract class WeaponComponent extends Component{
 
     protected int mag; //max amount of bullets
@@ -13,7 +11,7 @@ abstract class WeaponComponent extends Component{
 
     public abstract void shoot(GameWorld gameWorld);
     public abstract void reload();
-    public abstract void aim(int angle, GameWorld gameWorld); //draw aim lines
+    public abstract void aim(int rightX, int rightY, GameWorld gameWorld); //draw aim lines
     public abstract float getRange();
     public abstract int getLineAmt();
     public abstract float[] getAimLineX();

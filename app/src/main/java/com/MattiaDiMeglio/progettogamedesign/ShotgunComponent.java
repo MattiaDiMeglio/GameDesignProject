@@ -27,14 +27,14 @@ public class ShotgunComponent extends WeaponComponent{
     }
 
     @Override
-    public void aim(int angle, GameWorld gameWorld) {
+    public void aim(int rightX, int rightY, GameWorld gameWorld) {
 
         //con 5 pallini sparati a volta e un offset di 15°,
         //il cono dello shotgun sarà di 60°
 
         int angleOffset = 15;
         int half = lineAmt/2;
-        int minAngle = angle - (half * angleOffset);
+        int minAngle = rightY - (half * angleOffset);
 
         for(int i = 0; i < lineAmt; i++){
 

@@ -74,13 +74,14 @@ public class GameWorld {
         this.gameScreen = gameScreen;//the main game screen
         this.world = new World(0, 0);//new phyisics world
         this.context = context;
-        contactListener = new PhysicsContactListener();
-        world.setContactListener(contactListener);
         ParticleSystemDef ps = new ParticleSystemDef();
         particleSystem = world.createParticleSystem(ps);
         particleSystem.setRadius(PARTICLE_RADIUS);
         particleSystem.setMaxParticleCount(MAXPARTICLECOUNT);
         ps.delete();
+
+        contactListener = new PhysicsContactListener();
+        world.setContactListener(contactListener);
 
         gameObjects = new ArrayList<GameObject>();//list of active game objects
         gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
@@ -108,12 +109,14 @@ public class GameWorld {
         int testEnemyX = 100, testEnemyY = 100;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
         addGameObject(testEnemy);
+
     }
 
-    //Game World update, calls the world step, then responds to touch events
-    public synchronized void update(int x, int y, float elapsedTime, int rightAngle, int rightStrength, boolean isShooting){
-        world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
+
+    //Game World update, calls the world step, then responds to touch events
+    public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightStrength, boolean isShooting){
+        world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         checkOutOfBound();
 
         gameScreen.setWorldDestination(x, y, elapsedTime);
@@ -122,11 +125,11 @@ public class GameWorld {
 
             WeaponComponent playerWeapon = player.getPlayerWeapon();
             int lineAmt = playerWeapon.getLineAmt();
-            playerWeapon.aim(rightAngle,this);
+            playerWeapon.aim(rightX, rightY,this);
 
-            PixMapComponent pixmapComp = (PixMapComponent) player.getComponent(ComponentType.Drawable);
-            int playerX = pixmapComp.getPositionX();
-            int playerY = pixmapComp.getPositionY();
+            PhysicsComponent physicsComponent = (PhysicsComponent) player.getComponent(ComponentType.Physics);
+            float playerX = physicsComponent.getPositionX();
+            float playerY = physicsComponent.getPositionY();
 
             gameScreen.setLineCoordinates(lineAmt, playerX, playerY, playerWeapon.getAimLineX(), playerWeapon.getAimLineY());
 
@@ -160,7 +163,7 @@ public class GameWorld {
     }
 
     protected void checkRaycast(float aimX, float aimY){//does the raycast callback
-        CharacterBodyComponent playerBody =(CharacterBodyComponent) player.getComponent(ComponentType.Physics);
+        DynamicBodyComponent playerBody =(DynamicBodyComponent) player.getComponent(ComponentType.Physics);
 
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback(){
@@ -173,9 +176,12 @@ public class GameWorld {
             }
         };
 
-        float targetX = playerBody.getPositionX() + toMetersXLength(aimX);
-        float targetY = playerBody.getPositionY() + toMetersYLength(aimY);
+        float targetX = playerBody.getPositionX() + (aimX);
+        float targetY = playerBody.getPositionY() + (aimY);
 
+
+        Log.d("raycast", "body: " + playerBody.getPositionX() + ", " + playerBody.getPositionY() +
+                " and target: " + targetX + ", " + targetY);
         world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
                 targetX, targetY);//calls the raycast
         if(rayCastFixture != null){//if the ray met a fixture

@@ -28,10 +28,13 @@ public class StaticBodyComponent extends PhysicsComponent{
         body.setUserData(this);
 
         PolygonShape box = new PolygonShape();
-        box.setAsBox(width, height);
+        box.setAsBox(width/2, height/2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(box);
+        fixtureDef.setFriction(0.1f);
+        fixtureDef.setRestitution(0.4f);
+        fixtureDef.setDensity(0.5f);
         body.createFixture(fixtureDef);
 
         bodyDef.delete();

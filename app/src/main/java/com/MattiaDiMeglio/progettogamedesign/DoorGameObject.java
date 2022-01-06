@@ -58,7 +58,7 @@ public class DoorGameObject extends GameObject {
     public void draw(Graphics graphics, GameWorld gameWorld){
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
         if(dynamicBodyComponent != null) {
-            dynamicBodyComponent.draw(graphics, gameWorld);
+            //dynamicBodyComponent.draw(graphics, gameWorld);
         }
     }
 

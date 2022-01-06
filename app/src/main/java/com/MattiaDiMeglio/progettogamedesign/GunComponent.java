@@ -7,7 +7,7 @@ public class GunComponent extends WeaponComponent{
     public GunComponent(){
         mag = 10;
         bullets = mag;
-        range = 10.0f;
+        range = 3.6f;
         lineAmt = 1;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
@@ -32,23 +32,25 @@ public class GunComponent extends WeaponComponent{
     }
 
     @Override
-    public void aim(int angle, GameWorld gameWorld) {
+    public void aim(int rightX, int rightY, GameWorld gameWorld) {
 
-        float normalX = 0f;
-        float normalY = 0f;
+        //normalizzazione
+        float normalizedX = (float) (rightX-50) / 50;
+        float normalizedY = (float) (rightY-50) / 50;
 
-        float convAngle = (float) Math.toRadians(angle);
+        /*
+        float convAngle = (float) Math.toRadians(rightY);
         float cosAngle = (float) Math.cos(convAngle);
         float sinAngle = (float) Math.sin(convAngle);
         /*float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
         cosAngle /= length;
-        sinAngle /= length;*/
+        sinAngle /= length;
 
         normalX = cosAngle;
-        normalY = -sinAngle;
+        normalY = -sinAngle;*/
 
-        aimLineX[0] = gameWorld.toPixelsXLength(range) * normalX;
-        aimLineY[0] = gameWorld.toPixelsYLength(range) * normalY;
+        aimLineX[0] = range * normalizedX;
+        aimLineY[0] = range * normalizedY;
     }
 
     @Override

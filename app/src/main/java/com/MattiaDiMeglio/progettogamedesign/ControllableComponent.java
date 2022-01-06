@@ -26,7 +26,7 @@ public class ControllableComponent extends Component {
     //New movement system
     public void moveCharacter(int x, int y, int angle, int strength, float deltaTime){
         PixMapComponent pixmapComp = (PixMapComponent) owner.getComponent(ComponentType.Drawable);//gets the drawable component as ref for the movement
-        CharacterBodyComponent characterBodyComponent = (CharacterBodyComponent) owner.getComponent(ComponentType.Physics);
+        DynamicBodyComponent characterBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
 
         //normalizzazione
         float normalizedX = (float) (x-50) / 50;
@@ -34,8 +34,8 @@ public class ControllableComponent extends Component {
 
         characterBodyComponent.update(normalizedX, normalizedY, angle);
 
-        int currentGX =(int)gameWorld.toPixelsX(characterBodyComponent.getPositionX());
-        int currentGY =(int)gameWorld.toPixelsY(characterBodyComponent.getPositionY());
+        int currentGX = (int)gameWorld.toPixelsX(characterBodyComponent.getPositionX());
+        int currentGY = (int)gameWorld.toPixelsY(characterBodyComponent.getPositionY());
         //Log.d("Controller", "x " + currentGX + " y: " + currentGY);
         pixmapComp.setPosition(currentGX, currentGY, angle);
     }

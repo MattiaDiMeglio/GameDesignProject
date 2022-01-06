@@ -50,7 +50,7 @@ public class GameScreen extends Screen {
     int lineAmount = 0;
 
     int leftX = 50, leftY = 50, leftAngle = 0, leftStrength = 0;
-    int rightX = 50, rightY = 50, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
+    int rightX = 50, rightY = 50, oldRightX = 50, oldRightY = 50, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
 
     boolean isShooting = false;
 
@@ -91,6 +91,8 @@ public class GameScreen extends Screen {
         rightJoystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
+                oldRightX = rightX;
+                oldRightY = rightY;
                 rightX = rightJoystick.getNormalizedX();
                 rightY = rightJoystick.getNormalizedY();
                 rightAngle = angle;
@@ -122,10 +124,10 @@ public class GameScreen extends Screen {
             case Running: //if the game is running update the gameworld
                 gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
                 if(isShooting){
-                    gameWorld.update(leftX, leftY, deltaTime, oldRightAngle, oldRightStrength, isShooting);
+                    gameWorld.update(leftX, leftY, deltaTime, oldRightX, oldRightY, oldRightStrength, isShooting);
                     isShooting = false;
                 }
-                else gameWorld.update(leftX, leftY, deltaTime, rightAngle, rightStrength, isShooting);
+                else gameWorld.update(leftX, leftY, deltaTime, rightX, rightY, rightStrength, isShooting);
                 break;
             case Paused:
                 break;
@@ -156,7 +158,7 @@ public class GameScreen extends Screen {
             }
         }
         //To test the body positions
-        //drawBodies();
+        drawBodies();
     }
 
     private void drawBodies(){
@@ -182,15 +184,19 @@ public class GameScreen extends Screen {
         }
     }
 
-    public void setLineCoordinates(int lineAmt, int px, int py, float[] targX, float[] targY){
+    public void setLineCoordinates(int lineAmt, float px, float py, float[] targX, float[] targY){
+        //ricalcolare completamente il cristo
+        //bisogna passare solo il range e la direzione
+        //e rifare il calcolo da 0, per evitare che non disegni un cerchio cristiano.
+        //le coordinate fisiche son corrette
 
         lineAmount = lineAmt;
-        playerx = px;
-        playery = py;
+        playerx = (int)gameWorld.toPixelsX(px);
+        playery = (int)gameWorld.toPixelsY(py);
 
         for(int i = 0; i < lineAmt; i++){
-            targetx[i] = (int)(targX[i] + px);
-            targety[i] = (int)(targY[i] + py);
+            targetx[i] = (int)(gameWorld.toPixelsX(targX[i] + px));
+            targety[i] = (int)(gameWorld.toPixelsY(targY[i] + py));
         }
     }
 

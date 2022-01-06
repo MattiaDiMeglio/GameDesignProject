@@ -45,6 +45,9 @@ public class CharacterBodyComponent extends PhysicsComponent{
         //fixturedef
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(box);
+        fixtureDef.setFriction(0.1f);
+        fixtureDef.setRestitution(0.4f);
+        fixtureDef.setDensity(0.5f);
         body.createFixture(fixtureDef);
 
         //cleanup

@@ -37,7 +37,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
 
         //fixture
         PolygonShape box = new PolygonShape();
-        box.setAsBox(width, height);
+        box.setAsBox(width/2, height/2);
 
         //fixturedef
         FixtureDef fixtureDef = new FixtureDef();
@@ -46,7 +46,6 @@ public class DynamicBodyComponent extends PhysicsComponent{
         fixtureDef.setRestitution(0);
         fixtureDef.setDensity(2);
         body.createFixture(fixtureDef);
-
         //cleanup
         bodyDef.delete();
         box.delete();
@@ -58,6 +57,14 @@ public class DynamicBodyComponent extends PhysicsComponent{
         this.x = x;
         this.y = y;
         body.setTransform(x, y, body.getAngle());
+    }
+
+    public void update(float normalizedX, float normalizedY, int angle) {
+        Vec2 velocity = new Vec2();
+        velocity.set(normalizedX * 2, normalizedY * 2);
+        body.setLinearVelocity(velocity);
+        x = body.getPositionX();
+        y = body.getPositionY();
     }
 
     @Override
@@ -73,11 +80,5 @@ public class DynamicBodyComponent extends PhysicsComponent{
         body.applyForce(force, point, true);
     }
 
-    //testing only
-    public void draw(Graphics graphics, GameWorld gameWorld){
-        int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));
-        int sy = (int) (gameWorld.toPixelsY(body.getPositionY()) - (gameWorld.toPixelsYLength(height)/2));
-        graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height) , Color.WHITE);
-    }
 
 }
