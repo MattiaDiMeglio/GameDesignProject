@@ -7,7 +7,7 @@ public class ShotgunComponent extends WeaponComponent{
     public ShotgunComponent(){
         mag = 3;
         bullets = mag;
-        range = 5.0f;
+        range = 80.0f;
         lineAmt = 5;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
@@ -38,21 +38,21 @@ public class ShotgunComponent extends WeaponComponent{
 
         for(int i = 0; i < lineAmt; i++){
 
-            float normalX = 0f;
-            float normalY = 0f;
+            float normalX = (float) (rightX-50)/50;
+            float normalY = (float) (rightY-50)/50;;
 
-            float convAngle = (float) Math.toRadians(minAngle + i * angleOffset);
+            /*float convAngle = (float) Math.toRadians(minAngle + i * angleOffset);
             float cosAngle = (float) Math.cos(convAngle);
-            float sinAngle = (float) Math.sin(convAngle);
+            float sinAngle = (float) Math.sin(convAngle);*/
             /*float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
             cosAngle /= length;
             sinAngle /= length;*/
-
+/*
             normalX = cosAngle;
-            normalY = -sinAngle;
+            normalY = -sinAngle;*/
 
-            aimLineX[i] = gameWorld.toPixelsXLength(range) * normalX;
-            aimLineY[i] = gameWorld.toPixelsYLength(range) * normalY;
+            aimLineX[i] = range * normalX;
+            aimLineY[i] = range * normalY;
         }
     }
 

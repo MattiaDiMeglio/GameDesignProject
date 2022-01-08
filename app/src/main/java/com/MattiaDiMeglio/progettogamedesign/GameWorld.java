@@ -107,17 +107,24 @@ public class GameWorld {
         levelGrid.addObstacles(gameObjects, this);
 
         int testEnemyX = 100, testEnemyY = 100;
-        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
+        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY);
         addGameObject(testEnemy);
 
     }
 
 
-
     //Game World update, calls the world step, then responds to touch events
+
+
     public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightStrength, boolean isShooting){
-        world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        checkOutOfBound();
+            world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
+
+            for(GameObject go: gameObjects){
+                if(go.name.equals("Enemy"))
+                    go.update();
+            }
+
+            checkOutOfBound();
 
         gameScreen.setWorldDestination(x, y, elapsedTime);
 
@@ -162,115 +169,154 @@ public class GameWorld {
         }
     }
 
-    protected void checkRaycast(float aimX, float aimY){//does the raycast callback
-        DynamicBodyComponent playerBody =(DynamicBodyComponent) player.getComponent(ComponentType.Physics);
+        protected void checkRaycast ( float aimX, float aimY){//does the raycast callback
+            DynamicBodyComponent playerBody = (DynamicBodyComponent) player.getComponent(ComponentType.Physics);
 
-        //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
-        RayCastCallback rayCastCallback = new RayCastCallback(){
-            @Override
-            public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-                rayCastFixture = fixture;//raycast callback
-                Body castedBody = fixture.getBody();
-                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-                return fraction;//stops at the first hit/
-            }
-        };
-
-        float targetX = playerBody.getPositionX() + (aimX);
-        float targetY = playerBody.getPositionY() + (aimY);
-
-
-        Log.d("raycast", "body: " + playerBody.getPositionX() + ", " + playerBody.getPositionY() +
-                " and target: " + targetX + ", " + targetY);
-        world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
-                targetX, targetY);//calls the raycast
-        if(rayCastFixture != null){//if the ray met a fixture
-            Body castedBody = rayCastFixture.getBody();//we get the body
-            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
-            if(casteduserData != null){//if there's user data
-                Log.d("Raycast", "hit : " + casteduserData.name);
-                switch(casteduserData.name){
-                    case "Enemy"://raycast met an enemy first
-                        EnemyGameObject enemyGameObject = (EnemyGameObject) casteduserData.getOwner();
-                        enemyGameObject.killed();
-                        //destroy enemy
-                        break;
-                    case "Wall"://met a wall
-                        //hit wall
-                        break;
-                    case "Door"://met a door
-                        //open door
-                        break;
-                    case "HalfWall":
-                        //Object userData = touchedBody.getUserData();
-                        PhysicsComponent touchedGO = (PhysicsComponent) casteduserData;
-                        if (touchedGO.name.equals("Enemy")){
-                            enemyGameObject = (EnemyGameObject) touchedGO.getOwner();
-                            enemyGameObject.killed();
-                        }
-                        break;
-                    default:
-                        Log.d("RaycastEvent", "raycast object with no name");
-                        break;
+            //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
+            RayCastCallback rayCastCallback = new RayCastCallback() {
+                @Override
+                public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
+                    rayCastFixture = fixture;//raycast callback
+                    Body castedBody = fixture.getBody();
+                    PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+                    return fraction;//stops at the first hit/
                 }
-                rayCastFixture = null;
-                Log.d("Raycast","Raycast terminato");
+            };
+
+            float targetX = playerBody.getPositionX() + (aimX);
+            float targetY = playerBody.getPositionY() + (aimY);
+
+            Log.d("raycast", "body: " + playerBody.getPositionX() + ", " + playerBody.getPositionY() +
+                    " and target: " + targetX + ", " + targetY);
+            world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
+                    targetX, targetY);//calls the raycast
+            if (rayCastFixture != null) {//if the ray met a fixture
+                Body castedBody = rayCastFixture.getBody();//we get the body
+                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
+                if (casteduserData != null) {//if there's user data
+                    Log.d("Raycast", "hit : " + casteduserData.name);
+                    switch (casteduserData.name) {
+                        case "Enemy"://raycast met an enemy first
+                            EnemyGameObject enemyGameObject = (EnemyGameObject) casteduserData.getOwner();
+                            enemyGameObject.killed();
+                            //destroy enemy
+                            break;
+                        case "Wall"://met a wall
+                            //hit wall
+                            break;
+                        case "Door"://met a door
+                            //open door
+                            break;
+                        case "HalfWall":
+                            //Object userData = touchedBody.getUserData();
+                            PhysicsComponent touchedGO = (PhysicsComponent) casteduserData;
+                            if (touchedGO.name.equals("Enemy")) {
+                                enemyGameObject = (EnemyGameObject) touchedGO.getOwner();
+                                enemyGameObject.killed();
+                            }
+                            break;
+                        default:
+                            Log.d("RaycastEvent", "raycast object with no name");
+                            break;
+                    }
+                    rayCastFixture = null;
+                    Log.d("Raycast", "Raycast terminato");
+                }
             }
         }
-    }
 
-    //methods to add and remove GO
-    public synchronized GameObject addGameObject(GameObject gameObject){
-        gameObjects.add(gameObject);
-        return gameObject;
-    }
-
-    public synchronized void removeGameObject(GameObject gameObject){gameObjects.remove(gameObject);}
-
-    //to check if a GO is in view, based on it's world coordinates
-    private boolean isInView(GameObject gameObject){
-        PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
-        if(gameObject.worldX + (drawableComponent.pixmap.getWidth()/2) > -gameScreen.getBackgroundX()
-                && gameObject.worldX - (drawableComponent.pixmap.getWidth()/2) < -(gameScreen.currentBackgroundX - bufferWidth)
-                && gameObject.worldY + (drawableComponent.pixmap.getHeight()/2) > - gameScreen.getBackgroundY()
-                && gameObject.worldY - (drawableComponent.pixmap.getHeight()/2) < -((gameScreen.currentBackgroundY) - bufferHeight)){
-            return true;
+        //methods to add and remove GO
+        public synchronized GameObject addGameObject (GameObject gameObject){
+            gameObjects.add(gameObject);
+            return gameObject;
         }
-        return false;
+
+        public synchronized void removeGameObject (GameObject gameObject){
+            gameObjects.remove(gameObject);
+        }
+
+        //to check if a GO is in view, based on it's world coordinates
+        private boolean isInView (GameObject gameObject){
+            PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
+            if (gameObject.worldX + (drawableComponent.pixmap.getWidth() / 2) > -gameScreen.getBackgroundX()
+                    && gameObject.worldX - (drawableComponent.pixmap.getWidth() / 2) < -(gameScreen.currentBackgroundX - bufferWidth)
+                    && gameObject.worldY + (drawableComponent.pixmap.getHeight() / 2) > -gameScreen.getBackgroundY()
+                    && gameObject.worldY - (drawableComponent.pixmap.getHeight() / 2) < -((gameScreen.currentBackgroundY) - bufferHeight)) {
+                return true;
+            }
+            return false;
+        }
+
+        //called by gamescreen, calls movement in playergo
+        public void movePlayer ( int normalizedX, int normalizedY, int angle, int strength,
+        float deltaTime){
+            player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
+        }
+
+        public void moveTestEnemy () {
+            int targetX = 150, targetY = 100; //cosi il nemico va semplicemente un po' più a destra
+            //rispetto a dove si trova, prova anche 100,400
+            AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
+            aiComponent.pathfind(targetX, targetY, gridSize, levelGrid.getCells());
+            if (aiComponent.path != null)
+                aiComponent.initializeStack();
+        }
+
+        //conversion methods
+        public int inViewPositionX ( float worldX){
+            return (int) worldX + (gameScreen.currentBackgroundX);
+        }
+        public int inViewPositionY ( float worldY){
+            return (int) worldY + (gameScreen.currentBackgroundY);
+        }
+
+        public float toMetersX ( float x){
+            return currentView.xmin + x * (currentView.width / screenSize.width);
+        }
+        public float toMetersY ( float y){
+            return currentView.ymin + y * (currentView.height / screenSize.height);
+        }
+
+        public float toPixelsX ( float x){
+            return (x - currentView.xmin) / currentView.width * bufferWidth;
+        }
+        public float toPixelsY ( float y){
+            return (y - currentView.ymin) / currentView.height * bufferHeight;
+        }
+
+        public float toPixelsXLength ( float x){
+            return x / currentView.width * bufferWidth;
+        }
+        public float toPixelsYLength ( float y){
+            return y / currentView.height * bufferHeight;
+        }
+
+        public float toMetersXLength ( float x){
+            return x * currentView.width / bufferWidth;
+        }
+        public float toMetersYLength ( float y){
+            return y * currentView.height / bufferHeight;
+        }
+
+        public float pixelsToMetersLengthX ( float x){
+            return x * currentView.width / screenSize.width;
+        }
+        public float pixelsToMetersLengthY ( float y){
+            return y * currentView.height / screenSize.height;
+        }
+
+        public float toPixelsTouchX ( float x){
+            return x / (gameScreen.graphics.getWidth() / screenSize.width);
+        }
+        public float toPixelsTouchY ( float y){
+            return y / (gameScreen.graphics.getHeight() / screenSize.height);
+        }
+
+        public float toPixelScaleX ( float x){
+            return x * (gameScreen.graphics.getWidth() / screenSize.width);
+        }
+        public float toPixelScaleY ( float y){
+            return y * (gameScreen.graphics.getHeight() / screenSize.height);
+        }
     }
 
-    //called by gamescreen, calls movement in playergo
-    public void movePlayer(int normalizedX, int normalizedY, int angle, int strength, float deltaTime){
-        player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
-    }
-
-    public void moveTestEnemy(){
-        int targetX = 150, targetY = 100;
-        int alternativeX = 500, alternativeY = 100;
-        List<Node> path = testEnemy.pathfind(targetX, targetY, gridSize, levelGrid.getCells());
-        if(path != null)
-        testEnemy.moveEnemy(path);
-    }
-
-    //conversion methods
-    public int inViewPositionX(float worldX){return(int) worldX + (gameScreen.currentBackgroundX);}
-    public int inViewPositionY(float worldY){return(int) worldY + (gameScreen.currentBackgroundY);}
-
-    public float toMetersX(float x){return currentView.xmin + x * (currentView.width/screenSize.width);}
-    public float toMetersY(float y){return currentView.ymin + y * (currentView.height/screenSize.height);}
-
-    public float toPixelsX(float x){return (x-currentView.xmin)/currentView.width*bufferWidth;}
-    public float toPixelsY(float y){return (y-currentView.ymin)/currentView.height*bufferHeight;}
-
-    public float toPixelsXLength(float x){return x/currentView.width*bufferWidth;}
-    public float toPixelsYLength(float y){return y/currentView.height*bufferHeight;}
-
-    public float toMetersXLength(float x){return x * currentView.width/bufferWidth;}
-    public float toMetersYLength(float y){return y * currentView.height/bufferHeight;}
-
-    public float toPixelsTouchX(float x){return x / (gameScreen.graphics.getWidth()/screenSize.width);}
-    public float toPixelsTouchY(float y){return y / (gameScreen.graphics.getHeight()/screenSize.height);}
-
-    public float toPixelScaleX(float x){return x * (gameScreen.graphics.getWidth()/screenSize.width);}
-    public float toPixelScaleY(float y){return y * (gameScreen.graphics.getHeight()/screenSize.height);}
-}

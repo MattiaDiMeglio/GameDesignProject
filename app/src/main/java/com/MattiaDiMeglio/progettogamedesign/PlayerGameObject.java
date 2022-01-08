@@ -25,7 +25,7 @@ public class PlayerGameObject extends GameObject {
 
     public void updatePosition(int x, int y, int angle, int strength, float deltaTime){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
-        controllableComponent.moveCharacter(x, y, angle, strength, deltaTime);
+        controllableComponent.moveCharacter(x, y, angle);
     }
 
 

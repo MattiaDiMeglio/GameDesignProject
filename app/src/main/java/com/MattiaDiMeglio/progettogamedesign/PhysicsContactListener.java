@@ -13,7 +13,7 @@ public class PhysicsContactListener extends ContactListener {
     @Override
     public void beginContact(Contact contact) {
         //super.beginContact(contact);
-        Log.d("collision", "Begin collision");
+        //Log.d("collision", "Begin collision");
         if(contact.getFixtureA() != null && contact.getFixtureB()!=null){
             Fixture fixtureA = contact.getFixtureA();
             Fixture fixtureB = contact.getFixtureB();
@@ -24,7 +24,7 @@ public class PhysicsContactListener extends ContactListener {
             if(userDataA != null && userDataB!=null){
                 PhysicsComponent gameObjectA = (PhysicsComponent) userDataA;
                 PhysicsComponent gameObjectB = (PhysicsComponent) userDataB;
-                Log.d("Collision", "GameObject: " + gameObjectA.name + " and GameObject: " + gameObjectB.name + " collided");
+                //Log.d("Collision", "GameObject: " + gameObjectA.name + " and GameObject: " + gameObjectB.name + " collided");
             } else {
                 Log.d("Collision", "null user data");
             }

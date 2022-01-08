@@ -1,11 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import com.google.fpl.liquidfun.World;
 
-import java.nio.file.Path;
-import java.util.Random;
 //the factory class to create the GO
 public class GameObjectFactory {
     private GameWorld gameWorld;//gameworld
@@ -30,12 +26,12 @@ public class GameObjectFactory {
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
 
-        GunComponent shotgunComponent = new GunComponent();
+        GunComponent gunComponent = new GunComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
         player.addComponent(controllableComponent);
-        player.addComponent(shotgunComponent);
+        player.addComponent(gunComponent);
 
         return player;
     }
@@ -43,16 +39,18 @@ public class GameObjectFactory {
     //enemy factory
     public GameObject makeEnemy(int worldX, int worldY){
         EnemyGameObject enemy = new EnemyGameObject(gameWorld, worldX, worldY);
-        CharacterBodyComponent bodyComponent = new CharacterBodyComponent(40, 40,
+        DynamicBodyComponent bodyComponent = new DynamicBodyComponent(40, 40,
                 gameWorld.toMetersXLength(AssetManager.enemy.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.enemy.getHeight()),
                 world, enemy.name);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
-        PathfindingComponent pathfindingComponent = new PathfindingComponent();
+        AIComponent aiComponent = new AIComponent();
+        ControllableComponent controllableComponent = new ControllableComponent(gameWorld);//new controllable component
 
+        enemy.addComponent(controllableComponent);
         enemy.addComponent(bodyComponent);
         enemy.addComponent(pixMapComponent);
-        enemy.addComponent(pathfindingComponent);
+        enemy.addComponent(aiComponent);
         return enemy;
     }
 
