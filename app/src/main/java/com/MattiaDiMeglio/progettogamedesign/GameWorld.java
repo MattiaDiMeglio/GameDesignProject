@@ -291,20 +291,13 @@ public class GameWorld {
             return y / currentView.height * bufferHeight;
         }
 
-<<<<<<< Updated upstream
-        public float toMetersXLength ( float x){
-            return x * currentView.width / bufferWidth;
-        }
-        public float toMetersYLength ( float y){
-            return y * currentView.height / bufferHeight;
-        }
-=======
+
     public float toPixelsXLengthNonBuffer(float x){return x/currentView.width*screenSize.width;}
     public float toPixelsYLengthNonBuffer(float y){return y/currentView.height*screenSize.height;}
 
     public float toMetersXLength(float x){return x * currentView.width/bufferWidth;}
     public float toMetersYLength(float y){return y * currentView.height/bufferHeight;}
->>>>>>> Stashed changes
+
 
         public float pixelsToMetersLengthX ( float x){
             return x * currentView.width / screenSize.width;
