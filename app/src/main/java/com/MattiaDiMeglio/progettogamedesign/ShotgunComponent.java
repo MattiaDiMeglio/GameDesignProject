@@ -7,7 +7,11 @@ public class ShotgunComponent extends WeaponComponent{
     public ShotgunComponent(){
         mag = 3;
         bullets = mag;
+<<<<<<< Updated upstream
         range = 80.0f;
+=======
+        range = 50.0f;
+>>>>>>> Stashed changes
         lineAmt = 5;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
@@ -51,8 +55,13 @@ public class ShotgunComponent extends WeaponComponent{
             normalX = cosAngle;
             normalY = -sinAngle;*/
 
+<<<<<<< Updated upstream
             aimLineX[i] = range * normalX;
             aimLineY[i] = range * normalY;
+=======
+            aimLineX[i] = gameWorld.toMetersXLength(range) * normalX;
+            aimLineY[i] = gameWorld.toMetersYLength(range) * normalY;
+>>>>>>> Stashed changes
         }
     }
 

@@ -28,6 +28,15 @@ public class PlayerGameObject extends GameObject {
         controllableComponent.moveCharacter(x, y, angle);
     }
 
+    public float getMovedX(){
+        PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
+        return Math.abs(component.getPositionX() - component.getLastPositionX());
+    }
+
+    public float getMovedY(){
+        PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
+        return  Math.abs(component.getPositionY() - component.getLastPositionY());
+    }
 
     public void setPlayerWeapon(WeaponComponent weapon){
         removeComponent(ComponentType.Weapon);

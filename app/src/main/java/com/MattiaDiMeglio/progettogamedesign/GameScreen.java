@@ -237,9 +237,10 @@ public class GameScreen extends Screen {
         float normalizedX = -((float) jx-50);
         float normalizedY = -((float) jy-50);
 
-        destinationX = currentBackgroundX + (int)((gameWorld.toPixelsTouchX(movementDistance) * normalizedX)  * deltaTime);
-        destinationY = currentBackgroundY + (int)((gameWorld.toPixelsTouchY(movementDistance) * normalizedY) * deltaTime);
+        destinationX = currentBackgroundX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX)  * deltaTime);
+        destinationY = currentBackgroundY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY) * deltaTime);
 
+        Log.d("backg", gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) + ", " + gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()));
 
         onBorderX = false;
         onBorderY = false;
@@ -279,10 +280,10 @@ public class GameScreen extends Screen {
     }
 
     public int movementX(float startingX, float normalizedX, float deltaTime){
-        return (int) (startingX + ((int)((movementDistance * normalizedX)  * deltaTime)));
+        return (int) (startingX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX)  * deltaTime));
     }
     public int movementY(float startingY, float normalizedY, float deltaTime){
-        return (int) (startingY + ((int)((movementDistance * normalizedY)  * deltaTime)));
+        return (int) (startingY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY) * deltaTime));
     }
 
 

@@ -40,7 +40,7 @@ public class CharacterBodyComponent extends PhysicsComponent{
 
         //fixture
         PolygonShape box = new PolygonShape();
-        box.setAsBox(width, height);
+        box.setAsBox(width/2, height/2);
 
         //fixturedef
         FixtureDef fixtureDef = new FixtureDef();

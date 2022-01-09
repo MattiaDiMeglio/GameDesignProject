@@ -7,7 +7,7 @@ public class GunComponent extends WeaponComponent{
     public GunComponent(){
         mag = 10;
         bullets = mag;
-        range = 3.6f;
+        range = 100;
         lineAmt = 1;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
@@ -49,8 +49,8 @@ public class GunComponent extends WeaponComponent{
         normalX = cosAngle;
         normalY = -sinAngle;*/
 
-        aimLineX[0] = range * normalizedX;
-        aimLineY[0] = range * normalizedY;
+        aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
+        aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
     }
 
     @Override

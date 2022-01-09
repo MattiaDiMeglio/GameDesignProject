@@ -7,7 +7,7 @@ import com.badlogic.androidgames.framework.Graphics;
 //general component class for every physics component
 abstract class PhysicsComponent extends Component{
     public String name;
-    float x, y;
+    float x, y, lastX, lastY;
     float width, height;
     @Override
     public ComponentType getType() {
@@ -18,6 +18,8 @@ abstract class PhysicsComponent extends Component{
 
     public float getPositionX(){return x;}
     public float getPositionY(){return y;}
+    public float getLastPositionX(){return lastX;}
+    public float getLastPositionY(){return lastY;}
     public float getWidth(){return width;}
     public float getHeight(){return height;}
 }

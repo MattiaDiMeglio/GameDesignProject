@@ -36,7 +36,6 @@ public class ControllableComponent extends Component {
 
         int currentGX = (int)gameWorld.toPixelsX(characterBodyComponent.getPositionX());
         int currentGY = (int)gameWorld.toPixelsY(characterBodyComponent.getPositionY());
-        //Log.d("Controller", "x " + currentGX + " y: " + currentGY);
         pixmapComp.setPosition(currentGX, currentGY, angle);
     }
 

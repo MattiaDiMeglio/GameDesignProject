@@ -63,6 +63,8 @@ public class DynamicBodyComponent extends PhysicsComponent{
         Vec2 velocity = new Vec2();
         velocity.set(normalizedX * 2, normalizedY * 2);
         body.setLinearVelocity(velocity);
+        lastX = x;
+        lastY = y;
         x = body.getPositionX();
         y = body.getPositionY();
     }
