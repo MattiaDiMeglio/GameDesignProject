@@ -16,6 +16,8 @@ abstract class PhysicsComponent extends Component{
 
     public abstract void Draw(Graphics graphics, GameWorld gameWorld, int color);
 
+    public abstract com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge getContactList();
+
     public float getPositionX(){return x;}
     public float getPositionY(){return y;}
     public float getLastPositionX(){return lastX;}

@@ -185,11 +185,6 @@ public class GameScreen extends Screen {
     }
 
     public void setLineCoordinates(int lineAmt, float px, float py, float[] targX, float[] targY){
-        //ricalcolare completamente il cristo
-        //bisogna passare solo il range e la direzione
-        //e rifare il calcolo da 0, per evitare che non disegni un cerchio cristiano.
-        //le coordinate fisiche son corrette
-
         lineAmount = lineAmt;
         playerx = (int)gameWorld.toPixelsX(px);
         playery = (int)gameWorld.toPixelsY(py);

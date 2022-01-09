@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.graphics.Color;
-
 import com.badlogic.androidgames.framework.Graphics;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
@@ -67,6 +65,11 @@ public class DynamicBodyComponent extends PhysicsComponent{
         lastY = y;
         x = body.getPositionX();
         y = body.getPositionY();
+    }
+
+    @Override
+    public com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge getContactList(){
+        return body.getContactList();
     }
 
     @Override

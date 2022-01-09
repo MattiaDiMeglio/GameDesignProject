@@ -30,17 +30,29 @@ public class PlayerGameObject extends GameObject {
 
     public float getMovedX(){
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
-        return Math.abs(component.getPositionX() - component.getLastPositionX());
+        if(!isInContact())
+            return Math.abs(component.getPositionX() - component.getLastPositionX());
+        return 0f;
     }
 
     public float getMovedY(){
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
-        return  Math.abs(component.getPositionY() - component.getLastPositionY());
+        if(!isInContact())
+            return  Math.abs(component.getPositionY() - component.getLastPositionY());
+        return 0f;
     }
 
     public void setPlayerWeapon(WeaponComponent weapon){
         removeComponent(ComponentType.Weapon);
         addComponent(weapon);
+    }
+
+    public boolean isInContact(){
+        PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
+        com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge s = component.getContactList();
+        if(s == null)
+            return false;
+        return true;
     }
 
     public WeaponComponent getPlayerWeapon() {return (WeaponComponent) getComponent(ComponentType.Weapon);}

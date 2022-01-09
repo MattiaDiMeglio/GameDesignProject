@@ -95,4 +95,9 @@ public class CharacterBodyComponent extends PhysicsComponent{
         int sy = (int) (gameWorld.toPixelsY(body.getPositionY()) - (gameWorld.toPixelsYLength(height)/2));
         graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height), color);
     }
+
+    @Override
+    public SWIGTYPE_p_b2ContactEdge getContactList() {
+        return body.getContactList();
+    }
 }

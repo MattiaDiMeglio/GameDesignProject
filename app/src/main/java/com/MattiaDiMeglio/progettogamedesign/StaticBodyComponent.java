@@ -6,6 +6,7 @@ import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
+import com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge;
 import com.google.fpl.liquidfun.World;
 //the physics component for the elements that never move (walls
 public class StaticBodyComponent extends PhysicsComponent{
@@ -56,6 +57,11 @@ public class StaticBodyComponent extends PhysicsComponent{
         int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));
         int sy = (int) (gameWorld.toPixelsY(body.getPositionY()) - (gameWorld.toPixelsYLength(height)/2));
         graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height), color);
+    }
+
+    @Override
+    public SWIGTYPE_p_b2ContactEdge getContactList() {
+        return body.getContactList();
     }
 
 }
