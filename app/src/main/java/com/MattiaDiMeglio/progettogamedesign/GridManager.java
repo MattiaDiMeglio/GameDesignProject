@@ -152,4 +152,7 @@ public class GridManager {
 
     public Node[][] getCells() { return cells; }
 
+    public int getGridWidth() {return gridWidth;}
+    public int getGridHeight() {return gridHeight;}
+
 }

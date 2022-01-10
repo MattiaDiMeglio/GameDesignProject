@@ -17,6 +17,10 @@ public class MapManager {
         jSonParser = new JSonParser(context, this);
     }
 
+    public void generateMap(Node[][] cells, int startingX, int startingY, int endingX, int endingY){
+
+    };
+
     public void makeWalls(){//makes the wall of the maps
         //makes the perimeter walls
         int number = (int) AssetManager.background.getWidth() / AssetManager.horizontalWall.getWidth();

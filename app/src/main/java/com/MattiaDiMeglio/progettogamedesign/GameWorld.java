@@ -92,12 +92,9 @@ public class GameWorld {
 
         //JUST FOR TESTING, creates a player and some GO
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
-
-
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
-        MapManager mapManager = new MapManager(this, gameObjectFactory, context);
-        mapManager.makeWalls();
-        mapManager.makeEnemies();
+
+
 
         gridSize = 4;
         int levelWidth = (int) screenSize.width;
@@ -109,6 +106,10 @@ public class GameWorld {
         int testEnemyX = 100, testEnemyY = 100;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY);
         addGameObject(testEnemy);
+        MapManager mapManager = new MapManager(this, gameObjectFactory, context);
+        mapManager.generateMap(levelGrid.getCells(), 0, 0, levelGrid.getGridWidth(), levelGrid.getGridHeight());
+        mapManager.makeWalls();
+        mapManager.makeEnemies();
 
     }
 
