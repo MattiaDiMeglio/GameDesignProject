@@ -70,7 +70,7 @@ public class Pathfinder {
             n = n.parent;
         }
         path.add(n);
-        Collections.reverse(path);
+        //Collections.reverse(path);
         return path;
     }
 }

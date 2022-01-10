@@ -28,7 +28,7 @@ public class GameObject {
 
     public void updatePosition(int x, int y){};
 
-    public void updatePosition(int x, int y, int angle){};
+    public void updatePosition(float x, float y, int angle){};
 
     //public void updatePosition(int x, int y, int angle, int strength){};
 

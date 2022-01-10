@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 //the enemyGo
 public class EnemyGameObject extends GameObject {
     private GameWorld gameWorld;//the gameWorld,
@@ -30,9 +32,9 @@ public class EnemyGameObject extends GameObject {
                 gameWorld.toMetersY(touchY));
     }
 
-    public void updatePosition(int x, int y, int angle){
+    public void updatePosition(float x, float y, int angle){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
-        controllableComponent.moveEnemyCharacter(x,y,0);
+        controllableComponent.moveCharacter(x,y,0);
     }
 
     @Override

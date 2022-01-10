@@ -2,8 +2,6 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.util.Log;
 
-import com.badlogic.androidgames.framework.Pixmap;
-
 //component that controls a game object movement
 //be it the playerGO or the enemy.
 //it changes the position of the go components and should work
@@ -22,34 +20,15 @@ public class ControllableComponent extends Component {
         return ComponentType.Controllable;
     }
 
-
     //New movement system
-    public void moveCharacter(int x, int y, int angle){
-        PixMapComponent pixmapComp = (PixMapComponent) owner.getComponent(ComponentType.Drawable);//gets the drawable component as ref for the movement
-        DynamicBodyComponent characterBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
-
-        //normalizzazione
-        float normalizedX = (float) (x-50) / 50;
-        float normalizedY = (float) (y-50) / 50;
-
-        characterBodyComponent.update(normalizedX, normalizedY, angle);
-
-        int currentGX = (int)gameWorld.toPixelsX(characterBodyComponent.getPositionX());
-        int currentGY = (int)gameWorld.toPixelsY(characterBodyComponent.getPositionY());
-        pixmapComp.setPosition(currentGX, currentGY, angle);
-    }
-
-    public void moveEnemyCharacter(int x, int y, int angle){
-        //ho fatto una funzione a parte per evitare la normalizzazione con 50 in moveCharacter,
-        //soluzione temporanea naturalmente
+    public void moveCharacter(float normalizedX, float normalizedY, int angle){
         PixMapComponent pixmapComp = (PixMapComponent) owner.getComponent(ComponentType.Drawable);//gets the drawable component as ref for the movement
         DynamicBodyComponent dynamicBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
 
-        dynamicBodyComponent.update(x, y, angle);
+        dynamicBodyComponent.update(normalizedX, normalizedY, angle);
 
-        int currentGX =(int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
-        int currentGY =(int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
-        //Log.d("Controller", "x " + currentGX + " y: " + currentGY);
+        int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
+        int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
         pixmapComp.setPosition(currentGX, currentGY, angle);
     }
 

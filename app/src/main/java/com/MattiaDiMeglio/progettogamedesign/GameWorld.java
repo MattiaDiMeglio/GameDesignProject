@@ -103,7 +103,7 @@ public class GameWorld {
         levelGrid = new GridManager(levelWidth, levelHeight, gridSize);
         levelGrid.addObstacles(gameObjects, this);
 
-        int testEnemyX = 100, testEnemyY = 100;
+        int testEnemyX = 102, testEnemyY = 102;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY);
         addGameObject(testEnemy);
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
@@ -120,10 +120,12 @@ public class GameWorld {
     public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightStrength, boolean isShooting){
             world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
-            for(GameObject go: gameObjects){
+            /*for(GameObject go: gameObjects){
                 if(go.name.equals("Enemy"))
                     go.update();
-            }
+            }*/
+
+        testEnemy.update();
 
             checkOutOfBound();
 
@@ -255,8 +257,7 @@ public class GameWorld {
     }
 
     public void moveTestEnemy () {
-        int targetX = 150, targetY = 100; //cosi il nemico va semplicemente un po' più a destra
-        //rispetto a dove si trova, prova anche 100,400
+        int targetX = 150, targetY = 100;
         AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
         aiComponent.pathfind(targetX, targetY, gridSize, levelGrid.getCells());
         if (aiComponent.path != null)
@@ -279,7 +280,6 @@ public class GameWorld {
     public float toPixelsYLength ( float y){
         return y / currentView.height * bufferHeight;
     }
-
 
     public float toPixelsXLengthNonBuffer(float x){return x/currentView.width*screenSize.width;}
     public float toPixelsYLengthNonBuffer(float y){return y/currentView.height*screenSize.height;}

@@ -24,34 +24,53 @@ public class AIComponent extends Component{
     }
 
     public void initializeStack(){
-
-        int[] xSet = findXSet(path); //insieme delle coordinate X dei nodi del path
-        int[] ySet = findYSet(path);; //insieme delle coordinate Y dei nodi del path
-        int[] vectorX = findVectorX(xSet,ySet); //vettori X
-        int[] vectorY = findVectorY(xSet,ySet); //vettori Y
-
-        //il ciclo for è al contrario perché così facendo farò le pop dei vettori da start a end
-
-        for(int i = vectorX.length -1 ; i > -1 ; i--){
-            Movement m = new Movement(xSet[i+1],ySet[i+1],vectorX[i]/2, vectorY[i]/2);
-            //ho dimezzato le componenti dei vettori poiché l'update di DynamicBodyComponent,
-            //come quella di CharacterBodyComponent, va a raddoppiare queste componenti
+        for(Node n: path){
+            Movement m = new Movement(n.getPosX(),n.getPosY());
+            Log.i("initializeStack","Push posizione: ("+n.getPosX()+","+n.getPosY()+")");
             movementStack.push(m);
         }
     }
 
     public void movement(){
         if(!movementStack.isEmpty()){
-            Movement m = movementStack.pop();
-            int x = m.getCellX();
-            int y = m.getCellY();
-            int normX = m.getVectorX();
-            int normY = m.getVectorY();
+            float normalX = 0f, normalY = 0f;
 
-            owner.updatePosition(normX,normY, 0);
-            owner.worldX = x;
-            owner.worldY = y;
+            Movement nextMovement = movementStack.peek(); //prendo il top of stack movement, ovvero il prossimo
+                                                          //da effettuare
+            int nextX = nextMovement.getCellX();
+            int nextY = nextMovement.getCellY();
+
+            if(!(owner.worldX == nextX && owner.worldY == nextY)){
+                //Log.i("AIComponent movement","Enemy position: ("+owner.worldX+","+owner.worldY+")");
+                normalX = findNormalX(owner.worldX, owner.worldY, nextX, nextY);
+                normalY = findNormalY(owner.worldX, owner.worldY, nextX, nextY);
+            }
+            else{
+                Movement newMovement = movementStack.pop();
+                int newX = newMovement.getCellX();
+                int newY = newMovement.getCellY();
+                normalX = findNormalX(owner.worldX, owner.worldY, newX, newY);
+                normalY = findNormalY(owner.worldX, owner.worldY, newX, newY);
+            }
+            //Log.i("AIComponent movement","Vettore movimento = ("+normalX+","+normalY+")");
+            owner.updatePosition(normalX,normalY,0);
         }
+    }
+
+    public float findNormalX(int startX, int startY, int targetX, int targetY){
+        int deltaX = targetX - startX;
+        int deltaY = targetY - startY;
+        float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+
+        return deltaX/length;
+    }
+
+    public float findNormalY(int startX, int startY, int targetX, int targetY){
+        int deltaX = targetX - startX;
+        int deltaY = targetY - startY;
+        float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+
+        return deltaY/length;
     }
 
     public Node findNode(int x, int y, int gridSize, Node[][] cells){ //date le coordinate worldX e worldY, ricava il
@@ -59,66 +78,6 @@ public class AIComponent extends Component{
         int gridX = x / gridSize;
         int gridY = y / gridSize;
         return cells[gridY][gridX];
-    }
-
-    public int[] findXSet(List<Node> path){ //ritorna un array contenente le x di tutti i nodi del path
-
-        //Il path che ci viene restuito dal pathfinding è ordinato
-        //dalla cella di start alla cella target
-
-        int[] xSet = new int[path.size()];
-        xSet[0] = owner.worldX; //la prima coordinata è il punto di partenza del nemico, il primo nodo del path
-        //contiene le coordinate della cella, che potrebbero essere diverse
-        //dalle effettive coordinate del nemico
-        //Serve in ogni caso tenere traccia delle coordinate iniziali per calcolare
-        //le componenti del primo vettore movimento
-        int i = 0;
-        for(Node n: path){
-            if(i > 0)
-                xSet[i] = n.getPosX();
-            i++;
-        }
-        return xSet;
-    }
-
-    public int[] findYSet(List<Node> path){
-        int[] ySet = new int[path.size()];
-        ySet[0] = owner.worldY;
-        int i = 0;
-        for(Node n: path){
-            if(i > 0)
-                ySet[i] = n.getPosY();
-            i++;
-        }
-        return ySet;
-    }
-
-    public int[] findVectorX(int[] xSet, int[] ySet){
-        int[] vectorX = new int[xSet.length-1]; // se i nodi del path sono N, dovrò effettuare N-1 movimenti
-
-        //Voglio spostarmi dal nodo A al nodo B
-        //la coordinata x di A sta in xSet[0]
-        //la coordinata x di B sta in xSet[1]
-        //vettore X = xb - xa
-
-        for(int i = 0; i < vectorX.length; i++){
-            int deltaX = (xSet[i+1] - xSet[i]);
-            //int deltaY = (ySet[i+1] - ySet[i]);
-            //int length = (int) Math.sqrt(deltaX*deltaX + deltaY*deltaY); //modulo del vettore
-            vectorX[i] = deltaX; //così facendo i vettori non sono normalizzati
-        }
-        return vectorX;
-    }
-
-    public int[] findVectorY(int[] xSet, int[] ySet){
-        int[] vectorY = new int[ySet.length-1];
-        for(int i = 0; i < vectorY.length; i++){
-            //int deltaX = (xSet[i+1] - xSet[i]);
-            int deltaY = (ySet[i+1] - ySet[i]);
-            //int length = (int) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-            vectorY[i] = deltaY;
-        }
-        return vectorY;
     }
 
     @Override

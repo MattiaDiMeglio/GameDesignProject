@@ -1,9 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.os.Debug;
 import android.util.Log;
-
-import com.badlogic.androidgames.framework.Graphics;
 
 //the player GO
 public class PlayerGameObject extends GameObject {
@@ -25,9 +22,13 @@ public class PlayerGameObject extends GameObject {
     public void update() {//update
     }
 
-    public void updatePosition(int x, int y, int angle, int strength, float deltaTime){
+    public void updatePosition(float x, float y, int angle, int strength, float deltaTime){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
-        controllableComponent.moveCharacter(x, y, angle);
+
+        float normalizedX = (x-50) / 50;
+        float normalizedY = (y-50) / 50;
+
+        controllableComponent.moveCharacter(normalizedX, normalizedY, angle);
         DrawableComponent drawable = (DrawableComponent) components.get(ComponentType.Drawable);
         int addToX = 0;
         int addToY = 0;
