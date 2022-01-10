@@ -158,7 +158,7 @@ public class GameScreen extends Screen {
             }
         }
         //To test the body positions
-        drawBodies();
+        //drawBodies();
     }
 
     private void drawBodies(){
@@ -232,10 +232,11 @@ public class GameScreen extends Screen {
         float normalizedX = -((float) jx-50);
         float normalizedY = -((float) jy-50);
 
+        //settati i wordposX e Y del player basare il movimento sulla differenza
         destinationX = currentBackgroundX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX)  * deltaTime);
         destinationY = currentBackgroundY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY) * deltaTime);
 
-        Log.d("backg", gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) + ", " + gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()));
+        //Log.d("backg", gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) + ", " + gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()));
 
         onBorderX = false;
         onBorderY = false;

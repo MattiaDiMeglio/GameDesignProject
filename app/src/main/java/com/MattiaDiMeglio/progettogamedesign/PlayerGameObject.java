@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.os.Debug;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.Graphics;
@@ -8,7 +9,6 @@ import com.badlogic.androidgames.framework.Graphics;
 public class PlayerGameObject extends GameObject {
     private GameWorld gameWorld;
     private PixMapComponent drawableComponent;
-    private CharacterBodyComponent characterBodyComponent;
     private ControllableComponent controllableComponent;
     private WeaponComponent playerWeapon;
     protected boolean canMove = false;
@@ -17,6 +17,8 @@ public class PlayerGameObject extends GameObject {
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
         this.name = "Player";
+        this.worldX = (int)gameWorld.screenSize.width/2;
+        this.worldY = (int)gameWorld.screenSize.height/2;
     }
 
     @Override
@@ -26,6 +28,17 @@ public class PlayerGameObject extends GameObject {
     public void updatePosition(int x, int y, int angle, int strength, float deltaTime){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
         controllableComponent.moveCharacter(x, y, angle);
+        DrawableComponent drawable = (DrawableComponent) components.get(ComponentType.Drawable);
+        int addToX = 0;
+        int addToY = 0;
+
+        if(x!=0)
+            addToX = (int)((x/x)*gameWorld.toPixelsXLengthNonBuffer(getMovedX()));
+
+        if(y!=0)
+            addToY = (int)((y/y)*gameWorld.toPixelsYLengthNonBuffer(getMovedY()));
+
+        updateWorldPosition(addToX, addToY);
     }
 
     public float getMovedX(){
@@ -38,7 +51,7 @@ public class PlayerGameObject extends GameObject {
     public float getMovedY(){
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
         if(!isInContact())
-            return  Math.abs(component.getPositionY() - component.getLastPositionY());
+            return Math.abs(component.getPositionY() - component.getLastPositionY());
         return 0f;
     }
 
@@ -50,10 +63,17 @@ public class PlayerGameObject extends GameObject {
     public boolean isInContact(){
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
         com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge s = component.getContactList();
-        if(s == null)
-            return false;
-        return true;
+        return s != null;
     }
+
+    public void updateWorldPosition(int x, int y){
+        worldX += x;
+        worldY += y;
+        Log.d("playerPOs ", worldX + ", " + worldY);
+    }
+
+    public int getWorldX(){return worldX;}
+    public int getWorldY(){return worldY;}
 
     public WeaponComponent getPlayerWeapon() {return (WeaponComponent) getComponent(ComponentType.Weapon);}
 
