@@ -34,7 +34,7 @@ public class EnemyGameObject extends GameObject {
 
     public void updatePosition(float x, float y, int angle){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
-        controllableComponent.moveCharacter(x,y,0);
+        controllableComponent.moveCharacter(x,y,angle);
     }
 
     @Override
@@ -47,6 +47,9 @@ public class EnemyGameObject extends GameObject {
 
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
         aiComponent.movement(); //parte solo se lo stack dei movimenti non è vuoto
+
+        //Log.i("Enemy GO","Enemy WorldX Y = ("+worldX+","+worldY+")");
+        //Log.i("Enemy GO","Pixmap X Y = ("+drawableComponent.getPositionX()+","+drawableComponent.getPositionY()+")");
     }
 
     @Override//puts enemy out of view

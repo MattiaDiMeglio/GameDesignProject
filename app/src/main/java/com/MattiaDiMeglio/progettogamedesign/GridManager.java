@@ -9,10 +9,9 @@ public class GridManager {
     private int gridWidth;
     private int gridHeight;
     private int gridSize; // cell size
-
     private Node[][] cells;
 
-    public GridManager(int levelWidth, int levelHeight, int gridS){
+    public GridManager(int levelWidth, int levelHeight, int gridS,GameWorld gameWorld){
 
         this.gridSize = gridS;
         this.gridWidth = levelWidth / gridSize;
@@ -70,8 +69,8 @@ public class GridManager {
 
         float gridObstacleX = obstacleX / gridSize; // position in grid
         float gridObstacleY = obstacleY / gridSize;
-        float gridObstacleWidth = obstacleWidth / gridSize; // size in grid
-        float gridObstacleHeight = obstacleHeight / gridSize;
+        float gridObstacleWidth = (obstacleWidth / gridSize); // size in grid
+        float gridObstacleHeight = (obstacleHeight / gridSize);
 
         /*worldX e worldY dell'oggetto si riferiscono al centro dello stesso,
         quindi per riempire le celle della griglia col ciclo for sottostante,
@@ -120,7 +119,7 @@ public class GridManager {
                 if(!(cells[i][j].isWall()) && (cells[i][j].isWalkable())){
 
                     //stesso discorso per ognuno dei vicini
-                    // N = Nord, S = Sud, W = West, E = East
+                    // N = North, S = South, W = West, E = East
 
                     if(!(cells[i-1][j-1].isWall()) && (cells[i-1][j-1].isWalkable())) //NW Neighbor
                         cells[i][j].addBranch(weight, cells[i-1][j-1]);

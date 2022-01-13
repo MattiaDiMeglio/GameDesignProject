@@ -26,7 +26,6 @@ public class AIComponent extends Component{
     public void initializeStack(){
         for(Node n: path){
             Movement m = new Movement(n.getPosX(),n.getPosY());
-            Log.i("initializeStack","Push posizione: ("+n.getPosX()+","+n.getPosY()+")");
             movementStack.push(m);
         }
     }
@@ -35,42 +34,43 @@ public class AIComponent extends Component{
         if(!movementStack.isEmpty()){
             float normalX = 0f, normalY = 0f;
 
-            Movement nextMovement = movementStack.peek(); //prendo il top of stack movement, ovvero il prossimo
-                                                          //da effettuare
+            Movement nextMovement = movementStack.peek();
             int nextX = nextMovement.getCellX();
             int nextY = nextMovement.getCellY();
 
             if(!(owner.worldX == nextX && owner.worldY == nextY)){
-                //Log.i("AIComponent movement","Enemy position: ("+owner.worldX+","+owner.worldY+")");
-                normalX = findNormalX(owner.worldX, owner.worldY, nextX, nextY);
-                normalY = findNormalY(owner.worldX, owner.worldY, nextX, nextY);
+                normalX = findNormalX(owner.worldX, owner.worldY , nextX, nextY);
+                normalY = findNormalY(owner.worldX, owner.worldY , nextX, nextY);
             }
             else{
                 Movement newMovement = movementStack.pop();
                 int newX = newMovement.getCellX();
                 int newY = newMovement.getCellY();
-                normalX = findNormalX(owner.worldX, owner.worldY, newX, newY);
-                normalY = findNormalY(owner.worldX, owner.worldY, newX, newY);
+                normalX = findNormalX(owner.worldX, owner.worldY , newX, newY);
+                normalY = findNormalY(owner.worldX, owner.worldY , newX, newY);
             }
-            //Log.i("AIComponent movement","Vettore movimento = ("+normalX+","+normalY+")");
             owner.updatePosition(normalX,normalY,0);
         }
     }
 
     public float findNormalX(int startX, int startY, int targetX, int targetY){
         int deltaX = targetX - startX;
+        if(deltaX == 0)
+            return 0f;
+
         int deltaY = targetY - startY;
         float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-
-        return deltaX/length;
+        return (float) deltaX/length;
     }
 
     public float findNormalY(int startX, int startY, int targetX, int targetY){
-        int deltaX = targetX - startX;
         int deltaY = targetY - startY;
-        float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+        if(deltaY == 0)
+            return 0f;
 
-        return deltaY/length;
+        int deltaX = targetX - startX;
+        float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+        return (float) deltaY/length;
     }
 
     public Node findNode(int x, int y, int gridSize, Node[][] cells){ //date le coordinate worldX e worldY, ricava il

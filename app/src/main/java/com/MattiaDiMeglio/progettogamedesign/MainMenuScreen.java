@@ -32,13 +32,12 @@ public class MainMenuScreen extends Screen {
         this.context = context;
         graphics = game.getGraphics();
         nextScreen = new GameScreen(game, width, height, context);
-        game.setScreen(nextScreen);
-
     }
 
     //for now just goes to the gamescreen
     @Override
     public void update(float deltaTime) {
+        game.setScreen(nextScreen);
     }
 
     @Override
