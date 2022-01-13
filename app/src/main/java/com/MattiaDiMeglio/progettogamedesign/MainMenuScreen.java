@@ -22,6 +22,7 @@ public class MainMenuScreen extends Screen {
     int x, y, width, height;
     boolean touched = false;
     Context context;
+    Screen nextScreen;
 
     public MainMenuScreen(Game game, int width, int height, Context context) {
         super(game);
@@ -30,13 +31,14 @@ public class MainMenuScreen extends Screen {
         this.height = height;
         this.context = context;
         graphics = game.getGraphics();
+        nextScreen = new GameScreen(game, width, height, context);
+        game.setScreen(nextScreen);
 
     }
 
     //for now just goes to the gamescreen
     @Override
     public void update(float deltaTime) {
-        game.setScreen(new GameScreen(game, width, height, context));
     }
 
     @Override

@@ -33,11 +33,11 @@ public class PlayerGameObject extends GameObject {
         int addToX = 0;
         int addToY = 0;
 
-        if(x!=0)
-            addToX = (int)((x/x)*gameWorld.toPixelsXLengthNonBuffer(getMovedX()));
+        if(normalizedX!=0)
+            addToX = (int)(Math.signum(normalizedX)*gameWorld.toPixelsXLengthNonBuffer(getMovedX()));
 
-        if(y!=0)
-            addToY = (int)((y/y)*gameWorld.toPixelsYLengthNonBuffer(getMovedY()));
+        if(normalizedY!=0)
+            addToY = (int)(Math.signum(normalizedY)*gameWorld.toPixelsYLengthNonBuffer(getMovedY()));
 
         updateWorldPosition(addToX, addToY);
     }
