@@ -10,7 +10,6 @@ public class PlayerGameObject extends GameObject {
     private WeaponComponent playerWeapon;
     protected boolean canMove = false;
 
-
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
         this.name = "Player";
@@ -23,23 +22,12 @@ public class PlayerGameObject extends GameObject {
     }
 
     public void updatePosition(float x, float y, int angle, int strength, float deltaTime){
-        controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
 
         float normalizedX = (x-50) / 50;
         float normalizedY = (y-50) / 50;
 
+        controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
         controllableComponent.moveCharacter(normalizedX, normalizedY, angle);
-        DrawableComponent drawable = (DrawableComponent) components.get(ComponentType.Drawable);
-        int addToX = 0;
-        int addToY = 0;
-
-        if(normalizedX!=0)
-            addToX = (int)(Math.signum(normalizedX)*gameWorld.toPixelsXLengthNonBuffer(getMovedX()));
-
-        if(normalizedY!=0)
-            addToY = (int)(Math.signum(normalizedY)*gameWorld.toPixelsYLengthNonBuffer(getMovedY()));
-
-        updateWorldPosition(addToX, addToY);
     }
 
     public float getMovedX(){
@@ -65,12 +53,6 @@ public class PlayerGameObject extends GameObject {
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
         com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge s = component.getContactList();
         return s != null;
-    }
-
-    public void updateWorldPosition(int x, int y){
-        worldX += x;
-        worldY += y;
-        Log.d("playerPOs ", worldX + ", " + worldY);
     }
 
     public int getWorldX(){return worldX;}

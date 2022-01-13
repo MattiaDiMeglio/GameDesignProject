@@ -30,6 +30,13 @@ public class ControllableComponent extends Component {
         int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
         int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
         pixmapComp.setPosition(currentGX, currentGY, angle);
+
+        owner.worldX = gameWorld.updateWorldX(pixmapComp.getPositionX());
+        owner.worldY = gameWorld.updateWorldY(pixmapComp.getPositionY());
+
+        //if(owner.name == "Enemy")
+        //if(owner.name == "Player")
+            //Log.i("ControllableComponent",owner.name+" position = ("+owner.worldX+","+owner.worldY+")");
     }
 
     public void setAngle(float angle){

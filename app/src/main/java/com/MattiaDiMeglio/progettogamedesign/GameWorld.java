@@ -22,6 +22,7 @@ public class GameWorld {
     private Game game;
     protected World world;
     protected List<GameObject> gameObjects;
+    protected List<GameObject> activeGameObjects;
     private final GameObjectFactory gameObjectFactory;
     private final GameScreen gameScreen;
     private PhysicsContactListener contactListener;
@@ -54,7 +55,7 @@ public class GameWorld {
 
     //grid variables and parameters
     GridManager levelGrid;
-    int gridSize = 4;
+    int gridSize;
     EnemyGameObject testEnemy; // pathfinding test
 
     int[][]mapCells;
@@ -85,9 +86,9 @@ public class GameWorld {
         contactListener = new PhysicsContactListener();
         world.setContactListener(contactListener);
 
-        gameObjects = new ArrayList<GameObject>();//list of active game objects
+        gameObjects = new ArrayList<GameObject>();//list of all game objects
+        activeGameObjects = new ArrayList<GameObject>(); //list of active game objects
         gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
-
 
         bufferWidth = gameScreen.graphics.getWidth();
         bufferHeight = gameScreen.graphics.getHeight();
@@ -96,6 +97,10 @@ public class GameWorld {
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
+        int testEnemyX = 100;
+        int testEnemyY = 100;
+        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
+        addGameObject(testEnemy);
 
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
         mapCells = mapManager.initMap(mapCells, AssetManager.background.getWidth(), AssetManager.background.getHeight());
@@ -104,13 +109,12 @@ public class GameWorld {
         mapManager.makeEnemies();
 
         gridSize = 4;
-        int levelWidth = (int) screenSize.width;
-        int levelHeight = (int) screenSize.height;
+        int levelWidth = AssetManager.background.getWidth();
+        int levelHeight = AssetManager.background.getHeight();
+        levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
 
-        levelGrid = new GridManager(levelWidth, levelHeight, gridSize);
-        levelGrid.addObstacles(gameObjects, this);
-
-        int testEnemyX = 102, testEnemyY = 102;
+        testEnemyX = 102;
+        testEnemyY = 102;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY);
         addGameObject(testEnemy);
 
@@ -123,6 +127,7 @@ public class GameWorld {
             s = "";
         }
 
+        levelGrid.addObstacles(gameObjects, this);
     }
 
 
@@ -130,16 +135,13 @@ public class GameWorld {
 
 
     public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightStrength, boolean isShooting){
-            world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
-            /*for(GameObject go: gameObjects){
-                if(go.name.equals("Enemy"))
-                    go.update();
-            }*/
+        world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
-        testEnemy.update();
+        for(GameObject gameObject : activeGameObjects)
+            gameObject.update();
 
-            checkOutOfBound();
+        checkOutOfBound();
 
         gameScreen.setWorldDestination(x, y, elapsedTime);
 
@@ -167,6 +169,9 @@ public class GameWorld {
             //gameObject.update();//update TODO probabilmente inutile
             if(!gameObject.name.equals("Player")){//if it's not a player
                 if(isInView(gameObject)){//we check is it's in view
+
+                    addActiveGameObject(gameObject);
+
                     DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
                     if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
                         //inits the position of the GO in view
@@ -175,6 +180,10 @@ public class GameWorld {
                         gameScreen.addDrawable(component);
                     }
                 } else { //if they're not in view we remove the drawable
+
+                    if(activeGameObjects.contains(gameObject))
+                        removeActiveGameObject(gameObject);
+
                     if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
                         gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
                         gameObject.outOfView();
@@ -246,8 +255,17 @@ public class GameWorld {
         return gameObject;
     }
 
+    public synchronized GameObject addActiveGameObject (GameObject gameObject){
+        activeGameObjects.add(gameObject);
+        return gameObject;
+    }
+
     public synchronized void removeGameObject (GameObject gameObject){
         gameObjects.remove(gameObject);
+    }
+
+    public synchronized void removeActiveGameObject (GameObject gameObject){
+        activeGameObjects.remove(gameObject);
     }
 
     //to check if a GO is in view, based on it's world coordinates
@@ -263,18 +281,31 @@ public class GameWorld {
     }
 
     //called by gamescreen, calls movement in playergo
-    public void movePlayer ( int normalizedX, int normalizedY, int angle, int strength,
-    float deltaTime){
+    public void movePlayer ( int normalizedX, int normalizedY, int angle, int strength, float deltaTime){
         player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
     }
 
     public void moveTestEnemy () {
-        int targetX = 150, targetY = 100;
+        int enemyDestinationX = 200;
+        int enemyDestinationY = 200;
+        //addGameObject(gameObjectFactory.makeEnemy(enemyDestinationX,enemyDestinationY));
         AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
-        aiComponent.pathfind(targetX, targetY, gridSize, levelGrid.getCells());
-        if (aiComponent.path != null)
+        aiComponent.pathfind(enemyDestinationX, enemyDestinationY, gridSize, levelGrid.getCells());
+        if (aiComponent.path != null){
+            Log.i("moveTestEnemy","path trovato");
             aiComponent.initializeStack();
+        }
+
+        /*if(aiComponent.path != null)
+        for(Node n: aiComponent.path){
+            int x = n.getPosX();
+            int y = n.getPosY();
+            addGameObject(gameObjectFactory.makeEnemy(x,y));
+        }*/
     }
+
+    public int updateWorldX (float pixmapX){ return (int) (pixmapX - gameScreen.getBackgroundX()); }
+    public int updateWorldY (float pixmapY){ return (int) (pixmapY - gameScreen.getBackgroundY()); }
 
     //conversion methods
     public int inViewPositionX ( float worldX){return (int) worldX + (gameScreen.currentBackgroundX);}
@@ -298,7 +329,6 @@ public class GameWorld {
 
     public float toMetersXLength(float x){return x * currentView.width/bufferWidth;}
     public float toMetersYLength(float y){return y * currentView.height/bufferHeight;}
-
 
     public float pixelsToMetersLengthX ( float x){return x * currentView.width / screenSize.width;}
     public float pixelsToMetersLengthY ( float y){return y * currentView.height / screenSize.height;}
