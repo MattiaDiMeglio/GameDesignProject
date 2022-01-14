@@ -87,7 +87,7 @@ public class GameWorld {
         world.setContactListener(contactListener);
 
         gameObjects = new ArrayList<GameObject>();//list of all game objects
-        activeGameObjects = new ArrayList<GameObject>(); //list of active game objects
+        activeGameObjects = new ArrayList<GameObject>(); //list of on-screen game objects
         gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
 
         bufferWidth = gameScreen.graphics.getWidth();
@@ -97,8 +97,8 @@ public class GameWorld {
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
-        int testEnemyX = 100;
-        int testEnemyY = 100;
+        int testEnemyX = 325; //325
+        int testEnemyY = 100; //100
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
         addGameObject(testEnemy);
 
@@ -165,7 +165,8 @@ public class GameWorld {
             if(!gameObject.name.equals("Player")){//if it's not a player
                 if(isInView(gameObject)){//we check is it's in view
 
-                    addActiveGameObject(gameObject);
+                    if(!activeGameObjects.contains(gameObject))
+                        addActiveGameObject(gameObject);
 
                     DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
                     if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
@@ -176,8 +177,7 @@ public class GameWorld {
                     }
                 } else { //if they're not in view we remove the drawable
 
-                    if(activeGameObjects.contains(gameObject))
-                        removeActiveGameObject(gameObject);
+                    activeGameObjects.remove(gameObject);
 
                     if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
                         gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
@@ -281,22 +281,20 @@ public class GameWorld {
     }
 
     public void moveTestEnemy () {
-        int enemyDestinationX = 200;
-        int enemyDestinationY = 200;
+        int enemyDestinationX = 500; //500
+        int enemyDestinationY = 100;
         //addGameObject(gameObjectFactory.makeEnemy(enemyDestinationX,enemyDestinationY));
         AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
         aiComponent.pathfind(enemyDestinationX, enemyDestinationY, gridSize, levelGrid.getCells());
         if (aiComponent.path != null){
             Log.i("moveTestEnemy","path trovato");
             aiComponent.initializeStack();
+            /*for(Node n: aiComponent.path){
+                int x = n.getPosX();
+                int y = n.getPosY();
+                addGameObject(gameObjectFactory.makeEnemy(x,y));
+            }*/
         }
-
-        /*if(aiComponent.path != null)
-        for(Node n: aiComponent.path){
-            int x = n.getPosX();
-            int y = n.getPosY();
-            addGameObject(gameObjectFactory.makeEnemy(x,y));
-        }*/
     }
 
     public int updateWorldX (float pixmapX){ return (int) (pixmapX - gameScreen.getBackgroundX()); }
