@@ -59,10 +59,10 @@ public class GameObjectFactory {
         WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.horizontalWall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.horizontalWall.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.WallPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.WallPixmap.getHeight()),
                 world, wall.name);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.horizontalWall, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.WallPixmap, -100, -100);
 
         wall.addComponent(staticBodyComponent);
         wall.addComponent(pixMapComponent);
@@ -74,10 +74,10 @@ public class GameObjectFactory {
         HalfWallGameObject wall = new HalfWallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.horizontalHalfWall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.horizontalHalfWall.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.HorizontalHalfWallPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.HorizontalHalfWallPixmap.getHeight()),
                 world, wall.name);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.horizontalHalfWall, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.HorizontalHalfWallPixmap, -100, -100);
 
         wall.addComponent(staticBodyComponent);
         wall.addComponent(pixMapComponent);
@@ -89,10 +89,10 @@ public class GameObjectFactory {
         WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.verticalWall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.verticalWall.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.WallPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.WallPixmap.getHeight()),
                 world, wall.name);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.verticalWall, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.WallPixmap, -100, -100);
 
         wall.addComponent(staticBodyComponent);
         wall.addComponent(pixMapComponent);
@@ -104,10 +104,10 @@ public class GameObjectFactory {
         HalfWallGameObject wall = new HalfWallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.verticalHalfWall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.verticalHalfWall.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.VerticalHalfWallPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.VerticalHalfWallPixmap.getHeight()),
                 world, wall.name);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.verticalHalfWall, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.VerticalHalfWallPixmap, -100, -100);
 
         wall.addComponent(staticBodyComponent);
         wall.addComponent(pixMapComponent);

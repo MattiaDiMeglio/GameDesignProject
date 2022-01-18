@@ -24,6 +24,7 @@ public class LoadingScreen extends Screen {
 
         //loads the pixmaps
         AssetManager.background = graphics.newPixmap("Background.png", Graphics.PixmapFormat.RGB565);
+        AssetManager.backgroundPixmap = graphics.newPixmap("BackgroundPixmap.png", Graphics.PixmapFormat.RGB565);
         AssetManager.player = graphics.newPixmap("testCharacter.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.enemy = graphics.newPixmap("testEnemy.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.enemyKilled = graphics.newPixmap("testEnemyKilled.png", Graphics.PixmapFormat.ARGB4444);
@@ -32,6 +33,9 @@ public class LoadingScreen extends Screen {
         AssetManager.verticalWall = graphics.newPixmap("testWallVertical.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.verticalHalfWall = graphics.newPixmap("testWallVerticalHalf.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.door = graphics.newPixmap("testDoor.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.WallPixmap = graphics.newPixmap("WallPixmap.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.VerticalHalfWallPixmap = graphics.newPixmap("VerticalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.HorizontalHalfWallPixmap = graphics.newPixmap("HorizontalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
 
         //sets the next screen
         game.setScreen(new MainMenuScreen(game, width, height, context));

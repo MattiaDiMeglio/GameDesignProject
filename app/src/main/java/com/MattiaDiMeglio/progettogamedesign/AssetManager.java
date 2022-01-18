@@ -8,6 +8,7 @@ import com.badlogic.androidgames.framework.Pixmap;
 
 public class AssetManager {
     public static Pixmap background;
+    public static Pixmap backgroundPixmap;
     public static Pixmap player;
     public static Pixmap enemy;
     public static Pixmap enemyKilled;
@@ -16,4 +17,7 @@ public class AssetManager {
     public static Pixmap verticalWall;
     public static Pixmap verticalHalfWall;
     public static Pixmap door;
+    public static Pixmap WallPixmap;
+    public static Pixmap HorizontalHalfWallPixmap;
+    public static Pixmap VerticalHalfWallPixmap;
 }

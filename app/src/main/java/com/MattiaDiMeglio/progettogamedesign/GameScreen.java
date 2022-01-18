@@ -143,7 +143,7 @@ public class GameScreen extends Screen {
         graphics.clear(Color.WHITE);
 
         //draw the background
-        graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX, (int)currentBackgroundY);
+        graphics.drawPixmap(AssetManager.backgroundPixmap, (int)currentBackgroundX, (int)currentBackgroundY);
         //draw the grid
         graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
                 (int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(15), Color.WHITE);
@@ -250,12 +250,12 @@ public class GameScreen extends Screen {
             destinationY = 0;
             onBorderY = true;
         }
-        if(destinationX < -(AssetManager.background.getWidth() - graphics.getWidth())){
-            destinationX = -(AssetManager.background.getWidth() - graphics.getWidth());
+        if(destinationX < -(AssetManager.backgroundPixmap.getWidth() - graphics.getWidth())){
+            destinationX = -(AssetManager.backgroundPixmap.getWidth() - graphics.getWidth());
             onBorderX = true;
         }
-        if(destinationY < - (AssetManager.background.getHeight() - graphics.getHeight())){
-            destinationY = - (AssetManager.background.getHeight() - graphics.getHeight());
+        if(destinationY < - (AssetManager.backgroundPixmap.getHeight() - graphics.getHeight())){
+            destinationY = - (AssetManager.backgroundPixmap.getHeight() - graphics.getHeight());
             onBorderY = true;
         }
 
