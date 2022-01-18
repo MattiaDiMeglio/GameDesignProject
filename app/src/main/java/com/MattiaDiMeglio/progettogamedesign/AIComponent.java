@@ -28,6 +28,18 @@ public class AIComponent extends Component{
             Movement m = new Movement(n.getPosX(),n.getPosY());
             movementStack.push(m);
         }
+
+        /*for(int i = 0; i < path.size(); i++){
+            Node n = path.get(i);
+            Node next = path.get(i+1);
+            List<Node.Edge> list = n.neighbors;
+            for(Node.Edge e: list){
+                if(e.node == next){
+                    Log.i("Path","Peso arco = "+e.weight);
+                    break;
+                }
+            }
+        }*/
     }
 
     public void movement(){
@@ -49,11 +61,16 @@ public class AIComponent extends Component{
                 normalX = findNormalX(owner.worldX, owner.worldY , newX, newY);
                 normalY = findNormalY(owner.worldX, owner.worldY , newX, newY);
             }
+            //Log.i("AIComponent","Vettore direzione = ("+normalX+","+normalY+")");
             owner.updatePosition(normalX,normalY,0);
         }
     }
 
     public float findNormalX(int startX, int startY, int targetX, int targetY){
+
+        /*Log.i("findNormalX","Posizione nemico = ("+startX+","+startY+")");
+        Log.i("findNormalX","Posizione da raggiungere = ("+targetX+","+targetY+")");*/
+
         int deltaX = targetX - startX;
         if(deltaX == 0)
             return 0f;

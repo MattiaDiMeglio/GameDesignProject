@@ -67,6 +67,7 @@ public class Node implements Comparable<Node>{
         float deltaY = Math.abs(this.posY - target.posY);
 
         return deltaX+deltaY;
+        //return h+deltaX+deltaY;
     }
 
     public void setPosX(int posX) { this.posX = posX; }
