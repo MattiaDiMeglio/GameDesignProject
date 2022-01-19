@@ -14,14 +14,16 @@ import com.google.fpl.liquidfun.World;
 //represents all physics body that can be moved by forces
 public class DynamicBodyComponent extends PhysicsComponent{
     private Body body;
+    private float speed;
 
 
-    public DynamicBodyComponent(float x, float y, float width, float height, World world, String name){
+    public DynamicBodyComponent(float x, float y, float width, float height, World world, String name, float speed){
         this.x = x;//physical pos
         this.y = y;
         this.width = width;//physical size
         this.height = height;
         this.name = name;
+        this.speed = speed;
 
         //bodydef
         BodyDef bodyDef = new BodyDef();
@@ -59,7 +61,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
 
     public void update(float normalizedX, float normalizedY, int angle) {
         Vec2 velocity = new Vec2();
-        velocity.set(normalizedX * 2, normalizedY * 2);
+        velocity.set(normalizedX * speed, normalizedY * speed);
         body.setLinearVelocity(velocity);
         lastX = x;
         lastY = y;

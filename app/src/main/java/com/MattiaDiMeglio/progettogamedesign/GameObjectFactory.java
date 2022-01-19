@@ -15,12 +15,13 @@ public class GameObjectFactory {
 //playerGO factory TODO piazzare tutte le posizioni basandosi sul worldpos
     public GameObject makePlayer(float x, float y){
         PlayerGameObject player = new PlayerGameObject(gameWorld);//new player GO
+        float playerSpeed = 2;
         //new physics component for playerGO
         DynamicBodyComponent body = new DynamicBodyComponent(gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)),
                 gameWorld.toMetersY(gameWorld.toPixelsTouchY(y)),
                 gameWorld.toMetersXLength(AssetManager.player.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.player.getHeight()),
-                world, player.name);
+                world, player.name, playerSpeed);
         ControllableComponent controllableComponent = new ControllableComponent(gameWorld);//new controllable component
 
         //new pixmap component
@@ -39,10 +40,12 @@ public class GameObjectFactory {
     //enemy factory
     public GameObject makeEnemy(int worldX, int worldY){
         EnemyGameObject enemy = new EnemyGameObject(gameWorld, worldX, worldY);
+        float enemySpeed = 3;
+
         DynamicBodyComponent bodyComponent = new DynamicBodyComponent(40, 40,
                 gameWorld.toMetersXLength(AssetManager.enemy.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.enemy.getHeight()),
-                world, enemy.name);
+                world, enemy.name, enemySpeed);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
         AIComponent aiComponent = new AIComponent();
         ControllableComponent controllableComponent = new ControllableComponent(gameWorld);//new controllable component
@@ -119,10 +122,13 @@ public class GameObjectFactory {
         PixMapComponent wallPixmap = (PixMapComponent) wall.getComponent(ComponentType.Drawable);
         StaticBodyComponent wallBody = (StaticBodyComponent) wall.getComponent(ComponentType.Physics);
         DoorGameObject door = new DoorGameObject(gameWorld, x, y, wall);
+        float doorSpeed = 1;
 
         DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(wallBody.x, wallBody.y,
                 gameWorld.toMetersXLength(AssetManager.horizontalWall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.horizontalWall.getHeight())/2, world, door.name);
+                gameWorld.toMetersYLength(AssetManager.horizontalWall.getHeight())/2,
+                world, door.name,doorSpeed);
+
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.door, -100, -100);
 
         door.addComponent(dynamicBodyComponent);
