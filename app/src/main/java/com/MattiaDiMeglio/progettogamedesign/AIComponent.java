@@ -21,25 +21,31 @@ public class AIComponent extends Component{
         Node target = findNode(targetX,targetY,gridSize,cells);
         Node res = pathfinder.aStar(start,target);
         path =  pathfinder.getPath(res);
+        if(path != null)
+            initializeStack(targetX,targetY);
     }
 
-    public void initializeStack(){
+    public void initializeStack(int targetX, int targetY){
+
+        /*int lastNodeX = path.get(0).getPosX();
+        int lastNodeY = path.get(0).getPosY();
+
+        if(!(lastNodeX == targetX && lastNodeY == targetY)){
+            Movement lastMovement = new Movement(targetX, targetY);
+            movementStack.push(lastMovement);
+        }*/
+
+        int i = 1;
+
         for(Node n: path){
+            if(i == path.size()){
+                i++;
+                continue;
+            }
             Movement m = new Movement(n.getPosX(),n.getPosY());
             movementStack.push(m);
+            i++;
         }
-
-        /*for(int i = 0; i < path.size(); i++){
-            Node n = path.get(i);
-            Node next = path.get(i+1);
-            List<Node.Edge> list = n.neighbors;
-            for(Node.Edge e: list){
-                if(e.node == next){
-                    Log.i("Path","Peso arco = "+e.weight);
-                    break;
-                }
-            }
-        }*/
     }
 
     public void movement(){
@@ -50,9 +56,16 @@ public class AIComponent extends Component{
             int nextX = nextMovement.getCellX();
             int nextY = nextMovement.getCellY();
 
-            if(!(owner.worldX == nextX && owner.worldY == nextY)){
-                normalX = findNormalX(owner.worldX, owner.worldY , nextX, nextY);
-                normalY = findNormalY(owner.worldX, owner.worldY , nextX, nextY);
+            int deltaX = Math.abs(nextX - owner.worldX);
+            int deltaY = Math.abs(nextY - owner.worldY);
+
+            int threshold = 5;
+
+            if(deltaX > threshold || deltaY > threshold){
+                if(deltaX > threshold)
+                    normalX = findNormalX(owner.worldX, owner.worldY, nextX, nextY);
+                if(deltaY > threshold)
+                    normalY = findNormalY(owner.worldX, owner.worldY, nextX, nextY);
             }
             else{
                 Movement newMovement = movementStack.pop();
@@ -63,13 +76,13 @@ public class AIComponent extends Component{
             }
             //Log.i("AIComponent","Vettore direzione = ("+normalX+","+normalY+")");
             owner.updatePosition(normalX,normalY,0);
+
+            if(movementStack.isEmpty())
+                owner.updatePosition(0,0,0);
         }
     }
 
     public float findNormalX(int startX, int startY, int targetX, int targetY){
-
-        /*Log.i("findNormalX","Posizione nemico = ("+startX+","+startY+")");
-        Log.i("findNormalX","Posizione da raggiungere = ("+targetX+","+targetY+")");*/
 
         int deltaX = targetX - startX;
         if(deltaX == 0)

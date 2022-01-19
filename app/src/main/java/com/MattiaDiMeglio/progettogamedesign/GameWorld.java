@@ -98,8 +98,8 @@ public class GameWorld {
         player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
-        int testEnemyX = 325; //325
-        int testEnemyY = 100; //100
+        int testEnemyX = 100;
+        int testEnemyY = 100;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
         addGameObject(testEnemy);
 
@@ -116,26 +116,27 @@ public class GameWorld {
         //mapManager.makeWalls();
         //mapManager.makeEnemies();
 
-        gridSize = 4;
-        int levelWidth = AssetManager.background.getWidth();
-        int levelHeight = AssetManager.background.getHeight();
-       // levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
+        gridSize = 42;
+        int levelWidth = AssetManager.backgroundPixmap.getWidth();
+        int levelHeight = AssetManager.backgroundPixmap.getHeight();
+        levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
 
         String s = "";
         for(int i = 0; i<50; i++){
             for(int j = 0; j<50; j++){
                 s = s.concat((mapCells[j][i]==2)? "|": (mapCells[j][i]==3) ? "_" : (mapCells[j][i]==4) ? "/" : ".");
+
+
             }
             Log.w("map" + (int) i%10, s);
             s = "";
-        }
+        }*/
 
-      //  levelGrid.addObstacles(gameObjects, this);*/
+      levelGrid.addObstacles(gameObjects, this);
     }
 
 
     //Game World update, calls the world step, then responds to touch events
-
 
     public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightStrength, boolean isShooting){
 
@@ -289,14 +290,13 @@ public class GameWorld {
     }
 
     public void moveTestEnemy () {
-        int enemyDestinationX = 500; //500
+        int enemyDestinationX = 300; //500
         int enemyDestinationY = 100;
         //addGameObject(gameObjectFactory.makeEnemy(enemyDestinationX,enemyDestinationY));
         AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
         aiComponent.pathfind(enemyDestinationX, enemyDestinationY, gridSize, levelGrid.getCells());
         if (aiComponent.path != null){
             Log.i("moveTestEnemy","path trovato");
-            aiComponent.initializeStack();
             /*for(Node n: aiComponent.path){
                 int x = n.getPosX();
                 int y = n.getPosY();

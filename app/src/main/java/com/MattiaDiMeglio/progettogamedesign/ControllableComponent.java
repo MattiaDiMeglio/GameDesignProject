@@ -25,7 +25,22 @@ public class ControllableComponent extends Component {
         PixMapComponent pixmapComp = (PixMapComponent) owner.getComponent(ComponentType.Drawable);//gets the drawable component as ref for the movement
         DynamicBodyComponent dynamicBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
 
+        /*float bodyX = 0f;
+        float bodyY = 0f;
+
+        if(owner.name == "Enemy"){
+            bodyX = dynamicBodyComponent.getPositionX();
+            bodyY = dynamicBodyComponent.getPositionY();
+            Log.i("ControllableComponent","Enemy body position = ("+bodyX+","+bodyY+")");
+        }*/
+
         dynamicBodyComponent.update(normalizedX, normalizedY, angle);
+
+        /*if(owner.name == "Enemy"){
+            bodyX = dynamicBodyComponent.getPositionX();
+            bodyY = dynamicBodyComponent.getPositionY();
+            Log.i("ControllableComponent","NEW enemy body position = ("+bodyX+","+bodyY+")");
+        }*/
 
         int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
         int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
@@ -33,10 +48,6 @@ public class ControllableComponent extends Component {
 
         owner.worldX = gameWorld.updateWorldX(pixmapComp.getPositionX());
         owner.worldY = gameWorld.updateWorldY(pixmapComp.getPositionY());
-
-        //if(owner.name == "Enemy")
-        //if(owner.name == "Player")
-            //Log.i("ControllableComponent",owner.name+" position = ("+owner.worldX+","+owner.worldY+")");
     }
 
     public void setAngle(float angle){

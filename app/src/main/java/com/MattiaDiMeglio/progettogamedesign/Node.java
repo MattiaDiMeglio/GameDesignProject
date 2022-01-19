@@ -3,14 +3,9 @@ package com.MattiaDiMeglio.progettogamedesign;
 import java.util.ArrayList;
 import java.util.List;
 
-//Ho preso l'implementazione di Nodo e della funzione aStar di PathfindingComponent
-//da questo sito, https://stackabuse.com/graphs-in-java-a-star-algorithm/
-//apportando delle modifiche per il nostro caso
-
 public class Node implements Comparable<Node>{
 
     private int posX, posY; // cell center coordinates
-    private boolean isWalkable;
     private boolean isWall;
 
     // Parent in the path
@@ -24,11 +19,10 @@ public class Node implements Comparable<Node>{
     //Heuristic
     public float h;
 
-    Node(float h, int x, int y, boolean walkable, boolean wall){
+    Node(float h, int x, int y, boolean wall){
         this.h = h;
         this.posX = x;
         this.posY = y;
-        this.isWalkable = walkable;
         this.isWall = wall;
         this.neighbors = new ArrayList<Edge>();
     }
@@ -66,18 +60,16 @@ public class Node implements Comparable<Node>{
         float deltaX = Math.abs(this.posX - target.posX);
         float deltaY = Math.abs(this.posY - target.posY);
 
-        return deltaX+deltaY;
-        //return h+deltaX+deltaY;
+        //return deltaX+deltaY;
+        return h+deltaX+deltaY;
     }
 
     public void setPosX(int posX) { this.posX = posX; }
     public void setPosY(int posY) { this.posY = posY; }
-    public void setWalkable(boolean walkable) { isWalkable = walkable; }
     public void setWall(boolean wall) { isWall = wall; }
 
     public int getPosX() { return posX; }
     public int getPosY() { return posY; }
-    public boolean isWalkable() { return isWalkable; }
     public boolean isWall() { return isWall; }
 
 }
