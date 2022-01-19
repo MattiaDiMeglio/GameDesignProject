@@ -9,6 +9,8 @@ public class MapManager {
     private GameWorld gameWorld;
     private GameObjectFactory gameObjectFactory;
     private JSonParser jSonParser;
+    private int mapWidth;
+    private int mapHeight;
     Context context;
 
 
@@ -19,6 +21,131 @@ public class MapManager {
         this.context = context;
         jSonParser = new JSonParser(context, this);
     }
+
+    public int[][] initMapResized(int[][]map, int width, int height){
+        map = new int[width][height];//init
+        mapWidth = width;
+        mapHeight = height;
+        for(int i = 0; i<width; i++){ //settiamo tutto walkable
+            for(int j = 0; j<height; j++){
+                map[i][j] = 0;
+            }
+        }
+        for(int i = 0; i<width; i++){
+            map[i][0] = 2;
+            map[i][width-1] = 2;
+        }
+        for(int i = 0; i<height; i++){
+            map[0][i] = 2;
+            map[height-1][i] = 2;
+        }
+        return map;
+    }
+
+    public int[][] generateMapResized(int[][] map, int startingX, int startingY, int endingX, int endingY, boolean vertical){
+        int randomIndex = 0;
+        int width = endingX - startingX;
+        int heigth = endingY - startingY;
+        if(vertical){
+            randomIndex = (int)(Math.random() * (endingX - startingX - 20)) + (startingX + 10);
+            int a = 0;
+            for(int i = startingY; i<endingY; i++){
+                for(int j = randomIndex-1; j<randomIndex+2; j++){
+                  if(i != 0 && i != mapHeight-1)
+                      map[j][i] = 0;
+                }
+                if(i>startingY && i<endingY-1) {
+                    if(i>startingY+1 && i < endingY-2) {
+                        map[randomIndex - 2][i] = randomWall(1);
+                        map[randomIndex + 2][i] = randomWall(1);
+                    } else {
+                        map[randomIndex - 2][i] = 2;
+                        map[randomIndex + 2][i] = 2;
+                    }
+                }
+            }
+            if(heigth > 21){
+                generateMapResized(map, startingX, startingY, randomIndex-1, endingY, !vertical);
+                generateMapResized(map, randomIndex+2, startingY, endingX, endingY, !vertical);
+            }
+        } else {
+            randomIndex = (int)(Math.random() * (endingY - startingY - 20)) + (startingY + 10);
+            int a = 0;
+            for(int i = startingX; i<endingX; i++){
+                for(int j = randomIndex - 1; j < randomIndex + 2; j++){
+                    if(i != 0 && i != mapWidth-1)
+                        map[i][j] = 0;
+                }
+                if(i > startingX && i < endingX - 1) {
+                    if(i > startingX+1 && i < endingX - 2) {
+                        map[i][randomIndex - 2] = randomWall(0);
+                        map[i][randomIndex + 2] = randomWall(0);
+                    } else {
+                        map[i][randomIndex - 2] = 2;
+                        map[i][randomIndex + 2] = 2;
+                    }
+                }
+            }
+            if(width > 21){
+                generateMapResized(map, startingX, startingY, endingX, randomIndex-1, !vertical);
+                generateMapResized(map, startingX, randomIndex+2, endingX, endingY, !vertical);
+            }
+
+        }
+
+        return map;
+    }
+
+    private int randomWall(int horizontal){
+        double random = Math.random();
+        if(0.40f <= random && random <= 0.5f)
+            return 3 + horizontal;
+        return 2;
+    }
+
+    public void constructMap(int[][]map, int width, int height){
+        for(int i = 0; i<width; i++){
+            for(int j = 0; j<height; j++){
+                switch (map[i][j]){
+                    case 2:
+                        makeWall("horizontal", toActualCoordX(i), toActualCoordX(j));
+                        break;
+                    case 3:
+                        makeWall("horizontalHalf", toActualCoordX(i), toActualCoordX(j));
+                        break;
+                    case 4:
+                        makeWall("verticalHalf", toActualCoordX(i), toActualCoordX(j));
+                        break;
+                }
+            }
+        }
+    }
+
+    private int toActualCoordX(int x){return (AssetManager.WallPixmap.getWidth()/2 + x * AssetManager.WallPixmap.getWidth());}
+
+    //called by the parser. Calls the corrispondent factory method based on the wall type
+    public void makeWall(String type, int worldX, int worldY){
+        switch (type){
+            case "horizontal":
+                gameWorld.addGameObject(gameObjectFactory.makeHorizontalWall(worldX, worldY));
+                break;
+            case "vertical":
+                gameWorld.addGameObject(gameObjectFactory.makeVerticalWall(worldX, worldY));
+                break;
+            case "horizontalHalf":
+                gameWorld.addGameObject(gameObjectFactory.makeHorizontalHalfWall(worldX, worldY));
+                break;
+            case "verticalHalf":
+                gameWorld.addGameObject(gameObjectFactory.makeVerticalHalfWall(worldX, worldY));
+            default:
+                break;
+        }
+    }
+
+
+
+
+
 
     public int[][] initMap(int[][]map, int width, int height){
         map = new int[width][height];//init
@@ -131,18 +258,6 @@ public class MapManager {
 
     };
 
-    public void constructMap(int[][]map, int width, int height){
-        for(int i = 0; i<width; i++){
-            for(int j = 0; j<height; j++){
-                if(map[i][j] == 2){
-                    makeWall("horizontal", i, j);
-                } else if(map[i][j]==3){
-                    makeWall("vertical", i, j);
-                }
-            }
-        }
-    }
-
     public void makeWalls(){//makes the wall of the maps
         //makes the perimeter walls
         int number = (int) AssetManager.backgroundPixmap.getWidth() / AssetManager.WallPixmap.getWidth();
@@ -163,24 +278,6 @@ public class MapManager {
         //calls the json parser to get the internal walls
         jSonParser.parseWalls();
     }
-    //called by the parser. Calls the corrispondent factory method based on the wall type
-    public void makeWall(String type, int worldX, int worldY){
-        switch (type){
-            case "horizontal":
-                gameWorld.addGameObject(gameObjectFactory.makeHorizontalWall(worldX, worldY));
-                break;
-            case "vertical":
-                gameWorld.addGameObject(gameObjectFactory.makeVerticalWall(worldX, worldY));
-                break;
-            case "horizontalHalf":
-                gameWorld.addGameObject(gameObjectFactory.makeHorizontalHalfWall(worldX, worldY));
-                break;
-            case "verticalHalf":
-                gameWorld.addGameObject(gameObjectFactory.makeVerticalHalfWall(worldX, worldY));
-            default:
-                break;
-        }
-    }
 
     //calls the parser for the enemies
     public void makeEnemies(){
@@ -191,7 +288,4 @@ public class MapManager {
     public void makeEnemy(int worldX, int worldY){
         gameWorld.addGameObject(gameObjectFactory.makeEnemy(worldX, worldY));
     }
-
-    private int revertX(int x){return x;}
-    private int revertY(int y){return y;}
 }
