@@ -104,16 +104,12 @@ public class GameWorld {
         addGameObject(testEnemy);
 
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
-        //mapCells = mapManager.initMap(mapCells, AssetManager.backgroundPixmap.getWidth(), AssetManager.backgroundPixmap.getHeight());//init della mappa
         mapCells = mapManager.initMapResized(mapCells, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth(),
                 AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth());
-        mapCells = mapManager.generateMapResized(mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth(),
-                AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth(), true);
+        mapCells = mapManager.generateMapResized(mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth()-1,
+                AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth()-1, true);
 
-        //mapCells = mapManager.generateMap(mapCells,0, 0,
-               // AssetManager.backgroundPixmap.getWidth(), AssetManager.backgroundPixmap.getHeight(), true);
         mapManager.constructMap(mapCells, 50, 50);
-        //mapManager.makeWalls();
         //mapManager.makeEnemies();
 
         gridSize = 42;
@@ -121,16 +117,7 @@ public class GameWorld {
         int levelHeight = AssetManager.backgroundPixmap.getHeight();
         levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
 
-        String s = "";
-        for(int i = 0; i<50; i++){
-            for(int j = 0; j<50; j++){
-                s = s.concat((mapCells[j][i]==2)? "|": (mapCells[j][i]==3) ? "_" : (mapCells[j][i]==4) ? "/" : ".");
 
-
-            }
-            Log.w("map" + (int) i%10, s);
-            s = "";
-        }*/
 
       levelGrid.addObstacles(gameObjects, this);
     }
