@@ -46,7 +46,8 @@ public class MapManager {
         Log.w("mapx", " ");
         for(int i = 0; i<50; i++){
             for(int j = 0; j<50; j++){
-                s = s.concat((map[j][i]==2)? "|": (map[j][i]==3) ? "_" : (map[j][i]==4) ? "/" : ".");
+                s = s.concat((map[j][i]==2)? "|": (map[j][i]==3) ? "_" : (map[j][i]==4) ? "/" : (map[i][j]== 5)?"p" :
+                        (map[i][j]==6)? "e" : ".");
 
 
             }
@@ -126,7 +127,50 @@ public class MapManager {
         return 2;
     }
 
+    public void generateEnemyPos(int[][]map){
+        boolean enemyInPosition = false;
+        int randomX = 0, randomY = 0;
+        while(!enemyInPosition){
+            randomX = (int)(Math.random() * (mapWidth-2)) + 1;
+            randomY = (int)(Math.random() * (mapHeight-2)) + 1;
+            if(map[randomX][randomY] == 0){
+                int i = Math.max(randomX - 5, 1);
+                int j = Math.max(randomY - 5, 1);
+                boolean playerFound = false;
+                while(i<randomX + 5 && i<mapWidth &&  !playerFound){
+                    while(j <randomY+5 && j<mapHeight && !playerFound) {
+                        if (map[i][j] >= 5) {
+                            playerFound = true;
+                        }
+                        j++;
+                    }
+                    j = Math.max(randomY - 5, 1);
+                    i++;
+                }
+                if(!playerFound){
+                    map[randomX][randomY] = 6;
+                    enemyInPosition = true;
+                }
+            }
+
+        }
+    }
+
     public void constructMap(int[][]map, int width, int height){
+        boolean playerPositioned = false;
+        int randomX = 0, randomY = 0;
+        while(!playerPositioned){
+            randomX = (int)(Math.random() * (mapWidth-2)) + 1;
+            randomY = (int)(Math.random() * (mapHeight-2)) + 1;
+            if(map[randomX][randomY] == 0){
+                map[randomX][randomY] = 5;
+                playerPositioned = true;
+            }
+        }
+        for(int i = 0; i< 10; i++){
+            generateEnemyPos(map);
+        }
+        printMap(map);
         for(int i = 0; i<width; i++){
             for(int j = 0; j<height; j++){
                 switch (map[i][j]){
@@ -139,9 +183,15 @@ public class MapManager {
                     case 4:
                         makeWall("verticalHalf", toActualCoordX(i), toActualCoordX(j));
                         break;
+                    case 5:
+                        break;
+                    case 6:
+                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoordX(i), toActualCoordX(j)));
+                        break;
                 }
             }
         }
+
     }
 
     private int toActualCoordX(int x){return (AssetManager.WallPixmap.getWidth()/2 + x * AssetManager.WallPixmap.getWidth());}
