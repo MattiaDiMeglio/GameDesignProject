@@ -148,7 +148,8 @@ public class MapManager {
                     i++;
                 }
                 if(!playerFound){
-                    map[randomX][randomY] = 6;
+                    int type = (int)(Math.random() * 2) + 6;
+                    map[randomX][randomY] = type;
                     enemyInPosition = true;
                 }
             }
@@ -157,16 +158,7 @@ public class MapManager {
     }
 
     public void constructMap(int[][]map, int width, int height){
-        boolean playerPositioned = false;
-        int randomX = 0, randomY = 0;
-        while(!playerPositioned){
-            randomX = (int)(Math.random() * (mapWidth-2)) + 1;
-            randomY = (int)(Math.random() * (mapHeight-2)) + 1;
-            if(map[randomX][randomY] == 0){
-                map[randomX][randomY] = 5;
-                playerPositioned = true;
-            }
-        }
+        map[5][5] = 5;
         for(int i = 0; i< 10; i++){
             generateEnemyPos(map);
         }
@@ -183,11 +175,14 @@ public class MapManager {
                     case 4:
                         makeWall("verticalHalf", toActualCoordX(i), toActualCoordX(j));
                         break;
-                    case 5:
-                        break;
                     case 6:
-                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoordX(i), toActualCoordX(j)));
+                        makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Dummy);
                         break;
+                    case 7:
+                        //makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Sniper);
+                        break;
+                    case 8:
+                       // makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Wimp);
                 }
             }
         }
