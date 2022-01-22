@@ -407,7 +407,7 @@ public class MapManager {
     }
 
     //calls the factory to make the enemies
-    public void makeEnemy(int worldX, int worldY){
-        gameWorld.addGameObject(gameObjectFactory.makeEnemy(worldX, worldY));
+    public void makeEnemy(int worldX, int worldY, AIType aiType){
+        gameWorld.addGameObject(gameObjectFactory.makeEnemy(worldX, worldY, aiType));
     }
 }

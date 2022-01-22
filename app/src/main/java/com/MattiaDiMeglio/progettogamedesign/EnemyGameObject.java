@@ -8,6 +8,7 @@ public class EnemyGameObject extends GameObject {
     private PixMapComponent drawableComponent;//component saved for simplicity
     private DynamicBodyComponent dynamicBodyComponent;
     private ControllableComponent controllableComponent;
+    private WeaponComponent weaponComponent;
     protected boolean killed = false;//has it been killed?
 
     public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){//constructor
@@ -38,7 +39,9 @@ public class EnemyGameObject extends GameObject {
     }
 
     @Override
-    public void update() {
+    public void update() { }
+
+    public void update(int playerX, int playerY, float elapsedTime, int gridSize, Node[][] cells){
         drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
         dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
 
@@ -46,6 +49,8 @@ public class EnemyGameObject extends GameObject {
                 (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
 
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
+
+        aiComponent.updateAI(playerX, playerY, elapsedTime, gridSize, cells);
         aiComponent.movement(); //parte solo se lo stack dei movimenti non è vuoto
 
         //Log.i("Enemy GO","Enemy WorldX Y = ("+worldX+","+worldY+")");
