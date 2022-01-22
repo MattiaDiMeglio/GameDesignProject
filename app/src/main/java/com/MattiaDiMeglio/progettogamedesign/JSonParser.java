@@ -56,7 +56,7 @@ public class JSonParser {
             for(int i = 0; i < enemies.length(); i++){
                 JSONObject enemy = enemies.getJSONObject(i);//for eachone
                 //calls the map manager to make a new enemy
-                mapManager.makeEnemy(enemy.getInt("worldx"),enemy.getInt("worldy"));
+                mapManager.makeEnemy(enemy.getInt("worldx"),enemy.getInt("worldy"), AIType.Dummy);
             }
         } catch (JSONException e) {
             e.printStackTrace();

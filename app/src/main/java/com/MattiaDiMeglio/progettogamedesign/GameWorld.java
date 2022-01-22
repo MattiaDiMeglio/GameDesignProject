@@ -100,7 +100,7 @@ public class GameWorld {
 
         int testEnemyX = 100;
         int testEnemyY = 100;
-        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY);
+        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
         addGameObject(testEnemy);
 
         MapManager mapManager = new MapManager(this, gameObjectFactory, context);
@@ -117,9 +117,7 @@ public class GameWorld {
         int levelHeight = AssetManager.backgroundPixmap.getHeight();
         levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
 
-
-
-      levelGrid.addObstacles(gameObjects, this);
+        levelGrid.addObstacles(gameObjects, this);
     }
 
 
@@ -129,8 +127,14 @@ public class GameWorld {
 
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
-        for(GameObject gameObject : activeGameObjects)
+        for(GameObject gameObject : activeGameObjects){
+            if(gameObject.name.equals("Enemy")){
+                EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
+                enemyGameObject.update(player.worldX, player.worldY, elapsedTime, gridSize, levelGrid.getCells());
+            }
+            else
             gameObject.update();
+        }
 
         checkOutOfBound();
 
@@ -138,7 +142,7 @@ public class GameWorld {
 
         if(rightStrength > 0){
 
-            WeaponComponent playerWeapon = player.getPlayerWeapon();
+            WeaponComponent playerWeapon = (WeaponComponent) player.getComponent(ComponentType.Weapon);
             int lineAmt = playerWeapon.getLineAmt();
             playerWeapon.aim(rightX, rightY,this);
 
@@ -174,6 +178,11 @@ public class GameWorld {
                 } else { //if they're not in view we remove the drawable
 
                     activeGameObjects.remove(gameObject);
+
+                    if(gameObject.name.equals("Enemy")){
+                        AIComponent aiComponent = (AIComponent) gameObject.getComponent(ComponentType.AI);
+                        aiComponent.reset();
+                    }
 
                     if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
                         gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
@@ -282,7 +291,7 @@ public class GameWorld {
         //addGameObject(gameObjectFactory.makeEnemy(enemyDestinationX,enemyDestinationY));
         AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
         aiComponent.pathfind(enemyDestinationX, enemyDestinationY, gridSize, levelGrid.getCells());
-        if (aiComponent.path != null){
+        if (aiComponent.getPath() != null){
             Log.i("moveTestEnemy","path trovato");
             /*for(Node n: aiComponent.path){
                 int x = n.getPosX();

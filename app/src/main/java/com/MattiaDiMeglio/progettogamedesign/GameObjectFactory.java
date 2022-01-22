@@ -38,7 +38,7 @@ public class GameObjectFactory {
     }
 
     //enemy factory
-    public GameObject makeEnemy(int worldX, int worldY){
+    public GameObject makeEnemy(int worldX, int worldY, AIType aiType){
         EnemyGameObject enemy = new EnemyGameObject(gameWorld, worldX, worldY);
         float enemySpeed = 3;
 
@@ -47,8 +47,12 @@ public class GameObjectFactory {
                 gameWorld.toMetersYLength(AssetManager.enemy.getHeight()),
                 world, enemy.name, enemySpeed);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
-        AIComponent aiComponent = new AIComponent();
-        ControllableComponent controllableComponent = new ControllableComponent(gameWorld);//new controllable component
+        ControllableComponent controllableComponent = new ControllableComponent(gameWorld);
+        AIComponent aiComponent = null;
+
+        if(aiType == AIType.Dummy) {
+            aiComponent = new DummyAI(aiType);
+        }
 
         enemy.addComponent(controllableComponent);
         enemy.addComponent(bodyComponent);

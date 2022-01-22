@@ -7,7 +7,7 @@ public class PlayerGameObject extends GameObject {
     private GameWorld gameWorld;
     private PixMapComponent drawableComponent;
     private ControllableComponent controllableComponent;
-    private WeaponComponent playerWeapon;
+    private WeaponComponent weaponComponent;
     protected boolean canMove = false;
 
     public PlayerGameObject(GameWorld gameWorld){
@@ -44,11 +44,6 @@ public class PlayerGameObject extends GameObject {
         return 0f;
     }
 
-    public void setPlayerWeapon(WeaponComponent weapon){
-        removeComponent(ComponentType.Weapon);
-        addComponent(weapon);
-    }
-
     public boolean isInContact(){
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
         com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge s = component.getContactList();
@@ -57,7 +52,5 @@ public class PlayerGameObject extends GameObject {
 
     public int getWorldX(){return worldX;}
     public int getWorldY(){return worldY;}
-
-    public WeaponComponent getPlayerWeapon() {return (WeaponComponent) getComponent(ComponentType.Weapon);}
 
 }
