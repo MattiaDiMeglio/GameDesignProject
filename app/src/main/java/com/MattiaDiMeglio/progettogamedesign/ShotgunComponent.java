@@ -2,13 +2,15 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.util.Log;
 
+import com.google.fpl.liquidfun.Body;
+import com.google.fpl.liquidfun.Fixture;
+
 public class ShotgunComponent extends WeaponComponent{
 
     public ShotgunComponent(){
         mag = 3;
         bullets = mag;
         range = 80.0f;
-
         lineAmt = 5;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
@@ -23,39 +25,59 @@ public class ShotgunComponent extends WeaponComponent{
         if(bullets == 0)
             reload();
 
-        for(int i = 0; i < lineAmt; i++)
-        gameWorld.checkRaycast(aimLineX[i], aimLineY[i]);
+        PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+
+        for(int i = 0; i < lineAmt; i++){
+            Fixture fixture = gameWorld.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
+                    aimLineX[i], aimLineY[i],shooter);
+
+            if(fixture != null){
+                Body castedBody = fixture.getBody();
+                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+
+                if(casteduserData.name.equals("Player"))
+                    gameWorld.killPlayer();
+            }
+        }
+
+
     }
 
     @Override
-    public void aim(int rightX, int rightY, GameWorld gameWorld) {
+    public void aim(float normalizedX, float normalizedY, float rightAngle, GameWorld gameWorld) {
+
+        if(shooter == null)
+            shooter = owner.name;
 
         //con 5 pallini sparati a volta e un offset di 15°,
         //il cono dello shotgun sarà di 60°
 
         int angleOffset = 15;
         int half = lineAmt/2;
-        int minAngle = rightY - (half * angleOffset);
+        float minAngle = rightAngle - (half * angleOffset);
 
-        for(int i = 0; i < lineAmt; i++){
+        float normalX = 0, normalY = 0;
 
-            float normalX = (float) (rightX-50)/50;
-            float normalY = (float) (rightY-50)/50;;
+        for(int i = 0; i < lineAmt; i++) {
 
-            /*float convAngle = (float) Math.toRadians(minAngle + i * angleOffset);
+            float convAngle = (float) Math.toRadians(minAngle + i * angleOffset);
             float cosAngle = (float) Math.cos(convAngle);
-            float sinAngle = (float) Math.sin(convAngle);*/
-            /*float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
+            float sinAngle = (float) Math.sin(convAngle);
+            float length = (float) Math.sqrt((cosAngle * cosAngle) + (sinAngle * sinAngle));
             cosAngle /= length;
-            sinAngle /= length;*/
-/*
-            normalX = cosAngle;
-            normalY = -sinAngle;*/
+            sinAngle /= length;
 
-            aimLineX[i] = gameWorld.toMetersXLength(range) * normalX;
-            aimLineY[i] = gameWorld.toMetersYLength(range) * normalY;
+            normalX = cosAngle;
+            if(!owner.name.equals("Player"))
+                normalY = sinAngle;
+            else normalY = -sinAngle;
+
+            aimLineX[i] = gameWorld.toMetersXLength(range) * (normalX);
+            aimLineY[i] = gameWorld.toMetersYLength(range) * (normalY);
         }
+
     }
+
 
     @Override
     public void reload() {

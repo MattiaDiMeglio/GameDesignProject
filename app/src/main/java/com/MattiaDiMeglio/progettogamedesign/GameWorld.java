@@ -16,7 +16,6 @@ import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 //Gestione degli elementi in gioco
 public class GameWorld {
@@ -25,7 +24,7 @@ public class GameWorld {
     protected List<GameObject> gameObjects;
     protected List<GameObject> activeGameObjects;
     private final GameObjectFactory gameObjectFactory;
-    private final GameScreen gameScreen;
+    public GameScreen gameScreen;
     private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
     protected DoorGameObject door;
@@ -56,7 +55,7 @@ public class GameWorld {
 
     //grid variables and parameters
     GridManager levelGrid;
-    int gridSize;
+    int gridSize = 42;
     EnemyGameObject testEnemy; // pathfinding test
 
     int[][]mapCells;
@@ -95,7 +94,7 @@ public class GameWorld {
         bufferHeight = gameScreen.graphics.getHeight();
 
         //JUST FOR TESTING, creates a player and some GO
-        player = (PlayerGameObject) addGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
+        player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
         int testEnemyX = 100;
@@ -112,7 +111,6 @@ public class GameWorld {
         mapManager.constructMap(mapCells, 50, 50);
         //mapManager.makeEnemies();
 
-        gridSize = 42;
         int levelWidth = AssetManager.backgroundPixmap.getWidth();
         int levelHeight = AssetManager.backgroundPixmap.getHeight();
         levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
@@ -123,17 +121,17 @@ public class GameWorld {
 
     //Game World update, calls the world step, then responds to touch events
 
-    public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightStrength, boolean isShooting){
+    public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightAngle,
+                                    int rightStrength, boolean isShooting){
 
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
         for(GameObject gameObject : activeGameObjects){
             if(gameObject.name.equals("Enemy")){
                 EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
-                enemyGameObject.update(player.worldX, player.worldY, elapsedTime, gridSize, levelGrid.getCells());
+                enemyGameObject.update(player.worldX, player.worldY, elapsedTime, levelGrid.getCells(),this);
             }
-            else
-            gameObject.update();
+            else gameObject.update();
         }
 
         checkOutOfBound();
@@ -144,17 +142,40 @@ public class GameWorld {
 
             WeaponComponent playerWeapon = (WeaponComponent) player.getComponent(ComponentType.Weapon);
             int lineAmt = playerWeapon.getLineAmt();
-            playerWeapon.aim(rightX, rightY,this);
+
+            if(lineAmt == 1){
+                float normalizedX = (float) (rightX-50) / 50;
+                float normalizedY = (float) (rightY-50) / 50;
+                float length = (float) Math.sqrt((normalizedX*normalizedX) + (normalizedY*normalizedY));
+                normalizedX = normalizedX/length;
+                normalizedY = normalizedY/length;
+                //Log.i("GameWorld","Normal XY = ("+normalizedX+","+normalizedY+")");
+                playerWeapon.aim(normalizedX, normalizedY, rightAngle,this);
+            }
+            else if(lineAmt > 1){
+                playerWeapon.aim(rightX, rightY, rightAngle,this);
+            }
+
+            PhysicsComponent enemyBody = (PhysicsComponent) testEnemy.getComponent(ComponentType.Physics);
+            float enemyX = enemyBody.getPositionX();
+            float enemyY = enemyBody.getPositionY();
 
             PhysicsComponent physicsComponent = (PhysicsComponent) player.getComponent(ComponentType.Physics);
+
             float playerX = physicsComponent.getPositionX();
             float playerY = physicsComponent.getPositionY();
 
+            /*float[] playerX = {physicsComponent.getPositionX()};
+            float[] playerY = {physicsComponent.getPositionY()};*/
+
+            //gameScreen.setLineCoordinates(1, enemyX, enemyY, playerX, playerY);
+
             gameScreen.setLineCoordinates(lineAmt, playerX, playerY, playerWeapon.getAimLineX(), playerWeapon.getAimLineY());
+            /*for(int i = 0; i < lineAmt ; i++)
+                addAimLine(playerX,playerY,playerWeapon.getAimLineX()[i],playerWeapon.getAimLineY()[i],"Player");*/
 
             if(isShooting){
                 playerWeapon.shoot(this);
-                moveTestEnemy(); // al momento dello sparo, il nemico si muove (test)
             }
         }
     }
@@ -193,8 +214,8 @@ public class GameWorld {
         }
     }
 
-    protected void checkRaycast ( float aimX, float aimY){//does the raycast callback
-        DynamicBodyComponent playerBody = (DynamicBodyComponent) player.getComponent(ComponentType.Physics);
+    protected Fixture checkRaycast (float bodyX, float bodyY, float aimX, float aimY, String shooter){//does the raycast callback
+        //DynamicBodyComponent playerBody = (DynamicBodyComponent) player.getComponent(ComponentType.Physics);
 
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback() {
@@ -207,13 +228,14 @@ public class GameWorld {
             }
         };
 
-        float targetX = playerBody.getPositionX() + (aimX);
-        float targetY = playerBody.getPositionY() + (aimY);
+        float targetX = bodyX + (aimX);
+        float targetY = bodyY + (aimY);
 
-        Log.d("raycast", "body: " + playerBody.getPositionX() + ", " + playerBody.getPositionY() +
-                " and target: " + targetX + ", " + targetY);
-        world.rayCast(rayCastCallback, playerBody.getPositionX(), playerBody.getPositionY(),
-                targetX, targetY);//calls the raycast
+        Log.d("raycast", "body: " + bodyX + ", " + bodyY + " and target: " + targetX + ", " + targetY);
+        world.rayCast(rayCastCallback, bodyX, bodyY, targetX, targetY);//calls the raycast
+
+        Fixture returnFixture = rayCastFixture;
+
         if (rayCastFixture != null) {//if the ray met a fixture
             Body castedBody = rayCastFixture.getBody();//we get the body
             PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
@@ -221,9 +243,15 @@ public class GameWorld {
                 Log.d("Raycast", "hit : " + casteduserData.name);
                 switch (casteduserData.name) {
                     case "Enemy"://raycast met an enemy first
+                        if(shooter.equals("Enemy"))
+                            break;
                         EnemyGameObject enemyGameObject = (EnemyGameObject) casteduserData.getOwner();
                         enemyGameObject.killed();
                         //destroy enemy
+                        break;
+                    case "Player":
+                        /*PlayerGameObject playerGameObject = (PlayerGameObject) casteduserData.getOwner();
+                        playerGameObject.killed();*/
                         break;
                     case "Wall"://met a wall
                         //hit wall
@@ -247,6 +275,7 @@ public class GameWorld {
                 Log.d("Raycast", "Raycast terminato");
             }
         }
+        return returnFixture;
     }
 
     //methods to add and remove GO
@@ -285,20 +314,8 @@ public class GameWorld {
         player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
     }
 
-    public void moveTestEnemy () {
-        int enemyDestinationX = 300; //500
-        int enemyDestinationY = 100;
-        //addGameObject(gameObjectFactory.makeEnemy(enemyDestinationX,enemyDestinationY));
-        AIComponent aiComponent = (AIComponent) testEnemy.getComponent(ComponentType.AI);
-        aiComponent.pathfind(enemyDestinationX, enemyDestinationY, gridSize, levelGrid.getCells());
-        if (aiComponent.getPath() != null){
-            Log.i("moveTestEnemy","path trovato");
-            /*for(Node n: aiComponent.path){
-                int x = n.getPosX();
-                int y = n.getPosY();
-                addGameObject(gameObjectFactory.makeEnemy(x,y));
-            }*/
-        }
+    public void killPlayer(){
+        player.killed();
     }
 
     public int updateWorldX (float pixmapX){ return (int) (pixmapX - gameScreen.getBackgroundX()); }

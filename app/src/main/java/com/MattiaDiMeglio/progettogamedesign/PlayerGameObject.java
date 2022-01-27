@@ -6,9 +6,11 @@ import android.util.Log;
 public class PlayerGameObject extends GameObject {
     private GameWorld gameWorld;
     private PixMapComponent drawableComponent;
+    private DynamicBodyComponent dynamicBodyComponent;
     private ControllableComponent controllableComponent;
     private WeaponComponent weaponComponent;
     protected boolean canMove = false;
+    protected boolean killed = false;//has it been killed?
 
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
@@ -19,12 +21,24 @@ public class PlayerGameObject extends GameObject {
 
     @Override
     public void update() {//update
+        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+        dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
+
+        drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
+                (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
     }
 
     public void updatePosition(float x, float y, int angle, int strength, float deltaTime){
 
         float normalizedX = (x-50) / 50;
         float normalizedY = (y-50) / 50;
+
+        float length = (float) Math.sqrt((normalizedX*normalizedX) + (normalizedY*normalizedY));
+
+        if(normalizedX > 0)
+            normalizedX = normalizedX/length;
+        if(normalizedY > 0)
+            normalizedY = normalizedY/length;
 
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
         controllableComponent.moveCharacter(normalizedX, normalizedY, angle);
@@ -48,6 +62,22 @@ public class PlayerGameObject extends GameObject {
         PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
         com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge s = component.getContactList();
         return s != null;
+    }
+
+    public void killed(){
+
+        PixMapComponent pixMapComponent = (PixMapComponent) getComponent(ComponentType.Drawable);
+
+        if(!killed){
+            drawableComponent.pixmap = AssetManager.playerKilled;
+            killed = true;
+        }
+        else{
+            drawableComponent.pixmap = AssetManager.player;
+            killed = false;
+        }
+
+
     }
 
     public int getWorldX(){return worldX;}

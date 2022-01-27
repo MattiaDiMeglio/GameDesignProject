@@ -28,11 +28,13 @@ public class GameObjectFactory {
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
 
         GunComponent gunComponent = new GunComponent();
+        ShotgunComponent shotgunComponent = new ShotgunComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
         player.addComponent(controllableComponent);
         player.addComponent(gunComponent);
+        //player.addComponent(shotgunComponent);
 
         return player;
     }
@@ -49,15 +51,26 @@ public class GameObjectFactory {
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
         ControllableComponent controllableComponent = new ControllableComponent(gameWorld);
         AIComponent aiComponent = null;
+        WeaponComponent weaponComponent = null;
 
-        if(aiType == AIType.Dummy) {
-            aiComponent = new DummyAI(aiType);
+        if(aiType == AIType.Dummy){
+            aiComponent = new DummyAI();
+            weaponComponent = new ShotgunComponent();
         }
+
+        else if(aiType == AIType.Sniper)
+            aiComponent = new SniperAI();
+
+        else aiComponent = new WimpAI();
+
+        aiComponent.setGridSize(gameWorld.gridSize);
+        aiComponent.setAiType(aiType);
 
         enemy.addComponent(controllableComponent);
         enemy.addComponent(bodyComponent);
         enemy.addComponent(pixMapComponent);
         enemy.addComponent(aiComponent);
+        enemy.addComponent(weaponComponent);
         return enemy;
     }
 

@@ -2,7 +2,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 public class Movement {
 
-    private int cellX, cellY; // coordinate della cella
+    int cellX, cellY; // coordinate della cella
 
     public Movement(int x, int y){
         this.cellX = x;

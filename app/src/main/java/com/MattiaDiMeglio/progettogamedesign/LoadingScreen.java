@@ -26,6 +26,7 @@ public class LoadingScreen extends Screen {
         AssetManager.background = graphics.newPixmap("Background.png", Graphics.PixmapFormat.RGB565);
         AssetManager.backgroundPixmap = graphics.newPixmap("BackgroundPixmap.png", Graphics.PixmapFormat.RGB565);
         AssetManager.player = graphics.newPixmap("testCharacter.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.playerKilled = graphics.newPixmap("testCharacterKilled.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.enemy = graphics.newPixmap("testEnemy.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.enemyKilled = graphics.newPixmap("testEnemyKilled.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.horizontalWall = graphics.newPixmap("testWallHorizontal.png", Graphics.PixmapFormat.ARGB4444);

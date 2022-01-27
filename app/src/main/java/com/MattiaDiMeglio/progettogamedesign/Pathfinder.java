@@ -15,7 +15,19 @@ public class Pathfinder {
         PriorityQueue<Node> closedList = new PriorityQueue<>();
         PriorityQueue<Node> openList = new PriorityQueue<>();
 
-        //Se la cella target contiene un nodo, il nemico non si muove
+        if(start.parent!=null)
+            start.parent = null;
+
+        if(target.parent!=null)
+            target.parent = null;
+
+        /*if(start.h > 0)
+            Log.i("Pathfinder","Il nodo di partenza è il vicino di un muro");
+
+        if(target.h > 0)
+            Log.i("Pathfinder","Il nodo da raggiungere è il vicino di un muro");*/
+
+        //Se la cella target contiene un muro, il nemico non si muove
         //Se start e target corrispondono, quindi il nemico si è già spostato, il nemico non si muove (di nuovo)
 
         if(target.isWall() || ((start.getPosX() == target.getPosX()) && (start.getPosY() == target.getPosY())))
@@ -29,7 +41,7 @@ public class Pathfinder {
             Node n = openList.peek();
             if(n == target)
                 return n;
-
+            
             for(Node.Edge edge : n.neighbors){
                 Node m = edge.node;
                 float totalWeight = n.g + edge.weight;

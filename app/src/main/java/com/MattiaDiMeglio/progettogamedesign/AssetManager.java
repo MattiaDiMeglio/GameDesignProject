@@ -10,6 +10,7 @@ public class AssetManager {
     public static Pixmap background;
     public static Pixmap backgroundPixmap;
     public static Pixmap player;
+    public static Pixmap playerKilled;
     public static Pixmap enemy;
     public static Pixmap enemyKilled;
     public static Pixmap horizontalWall;

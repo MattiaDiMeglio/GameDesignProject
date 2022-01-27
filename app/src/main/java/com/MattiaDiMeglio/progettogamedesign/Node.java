@@ -24,7 +24,7 @@ public class Node implements Comparable<Node>{
         this.posX = x;
         this.posY = y;
         this.isWall = wall;
-        this.neighbors = new ArrayList<Edge>();
+        this.neighbors = new ArrayList<>();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Node implements Comparable<Node>{
         float deltaX = Math.abs(this.posX - target.posX);
         float deltaY = Math.abs(this.posY - target.posY);
 
-        return Math.max(deltaX, deltaY);
+        return h+Math.max(deltaX, deltaY);
     }
 
     public float manhattan(Node target){ //Manhattan distance

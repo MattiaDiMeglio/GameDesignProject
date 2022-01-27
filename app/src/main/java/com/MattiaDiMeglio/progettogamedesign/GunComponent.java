@@ -2,6 +2,9 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.util.Log;
 
+import com.google.fpl.liquidfun.Body;
+import com.google.fpl.liquidfun.Fixture;
+
 public class GunComponent extends WeaponComponent{
 
     public GunComponent(){
@@ -11,6 +14,7 @@ public class GunComponent extends WeaponComponent{
         lineAmt = 1;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
+        shooter = null;
     }
 
     @Override
@@ -22,7 +26,18 @@ public class GunComponent extends WeaponComponent{
         if(bullets == 0)
             reload();
 
-        gameWorld.checkRaycast(aimLineX[0], aimLineY[0]);
+        PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+
+        Fixture fixture = gameWorld.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
+                aimLineX[0], aimLineY[0],shooter);
+
+        if(fixture != null){
+            Body castedBody = fixture.getBody();
+            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+
+            if(casteduserData.name.equals("Player"))
+                gameWorld.killPlayer();
+        }
     }
 
     @Override
@@ -32,22 +47,10 @@ public class GunComponent extends WeaponComponent{
     }
 
     @Override
-    public void aim(int rightX, int rightY, GameWorld gameWorld) {
+    public void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld) {
 
-        //normalizzazione
-        float normalizedX = (float) (rightX-50) / 50;
-        float normalizedY = (float) (rightY-50) / 50;
-
-        /*
-        float convAngle = (float) Math.toRadians(rightY);
-        float cosAngle = (float) Math.cos(convAngle);
-        float sinAngle = (float) Math.sin(convAngle);
-        /*float length = (float) Math.sqrt( (cosAngle*cosAngle) + (sinAngle*sinAngle) );
-        cosAngle /= length;
-        sinAngle /= length;
-
-        normalX = cosAngle;
-        normalY = -sinAngle;*/
+        if(shooter == null)
+            shooter = owner.name;
 
         aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
         aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
