@@ -45,16 +45,15 @@ public class GameScreen extends Screen {
     boolean onBorderX = false, onBorderY = false;
     float scale;
     Context context;//android context
-    int playerx = 0, playery = 0;
-    int[] targetx, targety;
+
+    int startX = 0, startY = 0;
+    int[] destX, destY;
     int lineAmount = 0;
 
     int leftX = 50, leftY = 50, leftAngle = 0, leftStrength = 0;
     int rightX = 50, rightY = 50, oldRightX = 50, oldRightY = 50, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
 
     boolean isShooting = false;
-
-    int movementDistance = 5;
 
     public GameScreen(Game game, int width, int height, Context context) {
         super(game);
@@ -107,8 +106,8 @@ public class GameScreen extends Screen {
             }
         });
 
-        targetx = new int[10];
-        targety = new int[10];
+        destX = new int[10];
+        destY = new int[10];
 
         }
 
@@ -124,10 +123,10 @@ public class GameScreen extends Screen {
             case Running: //if the game is running update the gameworld
                 gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
                 if(isShooting){
-                    gameWorld.update(leftX, leftY, deltaTime, oldRightX, oldRightY, oldRightStrength, isShooting);
+                    gameWorld.update(leftX, leftY, deltaTime, oldRightX, oldRightY, oldRightAngle, oldRightStrength, isShooting);
                     isShooting = false;
                 }
-                else gameWorld.update(leftX, leftY, deltaTime, rightX, rightY, rightStrength, isShooting);
+                else gameWorld.update(leftX, leftY, deltaTime, rightX, rightY, rightAngle, rightStrength, isShooting);
                 break;
             case Paused:
                 break;
@@ -153,12 +152,12 @@ public class GameScreen extends Screen {
                 drawable.Draw(graphics);
             }
 
-            if(rightStrength > 0){
+            //if(rightStrength > 0){
                 drawAimLines();
-            }
+            //}
         }
         //To test the body positions
-        //drawBodies();
+        drawBodies();
     }
 
     private void drawBodies(){
@@ -184,20 +183,20 @@ public class GameScreen extends Screen {
         }
     }
 
-    public void setLineCoordinates(int lineAmt, float px, float py, float[] targX, float[] targY){
+    public void setLineCoordinates(int lineAmt, float sx, float sy, float[] targX, float[] targY){
         lineAmount = lineAmt;
-        playerx = (int)gameWorld.toPixelsX(px);
-        playery = (int)gameWorld.toPixelsY(py);
+        startX = (int)gameWorld.toPixelsX(sx);
+        startY = (int)gameWorld.toPixelsY(sy);
 
         for(int i = 0; i < lineAmt; i++){
-            targetx[i] = (int)(gameWorld.toPixelsX(targX[i] + px));
-            targety[i] = (int)(gameWorld.toPixelsY(targY[i] + py));
+            destX[i] = (int)(gameWorld.toPixelsX(targX[i] + sx));
+            destY[i] = (int)(gameWorld.toPixelsY(targY[i] + sy));
         }
     }
 
     public void drawAimLines(){
         for(int i = 0; i < lineAmount ; i++){
-            graphics.drawLine(playerx, playery, targetx[i], targety[i], Color.RED);
+            graphics.drawLine(startX, startY, destX[i], destY[i], Color.GREEN);
         }
     }
 
