@@ -59,7 +59,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
         body.setTransform(x, y, body.getAngle());
     }
 
-    public void update(float normalizedX, float normalizedY, int angle) {
+    public void update(float normalizedX, float normalizedY, float angle) {
         Vec2 velocity = new Vec2();
         velocity.set(normalizedX * speed, normalizedY * speed);
         body.setLinearVelocity(velocity);

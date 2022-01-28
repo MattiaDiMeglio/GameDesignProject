@@ -24,7 +24,7 @@ public class GameWorld {
     protected List<GameObject> gameObjects;
     protected List<GameObject> activeGameObjects;
     private final GameObjectFactory gameObjectFactory;
-    public GameScreen gameScreen;
+    private final GameScreen gameScreen;
     private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
     protected DoorGameObject door;
@@ -97,7 +97,7 @@ public class GameWorld {
         player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
-        int testEnemyX = 100;
+        int testEnemyX = 300;
         int testEnemyY = 100;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
         addGameObject(testEnemy);
@@ -121,8 +121,8 @@ public class GameWorld {
 
     //Game World update, calls the world step, then responds to touch events
 
-    public synchronized void update(int x, int y, float elapsedTime, int rightX, int rightY, int rightAngle,
-                                    int rightStrength, boolean isShooting){
+    public synchronized void update(float leftX, float leftY, float elapsedTime, float rightX,
+                                    float rightY, float rightAngle, float rightStrength, boolean isShooting){
 
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
 
@@ -136,43 +136,11 @@ public class GameWorld {
 
         checkOutOfBound();
 
-        gameScreen.setWorldDestination(x, y, elapsedTime);
+        gameScreen.setWorldDestination(leftX, leftY, elapsedTime);
 
         if(rightStrength > 0){
-
             WeaponComponent playerWeapon = (WeaponComponent) player.getComponent(ComponentType.Weapon);
-            int lineAmt = playerWeapon.getLineAmt();
-
-            if(lineAmt == 1){
-                float normalizedX = (float) (rightX-50) / 50;
-                float normalizedY = (float) (rightY-50) / 50;
-                float length = (float) Math.sqrt((normalizedX*normalizedX) + (normalizedY*normalizedY));
-                normalizedX = normalizedX/length;
-                normalizedY = normalizedY/length;
-                //Log.i("GameWorld","Normal XY = ("+normalizedX+","+normalizedY+")");
-                playerWeapon.aim(normalizedX, normalizedY, rightAngle,this);
-            }
-            else if(lineAmt > 1){
-                playerWeapon.aim(rightX, rightY, rightAngle,this);
-            }
-
-            PhysicsComponent enemyBody = (PhysicsComponent) testEnemy.getComponent(ComponentType.Physics);
-            float enemyX = enemyBody.getPositionX();
-            float enemyY = enemyBody.getPositionY();
-
-            PhysicsComponent physicsComponent = (PhysicsComponent) player.getComponent(ComponentType.Physics);
-
-            float playerX = physicsComponent.getPositionX();
-            float playerY = physicsComponent.getPositionY();
-
-            /*float[] playerX = {physicsComponent.getPositionX()};
-            float[] playerY = {physicsComponent.getPositionY()};*/
-
-            //gameScreen.setLineCoordinates(1, enemyX, enemyY, playerX, playerY);
-
-            gameScreen.setLineCoordinates(lineAmt, playerX, playerY, playerWeapon.getAimLineX(), playerWeapon.getAimLineY());
-            /*for(int i = 0; i < lineAmt ; i++)
-                addAimLine(playerX,playerY,playerWeapon.getAimLineX()[i],playerWeapon.getAimLineY()[i],"Player");*/
+            playerWeapon.aim(rightX, rightY, rightAngle,this);
 
             if(isShooting){
                 playerWeapon.shoot(this);
@@ -215,7 +183,6 @@ public class GameWorld {
     }
 
     protected Fixture checkRaycast (float bodyX, float bodyY, float aimX, float aimY, String shooter){//does the raycast callback
-        //DynamicBodyComponent playerBody = (DynamicBodyComponent) player.getComponent(ComponentType.Physics);
 
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         RayCastCallback rayCastCallback = new RayCastCallback() {
@@ -310,12 +277,27 @@ public class GameWorld {
     }
 
     //called by gamescreen, calls movement in playergo
-    public void movePlayer ( int normalizedX, int normalizedY, int angle, int strength, float deltaTime){
+    public void movePlayer (float normalizedX, float normalizedY, float angle, float strength, float deltaTime){
         player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
     }
 
     public void killPlayer(){
         player.killed();
+    }
+
+    public void addAimLine(int lineAmt, float sx, float sy, float[] aimLineX, float[] aimLineY){
+
+        int startX = (int) toPixelsX(sx);
+        int startY = (int) toPixelsY(sy);
+        int targetX = 0;
+        int targetY = 0;
+
+        for(int i = 0; i < lineAmt; i++){
+            targetX = (int)(toPixelsX(aimLineX[i] + sx));
+            targetY = (int)(toPixelsY(aimLineY[i] + sy));
+            AimLine aimLine = new AimLine(startX, startY, targetX, targetY);
+            gameScreen.aimLineStack.push(aimLine);
+        }
     }
 
     public int updateWorldX (float pixmapX){ return (int) (pixmapX - gameScreen.getBackgroundX()); }

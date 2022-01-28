@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 //component that controls a game object movement
 //be it the playerGO or the enemy.
 //it changes the position of the go components and should work
@@ -21,7 +19,7 @@ public class ControllableComponent extends Component {
     }
 
     //New movement system
-    public void moveCharacter(float normalizedX, float normalizedY, int angle){
+    public void moveCharacter(float normalizedX, float normalizedY, float angle){
         PixMapComponent pixmapComp = (PixMapComponent) owner.getComponent(ComponentType.Drawable);//gets the drawable component as ref for the movement
         DynamicBodyComponent dynamicBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
 

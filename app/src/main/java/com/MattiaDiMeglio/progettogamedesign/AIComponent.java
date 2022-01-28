@@ -1,11 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
-import com.badlogic.androidgames.framework.Game;
-import com.google.fpl.liquidfun.Body;
-import com.google.fpl.liquidfun.Fixture;
-
 import java.util.List;
 import java.util.Stack;
 
@@ -14,26 +8,26 @@ enum AIType {Dummy, Sniper, Wimp};
 public class AIComponent extends Component{
 
     private Pathfinder pathfinder;
-    private Stack<Movement> movementStack;
+    protected Stack<Movement> movementStack;
     private int gridSize;
 
     private AIType aiType;
 
-    private int playerX, playerY;
+    private int lastPlayerX, lastPlayerY;
     private float elapsedTime;
 
     final float updateTime = 0.2f;
-    final float aimDelay = 1.0f;
-    final float shootDelay = 2f;
+    final float aimDelay = 0.7f;
+    final float shootDelay = 1.2f;
+    final float reloadDelay = 0.5f;
 
     boolean playerInRange;
-    boolean isAiming;
 
     public AIComponent(){
         pathfinder = new Pathfinder();
         movementStack = new Stack<>();
-        playerX = 0;
-        playerY = 0;
+        lastPlayerX = 0;
+        lastPlayerY = 0;
         elapsedTime = 0f;
     }
 
@@ -53,8 +47,9 @@ public class AIComponent extends Component{
         //se il percorso da far compiere al nemico è A->B->C,
         //path sarà ordinato così: C-B-A
 
-        emptyStack(); //se c'era un vecchio path da percorrere, lo stack viene svuotato
-                      //per far posto al nuovo path
+        if(!movementStack.isEmpty())
+            emptyStack(); //se c'era un vecchio path da percorrere, lo stack viene svuotato
+                          //per far posto al nuovo path
 
         int i = 1;
 
@@ -146,71 +141,25 @@ public class AIComponent extends Component{
 
         increaseElapsedTime(elapsedTime);
         if(this.elapsedTime > updateTime ){
-            setPlayerX(playerX);
-            setPlayerY(playerY);
+            setLastPlayerX(playerX);
+            setLastPlayerY(playerY);
             this.elapsedTime = 0;
         }
     }
 
-    public boolean checkPlayerInRange(GameWorld gameWorld){
+    public boolean checkPlayerInRange(){
 
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
         int lineAmt = enemyWeapon.getLineAmt();
         float range = enemyWeapon.getRange();
-        /*float rangeX = gameWorld.toMetersXLength(range);
-        float rangeY = gameWorld.toMetersYLength(range);
-        float totalRange = (float) Math.sqrt((rangeX * rangeX) + (rangeY * rangeY));*/
-
-        PhysicsComponent enemyBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
-
-        float physX = enemyBody.getPositionX();
-        float physY = enemyBody.getPositionY();
-        /*float playerBodyX = gameWorld.toMetersX(getPlayerX());
-        float playerBodyY = gameWorld.toMetersY(getPlayerY());*/
-
-        float normalX = findNormalX(owner.worldX, owner.worldY, getPlayerX(), getPlayerY());
-        float normalY = findNormalY(owner.worldX, owner.worldY, getPlayerX(), getPlayerY());
-        float angle = 0;
-
-        //Log.i("AIComponent","Normal XY = ("+normalX+","+normalY+")");
-
-        if(lineAmt > 1){
-            angle = (float) Math.atan2(normalY,normalX);
-            angle = (float) Math.toDegrees(angle);
-        }
-
-        enemyWeapon.aim(normalX,normalY,angle,gameWorld);
-        float[] aimLineX = enemyWeapon.getAimLineX();
-        float[] aimLineY = enemyWeapon.getAimLineY();
 
         float distanceToPlayer = getDistanceToPlayer();
 
         for(int i = 0; i < lineAmt ; i++){
-            float rangeX = gameWorld.toPixelsXLength(aimLineX[i]);
-            float rangeY = gameWorld.toPixelsYLength(aimLineY[i]);
-            float distance = (float) Math.sqrt((rangeX * rangeX) + (rangeY * rangeY));
-            distance += 20;
-            /*Log.d("AIComponent","distance = "+distance);
-            Log.d("AIComponent","distanceToPlayer = "+distanceToPlayer);*/
-            if(distanceToPlayer <= distance){
+            if(distanceToPlayer <= range+18){
                 return true;
             }
         }
-        /*for(int i = 0; i < lineAmt ; i++){
-            Fixture hitFixture = gameWorld.checkRaycast(physX,physY,aimLineX[i],aimLineY[i]);
-            if(hitFixture == null){
-                //Log.d("AIComponent","Fixture vuota");
-                break;
-            }
-
-            Body castedBody = hitFixture.getBody();
-            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-
-            if(casteduserData.name.equals("Player")){
-                return true;
-            }
-
-        }*/
         return false;
     }
 
@@ -219,17 +168,8 @@ public class AIComponent extends Component{
     }
 
     public float getDistanceToPlayer() {
-
-        return (float) Math.sqrt(((playerX - owner.worldX) * (playerX - owner.worldX)) +
-                (playerY - owner.worldY) * (playerY - owner.worldY));
-
-        /*float playerBodyX = gameWorld.toMetersX(playerX);
-        float playerBodyY = gameWorld.toMetersY(playerY);
-
-        Log.d("getDistanceToPlayer","enemy body XY = ("+x+","+y+")");
-        Log.d("getDistanceToPlayer","player body XY = ("+playerBodyX+","+playerBodyY+")");
-
-        return (float) Math.sqrt(((playerBodyX - x) * (playerBodyX - x)) + ((playerBodyY - y) * (playerBodyY - y)));*/
+        return (float) Math.sqrt(((lastPlayerX - owner.worldX) * (lastPlayerX - owner.worldX)) +
+                (lastPlayerY - owner.worldY) * (lastPlayerY - owner.worldY));
     }
 
     @Override
@@ -239,17 +179,15 @@ public class AIComponent extends Component{
 
     public float getElapsedTime() { return elapsedTime; }
 
-    public int getPlayerX() { return playerX; }
+    public int getLastPlayerX() { return lastPlayerX; }
 
-    public int getPlayerY() { return playerY; }
-
-    //public List<Node> getPath() { return path; }
+    public int getLastPlayerY() { return lastPlayerY; }
 
     public void increaseElapsedTime(float elapsedTime) { this.elapsedTime += elapsedTime; }
 
-    public void setPlayerX(int playerX) { this.playerX = playerX; }
+    public void setLastPlayerX(int lastPlayerX) { this.lastPlayerX = lastPlayerX; }
 
-    public void setPlayerY(int playerY) { this.playerY = playerY; }
+    public void setLastPlayerY(int lastPlayerY) { this.lastPlayerY = lastPlayerY; }
 
     public void setAiType(AIType aiType) { this.aiType = aiType; }
 

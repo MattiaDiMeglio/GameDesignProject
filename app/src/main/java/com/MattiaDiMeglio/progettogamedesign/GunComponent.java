@@ -23,7 +23,7 @@ public class GunComponent extends WeaponComponent{
         Log.d("GunComponent","shooting");
         bullets--;
 
-        if(bullets == 0)
+        if(bullets == 0 && shooter.equals("Player"))
             reload();
 
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
@@ -54,6 +54,12 @@ public class GunComponent extends WeaponComponent{
 
         aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
         aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
+
+        PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+        float bodyX = physicsComponent.getPositionX();
+        float bodyY = physicsComponent.getPositionY();
+
+        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
     }
 
     @Override

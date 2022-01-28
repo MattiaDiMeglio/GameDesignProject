@@ -2,7 +2,6 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -11,6 +10,7 @@ import com.badlogic.androidgames.framework.impl.AndroidFastRenderView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import io.github.controlwear.virtual.joystick.android.JoystickView;
 
@@ -46,12 +46,10 @@ public class GameScreen extends Screen {
     float scale;
     Context context;//android context
 
-    int startX = 0, startY = 0;
-    int[] destX, destY;
-    int lineAmount = 0;
+    Stack<AimLine> aimLineStack;
 
-    int leftX = 50, leftY = 50, leftAngle = 0, leftStrength = 0;
-    int rightX = 50, rightY = 50, oldRightX = 50, oldRightY = 50, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
+    float leftX = 0, leftY = 0, leftAngle = 0, leftStrength = 0;
+    float rightX = 0, rightY = 0, oldRightX = 0, oldRightY = 0, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
 
     boolean isShooting = false;
 
@@ -74,14 +72,16 @@ public class GameScreen extends Screen {
         initialPlayerLookX = 0;
         renderView = game.getRenderView();
 
+        aimLineStack = new Stack<>();
+
         leftJoystick = game.getLeftJoystick();
         rightJoystick = game.getRightJoystick();
 
         leftJoystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
             public void onMove(int angle, int strength) {
-                leftX = leftJoystick.getNormalizedX();
-                leftY = leftJoystick.getNormalizedY();
+                leftX = (float) (leftJoystick.getNormalizedX() - 50) / 50;
+                leftY = (float) (leftJoystick.getNormalizedY() - 50) / 50;
                 leftAngle = angle;
                 leftStrength = strength;
             }
@@ -92,24 +92,27 @@ public class GameScreen extends Screen {
             public void onMove(int angle, int strength) {
                 oldRightX = rightX;
                 oldRightY = rightY;
-                rightX = rightJoystick.getNormalizedX();
-                rightY = rightJoystick.getNormalizedY();
+
+                float rightVectorX = rightJoystick.getNormalizedX();
+                float rightVectorY = rightJoystick.getNormalizedY();
+
+                rightVectorX = (rightVectorX-50)/50;
+                rightVectorY = (rightVectorY-50)/50;
+                float length = (float) Math.sqrt((rightVectorX * rightVectorX) + (rightVectorY * rightVectorY));
+
+                rightX = rightVectorX/length;
+                rightY = rightVectorY/length;
                 rightAngle = angle;
                 rightStrength = strength;
 
-                if(!(rightX == 50 && rightY == 50)){
+                if(!(rightJoystick.getNormalizedX() == 50 && rightJoystick.getNormalizedY() == 50)){
                     oldRightAngle = angle;
                     oldRightStrength = strength;
                 }
                 else isShooting = true;
-
             }
         });
-
-        destX = new int[10];
-        destY = new int[10];
-
-        }
+    }
 
     //gamescreen update, calls the gameworld update
     @Override
@@ -151,11 +154,8 @@ public class GameScreen extends Screen {
             for (DrawableComponent drawable : drawables) {
                 drawable.Draw(graphics);
             }
-
-            //if(rightStrength > 0){
-                drawAimLines();
-            //}
         }
+        drawAimLines();
         //To test the body positions
         drawBodies();
     }
@@ -183,20 +183,10 @@ public class GameScreen extends Screen {
         }
     }
 
-    public void setLineCoordinates(int lineAmt, float sx, float sy, float[] targX, float[] targY){
-        lineAmount = lineAmt;
-        startX = (int)gameWorld.toPixelsX(sx);
-        startY = (int)gameWorld.toPixelsY(sy);
-
-        for(int i = 0; i < lineAmt; i++){
-            destX[i] = (int)(gameWorld.toPixelsX(targX[i] + sx));
-            destY[i] = (int)(gameWorld.toPixelsY(targY[i] + sy));
-        }
-    }
-
     public void drawAimLines(){
-        for(int i = 0; i < lineAmount ; i++){
-            graphics.drawLine(startX, startY, destX[i], destY[i], Color.GREEN);
+        while(!aimLineStack.isEmpty()){
+            AimLine aimLine = aimLineStack.pop();
+            graphics.drawLine(aimLine.startX, aimLine.startY, aimLine.targetX, aimLine.targetY, Color.GREEN);
         }
     }
 
@@ -226,10 +216,10 @@ public class GameScreen extends Screen {
     }
 
     //sets the destination for the world movement. It moves the map and all the GO other than the player
-    public void setWorldDestination(int jx, int jy, float deltaTime){
+    public void setWorldDestination(float jx, float jy, float deltaTime){
 
-        float normalizedX = -((float) jx-50);
-        float normalizedY = -((float) jy-50);
+        float normalizedX = -(jx*50);
+        float normalizedY = -(jy*50);
 
         //settati i wordposX e Y del player basare il movimento sulla differenza
         destinationX = currentBackgroundX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX)  * deltaTime);

@@ -42,7 +42,29 @@ public class GameObjectFactory {
     //enemy factory
     public GameObject makeEnemy(int worldX, int worldY, AIType aiType){
         EnemyGameObject enemy = new EnemyGameObject(gameWorld, worldX, worldY);
-        float enemySpeed = 3;
+        float enemySpeed = 0;
+
+        AIComponent aiComponent;
+        WeaponComponent weaponComponent = null;
+
+        if(aiType == AIType.Dummy){
+            aiComponent = new DummyAI();
+            weaponComponent = new ShotgunComponent();
+            enemySpeed = 3;
+        }
+
+        else if(aiType == AIType.Sniper){
+            aiComponent = new SniperAI();
+            enemySpeed = 1.5f;
+        }
+
+        else{
+            aiComponent = new WimpAI();
+            enemySpeed = 5;
+        }
+
+        aiComponent.setGridSize(gameWorld.gridSize);
+        aiComponent.setAiType(aiType);
 
         DynamicBodyComponent bodyComponent = new DynamicBodyComponent(40, 40,
                 gameWorld.toMetersXLength(AssetManager.enemy.getWidth()),
@@ -50,21 +72,6 @@ public class GameObjectFactory {
                 world, enemy.name, enemySpeed);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
         ControllableComponent controllableComponent = new ControllableComponent(gameWorld);
-        AIComponent aiComponent = null;
-        WeaponComponent weaponComponent = null;
-
-        if(aiType == AIType.Dummy){
-            aiComponent = new DummyAI();
-            weaponComponent = new ShotgunComponent();
-        }
-
-        else if(aiType == AIType.Sniper)
-            aiComponent = new SniperAI();
-
-        else aiComponent = new WimpAI();
-
-        aiComponent.setGridSize(gameWorld.gridSize);
-        aiComponent.setAiType(aiType);
 
         enemy.addComponent(controllableComponent);
         enemy.addComponent(bodyComponent);

@@ -28,20 +28,9 @@ public class PlayerGameObject extends GameObject {
                 (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
     }
 
-    public void updatePosition(float x, float y, int angle, int strength, float deltaTime){
-
-        float normalizedX = (x-50) / 50;
-        float normalizedY = (y-50) / 50;
-
-        float length = (float) Math.sqrt((normalizedX*normalizedX) + (normalizedY*normalizedY));
-
-        if(normalizedX > 0)
-            normalizedX = normalizedX/length;
-        if(normalizedY > 0)
-            normalizedY = normalizedY/length;
-
+    public void updatePosition(float x, float y, float angle, float strength, float deltaTime){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
-        controllableComponent.moveCharacter(normalizedX, normalizedY, angle);
+        controllableComponent.moveCharacter(x, y, angle);
     }
 
     public float getMovedX(){
@@ -65,9 +54,6 @@ public class PlayerGameObject extends GameObject {
     }
 
     public void killed(){
-
-        PixMapComponent pixMapComponent = (PixMapComponent) getComponent(ComponentType.Drawable);
-
         if(!killed){
             drawableComponent.pixmap = AssetManager.playerKilled;
             killed = true;
@@ -76,8 +62,6 @@ public class PlayerGameObject extends GameObject {
             drawableComponent.pixmap = AssetManager.player;
             killed = false;
         }
-
-
     }
 
     public int getWorldX(){return worldX;}

@@ -10,7 +10,7 @@ public class ShotgunComponent extends WeaponComponent{
     public ShotgunComponent(){
         mag = 3;
         bullets = mag;
-        range = 80.0f;
+        range = 60;
         lineAmt = 5;
         this.aimLineX = new float[lineAmt];
         this.aimLineY = new float[lineAmt];
@@ -22,7 +22,7 @@ public class ShotgunComponent extends WeaponComponent{
         Log.d("ShotgunComponent","shooting");
         bullets--;
 
-        if(bullets == 0)
+        if(bullets == 0 && shooter.equals("Player"))
             reload();
 
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
@@ -76,7 +76,13 @@ public class ShotgunComponent extends WeaponComponent{
             aimLineY[i] = gameWorld.toMetersYLength(range) * (normalY);
         }
 
+        PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+        float bodyX = physicsComponent.getPositionX();
+        float bodyY = physicsComponent.getPositionY();
+
+        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
     }
+
 
 
     @Override

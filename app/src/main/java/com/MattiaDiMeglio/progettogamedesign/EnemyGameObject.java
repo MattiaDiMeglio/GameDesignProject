@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 //the enemyGo
 public class EnemyGameObject extends GameObject {
     private GameWorld gameWorld;//the gameWorld,
