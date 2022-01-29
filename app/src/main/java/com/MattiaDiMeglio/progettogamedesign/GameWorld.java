@@ -234,6 +234,9 @@ public class GameWorld {
                             enemyGameObject.killed();
                         }
                         break;
+                    case "Box":
+                        BoxGameObject boxGameObject = (BoxGameObject) casteduserData.getOwner();
+                        boxGameObject.Damage();
                     default:
                         Log.d("RaycastEvent", "raycast object with no name");
                         break;
@@ -257,6 +260,7 @@ public class GameWorld {
     }
 
     public synchronized void removeGameObject (GameObject gameObject){
+        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
         gameObjects.remove(gameObject);
     }
 

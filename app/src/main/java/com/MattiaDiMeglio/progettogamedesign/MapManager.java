@@ -157,10 +157,44 @@ public class MapManager {
         }
     }
 
+    public void generateBoxPosition(int[][]map){
+        boolean boxInPosition = false;
+        int randomX = 0, randomY = 0;
+        while(!boxInPosition){
+            randomX = (int)(Math.random() * (mapWidth-2)) + 1;
+            randomY = (int)(Math.random() * (mapHeight-2)) + 1;
+
+            if(map[randomX][randomY] == 0){
+                int i = Math.max(randomX - 2, 2);
+                int j = Math.max(randomY - 2, 2);
+                boolean objectFound = false;
+                while(i < randomX + 2 && i<mapWidth - 2 &&  !objectFound){
+                    while(j < randomY+2 && j<mapHeight - 2 && !objectFound) {
+                        if (map[i][j] >= 2) {
+                            objectFound = true;
+                        }
+                        j++;
+                    }
+                    j = Math.max(randomY - 2, 1);
+                    i++;
+                }
+                if(!objectFound){
+                    map[randomX][randomY] = 9;
+                    boxInPosition = true;
+                }
+
+
+            }
+        }
+    }
+
     public void constructMap(int[][]map, int width, int height){
         map[5][5] = 5;
         for(int i = 0; i< 10; i++){
             generateEnemyPos(map);
+        }
+        for(int i = 0; i< 15; i++){
+            generateBoxPosition(map);
         }
         printMap(map);
         for(int i = 0; i<width; i++){
@@ -183,6 +217,10 @@ public class MapManager {
                         break;
                     case 8:
                        // makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Wimp);
+                        break;
+                    case 9:
+                        gameWorld.addGameObject(gameObjectFactory.makeBox(toActualCoordX(i), toActualCoordX(j)));
+                        break;
                 }
             }
         }

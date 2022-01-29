@@ -9,28 +9,54 @@ public class PlayerGameObject extends GameObject {
     private DynamicBodyComponent dynamicBodyComponent;
     private ControllableComponent controllableComponent;
     private WeaponComponent weaponComponent;
-    protected boolean canMove = false;
+    protected boolean canMove = true;
     protected boolean killed = false;//has it been killed?
 
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
         this.name = "Player";
-        this.worldX = (int)gameWorld.screenSize.width/2;
-        this.worldY = (int)gameWorld.screenSize.height/2;
+        this.worldX = (int)gameWorld.bufferWidth/2;
+        this.worldY = (int)gameWorld.bufferHeight/2;
     }
 
+    public void CanMove(){
+        canMove = true;
+    }
+
+    public void CantMove(){
+        canMove = false;
+    }
     @Override
     public void update() {//update
-        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
-        dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
+     //   drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+     //   dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
 
-        drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
-                (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
+     //   drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
+       //         (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
     }
 
     public void updatePosition(float x, float y, float angle, float strength, float deltaTime){
-        controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
-        controllableComponent.moveCharacter(x, y, angle);
+        if(canMove) {
+           // Log.d("playerPos1", "world: " + worldX + ", " + worldY);
+            controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
+            assert controllableComponent != null;
+            controllableComponent.moveCharacter(x, y, angle);
+          //  Log.d("playerPos2", "world: " + worldX + ", " + worldY);
+        }
+    }
+
+    public void updatePosition(int x, int y){
+        if(!canMove) {
+            drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+            dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
+
+            drawableComponent.setPosition(x, y);
+
+            float touchX = gameWorld.toPixelsTouchX(x);
+            float touchY = gameWorld.toPixelsTouchY(y);
+            dynamicBodyComponent.setTransform(gameWorld.toMetersX(touchX),
+                    gameWorld.toMetersY(touchY));
+        }
     }
 
     public float getMovedX(){
@@ -54,12 +80,14 @@ public class PlayerGameObject extends GameObject {
     }
 
     public void killed(){
+        PixMapComponent pixMapComponent = (PixMapComponent)components.get(ComponentType.Drawable);
+        assert pixMapComponent != null;
         if(!killed){
-            drawableComponent.pixmap = AssetManager.playerKilled;
+            pixMapComponent.pixmap = AssetManager.playerKilled;
             killed = true;
         }
         else{
-            drawableComponent.pixmap = AssetManager.player;
+            pixMapComponent.pixmap = AssetManager.player;
             killed = false;
         }
     }

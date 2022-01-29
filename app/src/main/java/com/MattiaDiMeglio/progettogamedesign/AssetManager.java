@@ -21,4 +21,5 @@ public class AssetManager {
     public static Pixmap WallPixmap;
     public static Pixmap HorizontalHalfWallPixmap;
     public static Pixmap VerticalHalfWallPixmap;
+    public static Pixmap BoxPixmap;
 }

@@ -15,7 +15,7 @@ public class GameObjectFactory {
 //playerGO factory TODO piazzare tutte le posizioni basandosi sul worldpos
     public GameObject makePlayer(float x, float y){
         PlayerGameObject player = new PlayerGameObject(gameWorld);//new player GO
-        float playerSpeed = 2;
+        float playerSpeed = 16;
         //new physics component for playerGO
         DynamicBodyComponent body = new DynamicBodyComponent(gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)),
                 gameWorld.toMetersY(gameWorld.toPixelsTouchY(y)),
@@ -79,6 +79,19 @@ public class GameObjectFactory {
         enemy.addComponent(aiComponent);
         enemy.addComponent(weaponComponent);
         return enemy;
+    }
+
+    public GameObject makeBox(int worldX, int worldY){
+        BoxGameObject box = new BoxGameObject(gameWorld, worldX, worldY);
+        StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
+                gameWorld.toMetersXLength(AssetManager.WallPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.WallPixmap.getHeight()),
+                world, box.name);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.BoxPixmap, -100, -100);
+
+        box.addComponent(staticBodyComponent);
+        box.addComponent(pixMapComponent);
+        return box;
     }
 
     //horizontal wall factory

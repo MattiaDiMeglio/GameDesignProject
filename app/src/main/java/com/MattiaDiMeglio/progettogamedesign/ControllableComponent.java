@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 //component that controls a game object movement
 //be it the playerGO or the enemy.
 //it changes the position of the go components and should work
@@ -24,13 +26,16 @@ public class ControllableComponent extends Component {
         DynamicBodyComponent dynamicBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
 
         dynamicBodyComponent.update(normalizedX, normalizedY, angle);
-
+        int prevGX = pixmapComp.getPositionX();
+        int prevGY = pixmapComp.getPositionY();
         int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
         int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
         pixmapComp.setPosition(currentGX, currentGY, angle);
 
         owner.worldX = gameWorld.updateWorldX(pixmapComp.getPositionX());
         owner.worldY = gameWorld.updateWorldY(pixmapComp.getPositionY());
+        //owner.worldX += currentGX - prevGX;
+        //owner.worldY += currentGY - prevGY;
     }
 
     public void setAngle(float angle){

@@ -2,6 +2,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -217,20 +218,25 @@ public class GameScreen extends Screen {
 
     //sets the destination for the world movement. It moves the map and all the GO other than the player
     public void setWorldDestination(float jx, float jy, float deltaTime){
+        gameWorld.player.CantMove();
 
-        float normalizedX = -(jx*50);
-        float normalizedY = -(jy*50);
+
+        float normalizedX = -(jx);//*50);
+        float normalizedY = -(jy);//*50);
 
         //settati i wordposX e Y del player basare il movimento sulla differenza
-        destinationX = currentBackgroundX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX)  * deltaTime);
-        destinationY = currentBackgroundY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY) * deltaTime);
+        //destinationX = currentBackgroundX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX));// * deltaTime);
+        //destinationY = currentBackgroundY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY));// * deltaTime);
 
-        //Log.d("backg", gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) + ", " + gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()));
+        destinationX = -(gameWorld.player.worldX - gameWorld.bufferWidth/2); //(int)(currentBackgroundX + normalizedX * 8);
+        destinationY = -(gameWorld.player.worldY - gameWorld.bufferHeight/2); //(int)(currentBackgroundY + normalizedY * 8);
+        //Log.d("playerWorld", "w: " + gameWorld.player.worldX + ", " +gameWorld.player.worldY);
 
         onBorderX = false;
         onBorderY = false;
 
         //check that we don't move outside the background boundaries
+        /*
         if(destinationX > 0){
             destinationX = 0;
             onBorderX = true;
@@ -246,29 +252,30 @@ public class GameScreen extends Screen {
         if(destinationY < - (AssetManager.backgroundPixmap.getHeight() - graphics.getHeight())){
             destinationY = - (AssetManager.backgroundPixmap.getHeight() - graphics.getHeight());
             onBorderY = true;
-        }
+        }*/
 
         if((currentBackgroundX != destinationX || currentBackgroundY != destinationY)) {
             if(!onBorderX)
-                currentBackgroundX = movementX(currentBackgroundX, normalizedX, deltaTime);
+                currentBackgroundX = destinationX;//movementX(currentBackgroundX, normalizedX, deltaTime);
             if(!onBorderY)
-                currentBackgroundY = movementY(currentBackgroundY, normalizedY, deltaTime);
+                currentBackgroundY = destinationY;//movementY(currentBackgroundY, normalizedY, deltaTime);
             for (DrawableComponent drawable : drawables) {
                 GameObject gameObject = drawable.owner;
-                if (!gameObject.name.equals("Player")){
+                //if (!gameObject.name.equals("Player")){
                     gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
                             (int) (gameWorld.inViewPositionY(gameObject.worldY)));
-                }
+                //}
             }
         }
 
+        gameWorld.player.CanMove();
     }
 
     public int movementX(float startingX, float normalizedX, float deltaTime){
-        return (int) (startingX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX)  * deltaTime));
+        return (int) (startingX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()*2) * normalizedX) ));// * deltaTime));
     }
     public int movementY(float startingY, float normalizedY, float deltaTime){
-        return (int) (startingY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY) * deltaTime));
+        return (int) (startingY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()*2) * normalizedY)));// * deltaTime));
     }
 
 
