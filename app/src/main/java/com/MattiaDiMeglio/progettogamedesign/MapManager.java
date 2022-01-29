@@ -163,28 +163,26 @@ public class MapManager {
         while(!boxInPosition){
             randomX = (int)(Math.random() * (mapWidth-2)) + 1;
             randomY = (int)(Math.random() * (mapHeight-2)) + 1;
-
             if(map[randomX][randomY] == 0){
-                int i = Math.max(randomX - 2, 2);
-                int j = Math.max(randomY - 2, 2);
-                boolean objectFound = false;
-                while(i < randomX + 2 && i<mapWidth - 2 &&  !objectFound){
-                    while(j < randomY+2 && j<mapHeight - 2 && !objectFound) {
+                int i = Math.max(randomX - 2, 1);
+                int j = Math.max(randomY - 2, 1);
+                boolean playerFound = false;
+                while(i<randomX + 2 && i<mapWidth &&  !playerFound){
+                    while(j <randomY + 2 && j<mapHeight && !playerFound) {
                         if (map[i][j] >= 2) {
-                            objectFound = true;
+                            playerFound = true;
                         }
                         j++;
                     }
                     j = Math.max(randomY - 2, 1);
                     i++;
                 }
-                if(!objectFound){
+                if(!playerFound){
                     map[randomX][randomY] = 9;
                     boxInPosition = true;
                 }
-
-
             }
+
         }
     }
 

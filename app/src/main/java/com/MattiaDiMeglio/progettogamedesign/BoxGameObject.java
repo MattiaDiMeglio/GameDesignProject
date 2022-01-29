@@ -38,7 +38,7 @@ public class BoxGameObject extends GameObject {
     public void Damage() {
         life -= 1;
         if( life == 0){
-            components.clear();
+            //components.clear();
             destroyed = true;
             gameWorld.removeActiveGameObject(this);
             gameWorld.removeGameObject(this);
