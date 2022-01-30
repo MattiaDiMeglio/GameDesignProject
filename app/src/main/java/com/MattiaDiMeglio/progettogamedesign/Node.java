@@ -6,7 +6,7 @@ import java.util.List;
 public class Node implements Comparable<Node>{
 
     private int posX, posY; // cell center coordinates
-    private boolean isWall;
+    private boolean isObstacle;
 
     // Parent in the path
     public Node parent = null;
@@ -23,7 +23,7 @@ public class Node implements Comparable<Node>{
         this.h = h;
         this.posX = x;
         this.posY = y;
-        this.isWall = wall;
+        this.isObstacle = wall;
         this.neighbors = new ArrayList<>();
     }
 
@@ -66,10 +66,10 @@ public class Node implements Comparable<Node>{
 
     public void setPosX(int posX) { this.posX = posX; }
     public void setPosY(int posY) { this.posY = posY; }
-    public void setWall(boolean wall) { isWall = wall; }
+    public void setObstacle(boolean obstacle) { isObstacle = obstacle; }
 
     public int getPosX() { return posX; }
     public int getPosY() { return posY; }
-    public boolean isWall() { return isWall; }
+    public boolean isObstacle() { return isObstacle; }
 
 }

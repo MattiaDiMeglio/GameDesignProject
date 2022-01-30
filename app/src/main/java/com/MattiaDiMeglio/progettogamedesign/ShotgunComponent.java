@@ -31,19 +31,15 @@ public class ShotgunComponent extends WeaponComponent{
             Fixture fixture = gameWorld.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
                     aimLineX[i], aimLineY[i],shooter);
 
-            if(fixture != null){
+            if(shooter.equals("Enemy") && fixture != null){
                 Body castedBody = fixture.getBody();
                 if (castedBody != null) {
                     PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-
-
                     if (casteduserData.name.equals("Player"))
                         gameWorld.killPlayer();
                 }
             }
         }
-
-
     }
 
     @Override

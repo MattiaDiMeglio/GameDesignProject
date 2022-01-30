@@ -42,6 +42,7 @@ public class BoxGameObject extends GameObject {
                 //components.clear();
                 outOfView();
                 destroyed = true;
+                gameWorld.levelGrid.removeObstacle(worldX, worldY);
                 gameWorld.removeActiveGameObject(this);
                 gameWorld.removeGameObject(this);
             }

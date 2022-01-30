@@ -97,8 +97,8 @@ public class GameWorld {
         player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
-        int testEnemyX = 300;
-        int testEnemyY = 100;
+        int testEnemyX = 100;
+        int testEnemyY = 300;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
         addGameObject(testEnemy);
 
@@ -114,6 +114,11 @@ public class GameWorld {
         int levelWidth = AssetManager.backgroundPixmap.getWidth();
         int levelHeight = AssetManager.backgroundPixmap.getHeight();
         levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
+
+        /*int boxX = 63;
+        int boxY = 231;
+        for(int i = 0; i < 7; i++)
+            addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));*/
 
         levelGrid.addObstacles(gameObjects, this);
     }
@@ -138,7 +143,7 @@ public class GameWorld {
 
         gameScreen.setWorldDestination(leftX, leftY, elapsedTime);
 
-        if(rightStrength > 0){
+        if(rightStrength > 0 && !(rightX == 0 && rightY == 0)){
             WeaponComponent playerWeapon = (WeaponComponent) player.getComponent(ComponentType.Weapon);
             playerWeapon.aim(rightX, rightY, rightAngle,this);
 

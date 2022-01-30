@@ -33,8 +33,8 @@ public class GameObjectFactory {
         player.addComponent(body);
         player.addComponent(pixmap);
         player.addComponent(controllableComponent);
-        //player.addComponent(gunComponent);
-        player.addComponent(shotgunComponent);
+        player.addComponent(gunComponent);
+        //player.addComponent(shotgunComponent);
 
         return player;
     }
@@ -55,6 +55,9 @@ public class GameObjectFactory {
 
         else if(aiType == AIType.Sniper){
             aiComponent = new SniperAI();
+            int sniperGunMag = 1;
+            float sniperGunRange = 220;
+            weaponComponent = new GunComponent(sniperGunMag, sniperGunRange);
             enemySpeed = 1.5f;
         }
 

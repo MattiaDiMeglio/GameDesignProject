@@ -7,7 +7,6 @@ public class DummyAI extends AIComponent{
     float aimingTimer = 0f;
     float shootingTimer = 0f;
     float reloadingTimer = 0f;
-    int shootCounter = 0;
 
     DummyAI(){ super(); }
 
@@ -43,8 +42,6 @@ public class DummyAI extends AIComponent{
                         aimingTimer = 0f;
                         shootingTimer = 0f;
                         weaponComponent.shoot(gameWorld);
-                        shootCounter++;
-                        Log.d("DummyAI","Shooting "+shootCounter);
                     }
                 }
             }

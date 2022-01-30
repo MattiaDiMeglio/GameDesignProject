@@ -97,12 +97,19 @@ public class GameScreen extends Screen {
                 float rightVectorX = rightJoystick.getNormalizedX();
                 float rightVectorY = rightJoystick.getNormalizedY();
 
-                rightVectorX = (rightVectorX-50)/50;
-                rightVectorY = (rightVectorY-50)/50;
-                float length = (float) Math.sqrt((rightVectorX * rightVectorX) + (rightVectorY * rightVectorY));
+                rightVectorX = (rightVectorX - 50) / 50;
+                rightVectorY = (rightVectorY - 50) / 50;
 
-                rightX = rightVectorX/length;
-                rightY = rightVectorY/length;
+                if(rightVectorX == 0 && rightVectorY == 0){
+                    rightX = rightVectorX;
+                    rightY = rightVectorY;
+                }
+                else{
+                    float length = (float) Math.sqrt((rightVectorX * rightVectorX) + (rightVectorY * rightVectorY));
+                    rightX = rightVectorX/length;
+                    rightY = rightVectorY/length;
+                }
+
                 rightAngle = angle;
                 rightStrength = strength;
 

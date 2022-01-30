@@ -1,9 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -30,7 +27,7 @@ public class Pathfinder {
         //Se la cella target contiene un muro, il nemico non si muove
         //Se start e target corrispondono, quindi il nemico si è già spostato, il nemico non si muove (di nuovo)
 
-        if(target.isWall() || ((start.getPosX() == target.getPosX()) && (start.getPosY() == target.getPosY())))
+        if(target.isObstacle() || ((start.getPosX() == target.getPosX()) && (start.getPosY() == target.getPosY())))
             return null;
 
         start.g = 0;

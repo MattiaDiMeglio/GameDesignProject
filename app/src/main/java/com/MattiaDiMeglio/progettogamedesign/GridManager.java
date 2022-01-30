@@ -36,7 +36,7 @@ public class GridManager {
 
     public void addObstacles(List<GameObject> gameObjects, GameWorld gameWorld){
         for(GameObject go : gameObjects){
-            if(go.name.equals("Wall") || go.name.equals("HalfWall"))
+            if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("Box"))
                 addSingleObstacle(go, gameWorld);
         }
         computeNeighbors(); // dopo aver aggiunto gli ostacoli, calcoliamo i vicini dei nodi
@@ -99,11 +99,11 @@ public class GridManager {
 
         for (int i = 0; i < gridObstacleHeight; i++) {
             for (int j = 0; j < gridObstacleWidth; j++) {
-                cells[(int) (startY + i)][(int) (startX + j)].setWall(true);
-                cells[(int) (startY + i)][(int) (startX + j)].h = wallWeight;
+                cells[(int) (startY + i)][(int) (startX + j)].setObstacle(true);
+                if (!obstacle.name.equals("Box"))
+                    cells[(int) (startY + i)][(int) (startX + j)].h = wallWeight;
             }
         }
-
     }
 
     public void computeNeighbors(){
@@ -122,40 +122,40 @@ public class GridManager {
 
                 // il nodo del quale vogliamo calcolare i vicini
                 // non deve contenere un muro
-                if(!(cells[i][j].isWall())){
+                if(!(cells[i][j].isObstacle())){
 
                     //stesso discorso per ognuno dei vicini
                     // N = North, S = South, W = West, E = East
 
-                    if(!(cells[i-1][j-1].isWall())) //NW Neighbor
+                    if(!(cells[i-1][j-1].isObstacle())) //NW Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i-1][j-1]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i-1][j].isWall())) //N Neighbor
+                    if(!(cells[i-1][j].isObstacle())) //N Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i-1][j]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i-1][j+1].isWall())) //NE Neighbor
+                    if(!(cells[i-1][j+1].isObstacle())) //NE Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i-1][j+1]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i][j-1].isWall())) //W Neighbor
+                    if(!(cells[i][j-1].isObstacle())) //W Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i][j-1]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i][j+1].isWall())) //E Neighbor
+                    if(!(cells[i][j+1].isObstacle())) //E Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i][j+1]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i+1][j-1].isWall())) //SW Neighbor
+                    if(!(cells[i+1][j-1].isObstacle())) //SW Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i+1][j-1]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i+1][j].isWall())) //S Neighbor
+                    if(!(cells[i+1][j].isObstacle())) //S Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i+1][j]);
                     else cells[i][j].h = wallNeighborWeight;
 
-                    if(!(cells[i+1][j+1].isWall())) //SE Neighbor
+                    if(!(cells[i+1][j+1].isObstacle())) //SE Neighbor
                         cells[i][j].addBranch(edgeWeight, cells[i+1][j+1]);
                     else cells[i][j].h = wallNeighborWeight;
 
@@ -192,6 +192,64 @@ public class GridManager {
                 }
             }
         }
+    }
+
+    public void removeObstacle(int obstacleX, int obstacleY){
+        int gridObstacleX = (obstacleX - (gridSize / 2)) / gridSize;
+        int gridObstacleY = (obstacleY - (gridSize / 2)) / gridSize;
+        cells[gridObstacleY][gridObstacleX].setObstacle(false);
+        int nodeX = cells[gridObstacleY][gridObstacleX].getPosX();
+        int nodeY = cells[gridObstacleY][gridObstacleX].getPosY();
+        Log.d("GridManager","Box is not an obstacle, [j][i] =  ["+gridObstacleY+"]["+gridObstacleX+"]");
+        Log.d("GridManager","Node XY =  ["+nodeX+"]["+nodeY+"]");
+        computeNodeNeighbor(gridObstacleY, gridObstacleX);
+    }
+
+    public void computeNodeNeighbor(int y, int x){
+
+        int nodeX = cells[x][y].getPosX();
+        int nodeY = cells[x][y].getPosY();
+
+        int edgeWeight = 1;
+        float wallNeighborWeight = 1000f;
+
+        int nodeXNW = cells[x-1][y-1].getPosX();
+        int nodeYNW = cells[x-1][y-1].getPosY();
+
+        Log.d("computeNodeNeighbor","Node XY =  ["+nodeX+"]["+nodeY+"]");
+        Log.d("computeNodeNeighbor","Node NW XY =  ["+nodeXNW+"]["+nodeYNW+"]");
+
+        if(!(cells[x-1][y-1].isObstacle())) //NW Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x-1][y-1]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x-1][y].isObstacle())) //N Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x-1][y]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x-1][y+1].isObstacle())) //NE Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x-1][y+1]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x][y-1].isObstacle())) //W Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x][y-1]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x][y+1].isObstacle())) //E Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x][y+1]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x+1][y-1].isObstacle())) //SW Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x+1][y-1]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x+1][y].isObstacle())) //S Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x+1][y]);
+        else cells[x][y].h = wallNeighborWeight;
+
+        if(!(cells[x+1][y+1].isObstacle())) //SE Neighbor
+            cells[x][y].addBranch(edgeWeight, cells[x+1][y+1]);
+        else cells[x][y].h = wallNeighborWeight;
     }
 
     public Node[][] getCells() { return cells; }

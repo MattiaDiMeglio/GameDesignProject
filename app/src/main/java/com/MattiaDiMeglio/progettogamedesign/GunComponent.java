@@ -17,6 +17,17 @@ public class GunComponent extends WeaponComponent{
         shooter = null;
     }
 
+    public GunComponent(int m, float r){ //Sniper
+        this.mag = m;
+        this.bullets = mag;
+        this.range = r;
+        this.lineAmt = 1;
+        this.aimLineX = new float[lineAmt];
+        this.aimLineY = new float[lineAmt];
+        shooter = null;
+        this.shooter = null;
+    }
+
     @Override
     public void shoot(GameWorld gameWorld) {
         Log.d("GunComponent","bullets = " +bullets);
@@ -31,13 +42,15 @@ public class GunComponent extends WeaponComponent{
         Fixture fixture = gameWorld.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
                 aimLineX[0], aimLineY[0],shooter);
 
-        if(fixture != null){
+        if(shooter.equals("Enemy") && fixture != null){
             Body castedBody = fixture.getBody();
-            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+            if (castedBody != null) {
+                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
 
-            if(casteduserData.name.equals("Player"))
-                gameWorld.killPlayer();
-        }
+                if (casteduserData.name.equals("Player"))
+                    gameWorld.killPlayer();
+                }
+            }
     }
 
     @Override
