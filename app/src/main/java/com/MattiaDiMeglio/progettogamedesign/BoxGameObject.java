@@ -36,13 +36,14 @@ public class BoxGameObject extends GameObject {
     }
 
     public void Damage() {
-        life -= 1;
-        if( life == 0){
-            //components.clear();
-            destroyed = true;
-            gameWorld.removeActiveGameObject(this);
-            gameWorld.removeGameObject(this);
-
+        if(!destroyed) {
+            life -= 1;
+            if (life == 0) {
+                //components.clear();
+                destroyed = true;
+                gameWorld.removeActiveGameObject(this);
+                gameWorld.removeGameObject(this);
+            }
         }
     }
 

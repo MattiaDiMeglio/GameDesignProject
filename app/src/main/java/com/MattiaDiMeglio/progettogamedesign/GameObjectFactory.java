@@ -33,8 +33,8 @@ public class GameObjectFactory {
         player.addComponent(body);
         player.addComponent(pixmap);
         player.addComponent(controllableComponent);
-        player.addComponent(gunComponent);
-        //player.addComponent(shotgunComponent);
+        //player.addComponent(gunComponent);
+        player.addComponent(shotgunComponent);
 
         return player;
     }
