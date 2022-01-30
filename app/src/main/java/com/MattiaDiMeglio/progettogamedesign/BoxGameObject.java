@@ -40,6 +40,7 @@ public class BoxGameObject extends GameObject {
             life -= 1;
             if (life == 0) {
                 //components.clear();
+                outOfView();
                 destroyed = true;
                 gameWorld.removeActiveGameObject(this);
                 gameWorld.removeGameObject(this);

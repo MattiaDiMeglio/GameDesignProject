@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.google.fpl.liquidfun.Body;
+
 //the enemyGo
 public class EnemyGameObject extends GameObject {
     private GameWorld gameWorld;//the gameWorld,
@@ -39,11 +41,11 @@ public class EnemyGameObject extends GameObject {
     public void update() { }
 
     public void update(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gWorld){
-        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
-        dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
+        //drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+        //dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
 
-        drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
-                (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
+        //drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
+          //      (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
 
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
 
@@ -59,11 +61,22 @@ public class EnemyGameObject extends GameObject {
     }
 
     public void killed(){
-        AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
-        aiComponent.emptyStack();
-
-        drawableComponent.pixmap = AssetManager.enemyKilled;
-        killed = true;
+        if(!killed) {
+            AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
+            aiComponent.emptyStack();
+            DynamicBodyComponent bodyComponent = (DynamicBodyComponent) getComponent(ComponentType.Physics);
+            bodyComponent.update(0f, 0f, 0f);
+            outOfView();
+            Body body = bodyComponent.getBody();
+            body.destroyFixture(body.getFixtureList());
+            body.delete();
+            gameWorld.removeActiveGameObject(this);
+            gameWorld.removeGameObject(this);
+            drawableComponent.pixmap = AssetManager.enemyKilled;
+            killed = true;
+        }
     }
+
+    public boolean isKilled(){return killed;}
 
 }

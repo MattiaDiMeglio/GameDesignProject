@@ -125,7 +125,7 @@ public class GameWorld {
                                     float rightY, float rightAngle, float rightStrength, boolean isShooting){
 
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-
+        //Log.d("touched", "" + player.isInContact());
         for(GameObject gameObject : activeGameObjects){
             if(gameObject.name.equals("Enemy")){
                 EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
@@ -150,19 +150,24 @@ public class GameWorld {
 
     private void checkOutOfBound(){
         for(GameObject gameObject : gameObjects){//for each GO
-            //gameObject.update();//update TODO probabilmente inutile
             if(!gameObject.name.equals("Player")){//if it's not a player
-                if(isInView(gameObject)){//we check is it's in view
-
-                    if(!activeGameObjects.contains(gameObject))
-                        addActiveGameObject(gameObject);
-
-                    DrawableComponent component = (DrawableComponent)gameObject.getComponent(ComponentType.Drawable);
-                    if(component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
-                        //inits the position of the GO in view
-                        gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
-                                (int) (inViewPositionY(gameObject.worldY)));
-                        gameScreen.addDrawable(component);
+                if(isInView(gameObject) ){//we check is it's in view
+                    if(!activeGameObjects.contains(gameObject)) {
+                        if (gameObject.name.equals("Enemy")) {
+                            EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
+                            if (!enemyGameObject.isKilled()) {
+                                addActiveGameObject(gameObject);
+                            }
+                        } else {
+                            addActiveGameObject(gameObject);
+                        }
+                        DrawableComponent component = (DrawableComponent) gameObject.getComponent(ComponentType.Drawable);
+                        if (component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
+                            //inits the position of the GO in view
+                            gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
+                                    (int) (inViewPositionY(gameObject.worldY)));
+                            gameScreen.addDrawable(component);
+                        }
                     }
                 } else { //if they're not in view we remove the drawable
 

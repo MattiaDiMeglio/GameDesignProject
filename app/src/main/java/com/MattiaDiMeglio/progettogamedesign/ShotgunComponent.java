@@ -33,10 +33,13 @@ public class ShotgunComponent extends WeaponComponent{
 
             if(fixture != null){
                 Body castedBody = fixture.getBody();
-                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+                if (castedBody != null) {
+                    PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
 
-                if(casteduserData.name.equals("Player"))
-                    gameWorld.killPlayer();
+
+                    if (casteduserData.name.equals("Player"))
+                        gameWorld.killPlayer();
+                }
             }
         }
 
