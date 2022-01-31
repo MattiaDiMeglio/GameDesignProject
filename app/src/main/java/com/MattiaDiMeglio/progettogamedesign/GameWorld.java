@@ -106,7 +106,7 @@ public class GameWorld {
         mapCells = mapManager.initMapResized(mapCells, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth(),
                 AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth());
         mapCells = mapManager.generateMapResized(mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth()-1,
-                AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth()-1, true);
+                AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth()-1, (Math.random() * 6) % 2 == 0);
 
         mapManager.constructMap(mapCells, 50, 50);
         //mapManager.makeEnemies();

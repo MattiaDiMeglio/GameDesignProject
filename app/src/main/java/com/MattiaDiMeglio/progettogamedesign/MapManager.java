@@ -253,7 +253,7 @@ public class MapManager {
         boolean doorMade = false;
         int doorPosition = 0;
         while(!doorMade) {
-            int randomSide = (int) ((Math.random() * 100) % 3);
+            int randomSide = (int) ((Math.random() * 100) % 4);
             switch (randomSide) {
                 case 0://sx
                     if (startingX > 0){
