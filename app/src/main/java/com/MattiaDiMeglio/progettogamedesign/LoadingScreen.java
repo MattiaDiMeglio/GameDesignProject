@@ -38,6 +38,9 @@ public class LoadingScreen extends Screen {
         AssetManager.VerticalHalfWallPixmap = graphics.newPixmap("VerticalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.HorizontalHalfWallPixmap = graphics.newPixmap("HorizontalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.BoxPixmap = graphics.newPixmap("Box.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.PausePixmap = graphics.newPixmap("PauseImg.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.PlayPixmap = graphics.newPixmap("PlayImg.png", Graphics.PixmapFormat.ARGB4444);
+
         //sets the next screen
         game.setScreen(new MainMenuScreen(game, width, height, context));
     }

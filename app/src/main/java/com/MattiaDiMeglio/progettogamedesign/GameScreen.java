@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.impl.AndroidFastRenderView;
 
@@ -125,7 +126,9 @@ public class GameScreen extends Screen {
     //gamescreen update, calls the gameworld update
     @Override
     public void update(float deltaTime) {
+        List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
         game.getInput().getKeyEvents();
+        int len = touchEvents.size();
 
         switch(gameState) {
             case Ready:
@@ -138,8 +141,26 @@ public class GameScreen extends Screen {
                     isShooting = false;
                 }
                 else gameWorld.update(leftX, leftY, deltaTime, rightX, rightY, rightAngle, rightStrength, isShooting);
+                for(int i = 0; i < len; i++){
+                    Input.TouchEvent event = touchEvents.get(i);
+                    if(event.type == Input.TouchEvent.TOUCH_DOWN){
+                        if(event.x > gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 48 && event.y < 48){
+                            gameState = GameState.Paused;
+                        }
+                    }
+                }
+
                 break;
             case Paused:
+                Log.d("Paused", "paused");
+                for(int i = 0; i < len; i++){
+                    Input.TouchEvent event = touchEvents.get(i);
+                    if(event.type == Input.TouchEvent.TOUCH_DOWN){
+                        if(event.x > gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 48 && event.y < 48){
+                            gameState = GameState.Running;
+                        }
+                    }
+                }
                 break;
             case GameOver:
                 break;
@@ -156,8 +177,8 @@ public class GameScreen extends Screen {
         graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX - 250, (int)currentBackgroundY - 250);
         graphics.drawPixmap(AssetManager.backgroundPixmap, (int)currentBackgroundX, (int)currentBackgroundY);
         //draw the grid
-        graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
-                (int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(15), Color.WHITE);
+        //graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
+          //      (int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(15), Color.WHITE);
         //draw the drawables
         if(!drawables.isEmpty()) {
             for (DrawableComponent drawable : drawables) {
@@ -167,6 +188,12 @@ public class GameScreen extends Screen {
         drawAimLines();
         //To test the body positions
         drawBodies();
+        if(gameState == GameState.Running)
+            graphics.drawPixmap(AssetManager.PausePixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+        if(gameState == GameState.Paused){
+            graphics.drawPixmap(AssetManager.PlayPixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+            //pipo
+        }
     }
 
     private void drawBodies(){
