@@ -40,6 +40,9 @@ public class LoadingScreen extends Screen {
         AssetManager.BoxPixmap = graphics.newPixmap("Box.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.PausePixmap = graphics.newPixmap("PauseImg.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.PlayPixmap = graphics.newPixmap("PlayImg.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.ResumeButtonPixmap = graphics.newPixmap("ResumeButton.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
 
         //sets the next screen
         game.setScreen(new MainMenuScreen(game, width, height, context));

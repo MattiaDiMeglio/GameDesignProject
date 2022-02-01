@@ -158,7 +158,14 @@ public class GameScreen extends Screen {
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
                         if(event.x > gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 48 && event.y < 48){
                             gameState = GameState.Running;
+                        } else if(event.x > gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2){
+                            if(event.y > gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2)
+                            && event.y < gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2)
+                                    + AssetManager.ResumeButtonPixmap.getHeight()){
+                                gameState = GameState.Running;
+                            }
                         }
+
                     }
                 }
                 break;
@@ -192,6 +199,10 @@ public class GameScreen extends Screen {
             graphics.drawPixmap(AssetManager.PausePixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
         if(gameState == GameState.Paused){
             graphics.drawPixmap(AssetManager.PlayPixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+            graphics.drawPixmap(AssetManager.ResumeButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2));
+            graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight()/2));
+            graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
+
             //pipo
         }
     }
