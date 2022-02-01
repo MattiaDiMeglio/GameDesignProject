@@ -23,7 +23,7 @@ public class LoadingScreen extends Screen {
         Graphics graphics = game.getGraphics();
 
         //loads the pixmaps
-        AssetManager.background = graphics.newPixmap("Background.png", Graphics.PixmapFormat.RGB565);
+        AssetManager.background = graphics.newPixmap("RoadPixmap.png", Graphics.PixmapFormat.RGB565);
         AssetManager.backgroundPixmap = graphics.newPixmap("BackgroundPixmap.png", Graphics.PixmapFormat.RGB565);
         AssetManager.player = graphics.newPixmap("testCharacter.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.playerKilled = graphics.newPixmap("testCharacterKilled.png", Graphics.PixmapFormat.ARGB4444);

@@ -153,6 +153,7 @@ public class GameScreen extends Screen {
         graphics.clear(Color.WHITE);
 
         //draw the background
+        graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX - 250, (int)currentBackgroundY - 250);
         graphics.drawPixmap(AssetManager.backgroundPixmap, (int)currentBackgroundX, (int)currentBackgroundY);
         //draw the grid
         graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
