@@ -14,24 +14,25 @@ public class AIComponent extends Component{
     private AIType aiType;
 
     private int lastPlayerX, lastPlayerY;
-    private float elapsedTime;
 
-    final float updateTime = 0.2f;
-    final float aimDelay = 0.7f;
-    final float shootDelay = 1.2f;
-    final float reloadDelay = 0.5f;
-
-    float aimingTimer = 0f;
-    float shootingTimer = 0f;
-    float reloadingTimer = 0f;
+    final float playerPositionUpdateDelay = 0.2f;
+    float playerPositionTimer;
     boolean playerInRange = false;
+
+    float aimDelay;
+    float shootDelay;
+    float reloadDelay;
+
+    float aimingTimer = 0;
+    float shootingTimer = 0;
+    float reloadingTimer = 0;
 
     public AIComponent(){
         pathfinder = new Pathfinder();
         movementStack = new Stack<>();
         lastPlayerX = 0;
         lastPlayerY = 0;
-        elapsedTime = 0f;
+        playerPositionTimer = 0;
     }
 
     public void pathfind(int targetX, int targetY, Node[][] cells){
@@ -142,11 +143,12 @@ public class AIComponent extends Component{
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
 
-        increaseElapsedTime(elapsedTime);
-        if(this.elapsedTime > updateTime ){
+        playerPositionTimer += elapsedTime;
+
+        if(playerPositionTimer > playerPositionUpdateDelay){
             setLastPlayerX(playerX);
             setLastPlayerY(playerY);
-            this.elapsedTime = 0;
+            playerPositionTimer = 0;
         }
     }
 
@@ -167,7 +169,7 @@ public class AIComponent extends Component{
     }
 
     public void reset(){
-        elapsedTime = 0f;
+        playerPositionTimer = 0f;
         aimingTimer = 0f;
         shootingTimer = 0f;
         reloadingTimer = 0f;
@@ -176,7 +178,7 @@ public class AIComponent extends Component{
 
     public float getDistanceToPlayer() {
         return (float) Math.sqrt(((lastPlayerX - owner.worldX) * (lastPlayerX - owner.worldX)) +
-                (lastPlayerY - owner.worldY) * (lastPlayerY - owner.worldY));
+                ((lastPlayerY - owner.worldY) * (lastPlayerY - owner.worldY)));
     }
 
     @Override
@@ -184,13 +186,9 @@ public class AIComponent extends Component{
 
     public AIType getAiType() { return aiType; }
 
-    public float getElapsedTime() { return elapsedTime; }
-
     public int getLastPlayerX() { return lastPlayerX; }
 
     public int getLastPlayerY() { return lastPlayerY; }
-
-    public void increaseElapsedTime(float elapsedTime) { this.elapsedTime += elapsedTime; }
 
     public void setLastPlayerX(int lastPlayerX) { this.lastPlayerX = lastPlayerX; }
 
