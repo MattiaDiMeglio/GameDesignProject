@@ -28,8 +28,6 @@ public class BoxGameObject extends GameObject {
                 gameWorld.toMetersY(physY));
     }
 
-
-
     @Override
     public void outOfView() {
         staticBodyComponent.setTrasform(40, 40);
@@ -43,7 +41,7 @@ public class BoxGameObject extends GameObject {
                 outOfView();
                 destroyed = true;
                 gameWorld.levelGrid.removeObstacle(worldX, worldY);
-                gameWorld.removeActiveGameObject(this);
+                //gameWorld.removeActiveGameObject(this);
                 gameWorld.removeGameObject(this);
             }
         }

@@ -5,12 +5,12 @@ import android.util.Log;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
 
-public class GunComponent extends WeaponComponent{
+public class RifleComponent extends WeaponComponent{
 
-    public GunComponent(){
-        mag = 10;
+    public RifleComponent(){
+        mag = 1;
         bullets = mag;
-        range = 100;
+        range = 220;
         lineAmt = 1;
         aimLineX = new float[lineAmt];
         aimLineY = new float[lineAmt];
@@ -18,8 +18,8 @@ public class GunComponent extends WeaponComponent{
 
     @Override
     public void shoot(GameWorld gameWorld) {
-        Log.d("GunComponent","bullets = " +bullets);
-        Log.d("GunComponent","shooting");
+        Log.d("RifleComponent","bullets = " +bullets);
+        Log.d("RifleComponent","shooting");
         bullets--;
 
         if(bullets == 0 && shooter.equals("Player"))
@@ -37,8 +37,8 @@ public class GunComponent extends WeaponComponent{
 
                 if (casteduserData.name.equals("Player"))
                     gameWorld.killPlayer();
-                }
             }
+        }
     }
 
     @Override

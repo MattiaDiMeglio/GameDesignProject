@@ -17,6 +17,7 @@ abstract class WeaponComponent extends Component{
     public abstract int getLineAmt();
     public abstract float[] getAimLineX();
     public abstract float[] getAimLineY();
+    public abstract void setShooter(String shooter);
 
     @Override
     public ComponentType getType() {

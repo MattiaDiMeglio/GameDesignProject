@@ -97,7 +97,7 @@ public class GameWorld {
         player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
         gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
-        int testEnemyX = 100;
+        int testEnemyX = 250;
         int testEnemyY = 300;
         testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
         addGameObject(testEnemy);
@@ -117,8 +117,14 @@ public class GameWorld {
 
         /*int boxX = 63;
         int boxY = 231;
-        for(int i = 0; i < 7; i++)
-            addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));*/
+        for(int i = 0; i < 7; i++){
+            addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));
+            if(i == 6){
+                for(int j = 1; j < 5; j++)
+                    if(j!=3)
+                    addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY - (j * 42)));
+            }
+        }*/
 
         levelGrid.addObstacles(gameObjects, this);
     }

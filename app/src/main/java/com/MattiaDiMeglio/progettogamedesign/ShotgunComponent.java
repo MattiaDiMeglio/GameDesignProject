@@ -12,8 +12,8 @@ public class ShotgunComponent extends WeaponComponent{
         bullets = mag;
         range = 60;
         lineAmt = 5;
-        this.aimLineX = new float[lineAmt];
-        this.aimLineY = new float[lineAmt];
+        aimLineX = new float[lineAmt];
+        aimLineY = new float[lineAmt];
     }
 
     @Override
@@ -44,9 +44,6 @@ public class ShotgunComponent extends WeaponComponent{
 
     @Override
     public void aim(float normalizedX, float normalizedY, float rightAngle, GameWorld gameWorld) {
-
-        if(shooter == null)
-            shooter = owner.name;
 
         //con 5 pallini sparati a volta e un offset di 15°,
         //il cono dello shotgun sarà di 60°
@@ -103,4 +100,7 @@ public class ShotgunComponent extends WeaponComponent{
 
     @Override
     public float[] getAimLineY() { return aimLineY;}
+
+    @Override
+    public void setShooter(String shooter) {this.shooter = shooter;}
 }

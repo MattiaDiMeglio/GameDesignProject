@@ -21,7 +21,10 @@ public class AIComponent extends Component{
     final float shootDelay = 1.2f;
     final float reloadDelay = 0.5f;
 
-    boolean playerInRange;
+    float aimingTimer = 0f;
+    float shootingTimer = 0f;
+    float reloadingTimer = 0f;
+    boolean playerInRange = false;
 
     public AIComponent(){
         pathfinder = new Pathfinder();
@@ -165,6 +168,10 @@ public class AIComponent extends Component{
 
     public void reset(){
         elapsedTime = 0f;
+        aimingTimer = 0f;
+        shootingTimer = 0f;
+        reloadingTimer = 0f;
+        playerInRange = false;
     }
 
     public float getDistanceToPlayer() {
