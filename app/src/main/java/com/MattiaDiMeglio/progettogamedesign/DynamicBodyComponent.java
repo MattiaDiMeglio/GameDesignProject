@@ -13,7 +13,6 @@ import com.google.fpl.liquidfun.World;
 //implements a dynamic body from jliquidfun
 //represents all physics body that can be moved by forces
 public class DynamicBodyComponent extends PhysicsComponent{
-    private Body body;
     private float speed;
 
 

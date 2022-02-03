@@ -33,12 +33,12 @@ public class MainMenuScreen extends Screen {
         this.context = context;
 
         graphics = game.getGraphics();
+        AssetManager.Lizard = graphics.newPixmap("Lizard.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.PlayButtonPixmap = graphics.newPixmap("PlayButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
-        AssetManager.Lizard = graphics.newPixmap("Lizard.png", Graphics.PixmapFormat.ARGB4444);
 
-        nextScreen = new LoadingScreen(game, width, height, context);
+        nextScreen = new LoadingScreen(game, width, height, context, this);
     }
 
     //for now just goes to the gamescreen
@@ -55,7 +55,10 @@ public class MainMenuScreen extends Screen {
                     if(event.y > graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
                             && event.y < graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
                             + AssetManager.PlayButtonPixmap.getHeight()){
+                        LoadingScreen loadingScreen = (LoadingScreen) nextScreen;
+                        loadingScreen.setNonCreated();
                         game.setScreen(nextScreen);
+
                     }
                 }
 

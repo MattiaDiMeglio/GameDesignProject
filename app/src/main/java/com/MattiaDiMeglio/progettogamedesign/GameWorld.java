@@ -276,7 +276,7 @@ public class GameWorld {
     }
 
     public synchronized void removeGameObject (GameObject gameObject){
-        gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
+        //gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
         gameObjects.remove(gameObject);
     }
 
@@ -354,5 +354,25 @@ public class GameWorld {
 
     public float toPixelScaleX ( float x){ return x * (gameScreen.graphics.getWidth() / screenSize.width); }
     public float toPixelScaleY ( float y){return y * (gameScreen.graphics.getHeight() / screenSize.height);}
+
+
+    public void destroyGameWorld(){
+        for (GameObject gameObject: gameObjects) {
+            PhysicsComponent physicsComponent = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
+            physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
+            physicsComponent.body.delete();
+            gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
+            gameObject.removeComponent(ComponentType.Physics);
+            gameObject.removeComponent(ComponentType.Drawable);
+            gameObject.removeComponent(ComponentType.Weapon);
+            gameObject.removeComponent(ComponentType.AI);
+            gameObject.removeComponent(ComponentType.Controllable);
+            gameObject.removeComponent(ComponentType.Joint);
+        }
+        activeGameObjects.clear();
+        gameObjects.clear();
+        world.delete();
+        player = null;
+    }
 }
 

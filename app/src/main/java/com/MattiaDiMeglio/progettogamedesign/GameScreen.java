@@ -33,6 +33,7 @@ public class GameScreen extends Screen {
     Box physicalSize, screenSize;
     AndroidFastRenderView renderView;
     JoystickView leftJoystick, rightJoystick;
+    MainMenuScreen mainMenuScreen;
 
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -55,9 +56,10 @@ public class GameScreen extends Screen {
 
     boolean isShooting = false;
 
-    public GameScreen(Game game, int width, int height, Context context) {
+    public GameScreen(Game game, int width, int height, Context context, MainMenuScreen mainMenuScreen) {
         super(game);
         this.context = context;
+        this.mainMenuScreen = mainMenuScreen;
 
         graphics = game.getGraphics();//we get the graphics from the framework, to draw on screen
         //world sizes
@@ -163,6 +165,10 @@ public class GameScreen extends Screen {
                             && event.y < gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2)
                                     + AssetManager.ResumeButtonPixmap.getHeight()){
                                 gameState = GameState.Running;
+                            } else if(event.y > gameWorld.bufferHeight/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2 - AssetManager.ExitButtonPixmap.getHeight())
+                                    && event.y < gameWorld.bufferHeight/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2)){
+                                gameWorld.destroyGameWorld();
+                                game.setScreen(mainMenuScreen);
                             }
                         }
 
