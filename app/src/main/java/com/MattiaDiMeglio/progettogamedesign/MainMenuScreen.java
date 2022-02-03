@@ -58,7 +58,10 @@ public class MainMenuScreen extends Screen {
                         LoadingScreen loadingScreen = (LoadingScreen) nextScreen;
                         loadingScreen.setNonCreated();
                         game.setScreen(nextScreen);
-
+                    } else if(event.y > graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2 - AssetManager.ExitButtonPixmap.getHeight())
+                            && event.y < graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2)){
+                        ProgettoGameDesign progettoGameDesign = (ProgettoGameDesign) game;
+                        progettoGameDesign.ExitGame();
                     }
                 }
 
