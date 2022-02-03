@@ -3,6 +3,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -137,6 +138,9 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running: //if the game is running update the gameworld
+                leftJoystick.setEnabled(true);
+                rightJoystick.setEnabled(true);
+
                 gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
                 if(isShooting){
                     gameWorld.update(leftX, leftY, deltaTime, oldRightX, oldRightY, oldRightAngle, oldRightStrength, isShooting);
@@ -155,6 +159,9 @@ public class GameScreen extends Screen {
                 break;
             case Paused:
                 Log.d("Paused", "paused");
+                leftJoystick.setEnabled(false);
+                rightJoystick.setEnabled(false);
+
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
