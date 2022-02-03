@@ -26,7 +26,7 @@ public class GameScreen extends Screen {
         Paused,
         GameOver
     }
-    static GameWorld gameWorld;//GW
+    GameWorld gameWorld;//GW
     Graphics graphics;
     List<DrawableComponent> drawables;
     GameState gameState = GameState.Ready;
@@ -328,4 +328,8 @@ public class GameScreen extends Screen {
     //background x and y
     public float getBackgroundX(){return currentBackgroundX;}
     public float getBackgroundY(){return currentBackgroundY;}
+
+    public GameWorld getGameWorld() {
+        return gameWorld;
+    }
 }

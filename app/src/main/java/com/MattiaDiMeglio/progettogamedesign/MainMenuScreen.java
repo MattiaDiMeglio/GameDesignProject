@@ -10,6 +10,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Input.TouchEvent;
 import com.badlogic.androidgames.framework.Screen;
 
@@ -30,18 +31,47 @@ public class MainMenuScreen extends Screen {
         this.width = width;
         this.height = height;
         this.context = context;
+
         graphics = game.getGraphics();
-        nextScreen = new GameScreen(game, width, height, context);
+        if(AssetManager.PlayButtonPixmap == null)
+            AssetManager.PlayButtonPixmap = graphics.newPixmap("PlayButton.png", Graphics.PixmapFormat.ARGB4444);
+        if(AssetManager.OptionsButtonPixmap == null)
+            AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
+        if(AssetManager.ExitButtonPixmap == null)
+            AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.Lizard = graphics.newPixmap("Lizard.png", Graphics.PixmapFormat.ARGB4444);
+
+        nextScreen = new LoadingScreen(game, width, height, context);
     }
 
     //for now just goes to the gamescreen
     @Override
     public void update(float deltaTime) {
-        game.setScreen(nextScreen);
+
+        List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
+        game.getInput().getKeyEvents();
+        int len = touchEvents.size();
+        for(int i = 0; i < len; i++){
+            Input.TouchEvent event = touchEvents.get(i);
+            if(event.type == Input.TouchEvent.TOUCH_DOWN){
+                if(event.x > graphics.getWidth()/2 - AssetManager.PlayButtonPixmap.getWidth()/2){
+                    if(event.y > graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
+                            && event.y < graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
+                            + AssetManager.PlayButtonPixmap.getHeight()){
+                        game.setScreen(nextScreen);
+                    }
+                }
+
+            }
+        }
     }
 
     @Override
     public void present(float deltaTime) {
+        graphics.drawPixmap(AssetManager.Lizard, 0, 0);
+        graphics.drawPixmap(AssetManager.PlayButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.PlayButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2));
+        graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.OptionsButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.OptionsButtonPixmap.getHeight()/2));
+        graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.ExitButtonPixmap.getWidth()/2, graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight()/2) + AssetManager.ExitButtonPixmap.getHeight()/2);
     }
 
     @Override

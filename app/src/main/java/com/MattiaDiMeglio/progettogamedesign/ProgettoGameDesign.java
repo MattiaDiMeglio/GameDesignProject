@@ -30,7 +30,7 @@ public class ProgettoGameDesign extends AndroidGame {
             width = getWindowManager().getDefaultDisplay().getWidth();
         }
 
-        return new LoadingScreen(this, width, height, getApplicationContext());
+        return new MainMenuScreen(this, width, height, getApplicationContext());
     }
 
     @Override

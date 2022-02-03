@@ -23,7 +23,7 @@ public class GameWorld {
     protected World world;
     protected List<GameObject> gameObjects;
     protected List<GameObject> activeGameObjects;
-    private final GameObjectFactory gameObjectFactory;
+    //private final GameObjectFactory gameObjectFactory;
     private final GameScreen gameScreen;
     private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
@@ -88,32 +88,32 @@ public class GameWorld {
 
         gameObjects = new ArrayList<GameObject>();//list of all game objects
         activeGameObjects = new ArrayList<GameObject>(); //list of on-screen game objects
-        gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
+        //gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
 
         bufferWidth = gameScreen.graphics.getWidth();
         bufferHeight = gameScreen.graphics.getHeight();
 
         //JUST FOR TESTING, creates a player and some GO
-        player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
-        gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
+        //player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
+        //gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
 
-        int testEnemyX = 250;
-        int testEnemyY = 300;
-        testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
-        addGameObject(testEnemy);
+        //int testEnemyX = 250;
+        //int testEnemyY = 300;
+        //testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
+        //addGameObject(testEnemy);
 
-        MapManager mapManager = new MapManager(this, gameObjectFactory, context);
-        mapCells = mapManager.initMapResized(mapCells, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth(),
-                AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth());
-        mapCells = mapManager.generateMapResized(mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth()-1,
-                AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth()-1, (Math.random() * 6) % 2 == 0);
+        //MapManager mapManager = new MapManager(this, gameObjectFactory, context);
+        //mapCells = mapManager.initMapResized(mapCells, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth(),
+       //         AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth());
+        //mapCells = mapManager.generateMapResized(mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth()-1,
+         //       AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth()-1, (Math.random() * 6) % 2 == 0);
 
-        mapManager.constructMap(mapCells, 50, 50);
+        //mapManager.constructMap(mapCells, 50, 50);
         //mapManager.makeEnemies();
 
-        int levelWidth = AssetManager.backgroundPixmap.getWidth();
-        int levelHeight = AssetManager.backgroundPixmap.getHeight();
-        levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
+        //int levelWidth = AssetManager.backgroundPixmap.getWidth();
+        //int levelHeight = AssetManager.backgroundPixmap.getHeight();
+        //levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
 
         /*int boxX = 63;
         int boxY = 231;
@@ -126,7 +126,7 @@ public class GameWorld {
             }
         }*/
 
-        levelGrid.addObstacles(gameObjects, this);
+        //levelGrid.addObstacles(gameObjects, this);
     }
 
 
