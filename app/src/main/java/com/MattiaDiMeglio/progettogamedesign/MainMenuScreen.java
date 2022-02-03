@@ -33,12 +33,9 @@ public class MainMenuScreen extends Screen {
         this.context = context;
 
         graphics = game.getGraphics();
-        if(AssetManager.PlayButtonPixmap == null)
-            AssetManager.PlayButtonPixmap = graphics.newPixmap("PlayButton.png", Graphics.PixmapFormat.ARGB4444);
-        if(AssetManager.OptionsButtonPixmap == null)
-            AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
-        if(AssetManager.ExitButtonPixmap == null)
-            AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.PlayButtonPixmap = graphics.newPixmap("PlayButton.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
+        AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.Lizard = graphics.newPixmap("Lizard.png", Graphics.PixmapFormat.ARGB4444);
 
         nextScreen = new LoadingScreen(game, width, height, context);
