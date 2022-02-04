@@ -61,7 +61,7 @@ public class LoadingScreen extends Screen {
             //making test enemy
             int testEnemyX = 250;
             int testEnemyY = 300;
-            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
+            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Wimp);
             gw.addGameObject(gw.testEnemy);
 
             //making the map

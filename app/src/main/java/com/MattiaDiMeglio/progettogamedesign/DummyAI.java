@@ -5,10 +5,12 @@ import android.util.Log;
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.7f;
-    private static final float DEFAULT_SHOOT_DELAY = 1.2f;
+    private static final float DEFAULT_SHOOT_DELAY = 0.5f;
 
     private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/4;
     private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/4;
+
+    int aimPlayerX = 0, aimPlayerY = 0;
 
     DummyAI(){
         super();
@@ -25,7 +27,8 @@ public class DummyAI extends AIComponent{
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){
-            playerInRange = checkPlayerInRange();
+            if(aimingTimer < aimDelay)
+                playerInRange = checkPlayerInRange();
 
             if(playerInRange){
                 if(!movementStack.isEmpty())
@@ -35,19 +38,31 @@ public class DummyAI extends AIComponent{
                     aimDelay = DEFAULT_AIM_DELAY;
 
                 if(aimingTimer >= aimDelay){
-                    dummyAim(weaponComponent, gameWorld, getLastPlayerX(), getLastPlayerY());
+
+                    if(aimPlayerX == 0 && aimPlayerY == 0){
+                        aimPlayerX = lastPlayerX;
+                        aimPlayerY = lastPlayerY;
+                    }
+
+                    enemyAim(weaponComponent, gameWorld, aimPlayerX, aimPlayerY);
 
                     if(shootDelay != DEFAULT_SHOOT_DELAY)
                         shootDelay = DEFAULT_SHOOT_DELAY;
 
-                    if(shootingTimer >= shootDelay)
-                        dummyShoot(weaponComponent, gameWorld);
+                    if(shootingTimer >= shootDelay){
+                        aimPlayerX = 0;
+                        aimPlayerY = 0;
+                        enemyShoot(weaponComponent, gameWorld);
+                    }
+
                     else shootingTimer += elapsedTime;
                 }
                 else aimingTimer += elapsedTime;
             }
             else{
                 if(oldPlayerInRange){
+                    aimPlayerX = 0;
+                    aimPlayerY = 0;
                     aimingTimer = 0;
                     shootingTimer = 0;
                 }
@@ -64,26 +79,6 @@ public class DummyAI extends AIComponent{
         }
     }
 
-    public void dummyAim(WeaponComponent weaponComponent, GameWorld gameWorld, int targetX, int targetY){
-
-        int lineAmt = weaponComponent.getLineAmt();
-
-        float normalX = findNormalX(owner.worldX, owner.worldY, targetX, targetY);
-        float normalY = findNormalY(owner.worldX, owner.worldY, targetX, targetY);
-        float angle = 0f;
-
-        if(lineAmt > 1)
-            angle = (float) Math.toDegrees(Math.atan2(normalY, normalX));
-
-        weaponComponent.aim(normalX,normalY,angle, gameWorld);
-    }
-
-    public void dummyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){
-        aimingTimer = 0f;
-        shootingTimer = 0f;
-        weaponComponent.shoot(gameWorld);
-    }
-
     public void checkBoxOnPath(WeaponComponent weaponComponent, GameWorld gameWorld, float elapsedTime, Node[][] cells){
         if(!movementStack.isEmpty()){
             Movement nextMovement = movementStack.peek();
@@ -96,22 +91,17 @@ public class DummyAI extends AIComponent{
                 if(aimDelay != BOX_AIM_DELAY)
                     aimDelay = BOX_AIM_DELAY;
 
-                Log.d("DummyAI","aimDelay = "+aimDelay);
-                Log.d("DummyAI","aimingTimer = "+aimingTimer);
-
                 if(aimingTimer >= aimDelay){
-                    Log.d("DummyAI","Dummy is aiming to a box");
-                    dummyAim(weaponComponent, gameWorld, nextMovementX, nextMovementY);
+                    enemyAim(weaponComponent, gameWorld, nextMovementX, nextMovementY);
 
                     if(shootDelay != BOX_SHOOT_DELAY)
                         shootDelay = BOX_SHOOT_DELAY;
 
                     if(shootingTimer >= shootDelay)
-                        dummyShoot(weaponComponent, gameWorld);
+                        enemyShoot(weaponComponent, gameWorld);
                     else shootingTimer += elapsedTime;
                 }
                 else{
-                    Log.d("DummyAI","Dummy is waiting to aim to a box");
                     aimingTimer += elapsedTime;
                 }
             }

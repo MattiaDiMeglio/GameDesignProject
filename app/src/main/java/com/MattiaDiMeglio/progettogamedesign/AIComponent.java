@@ -13,7 +13,7 @@ public class AIComponent extends Component{
 
     private AIType aiType;
 
-    private int lastPlayerX, lastPlayerY;
+    int lastPlayerX, lastPlayerY;
 
     final float playerPositionUpdateDelay = 0.2f;
     float playerPositionTimer;
@@ -80,7 +80,7 @@ public class AIComponent extends Component{
         owner.updatePosition(0,0,0);
     }
 
-    public void movement(){
+    public void movement(float enemySpeed){
         if(!movementStack.isEmpty()){
             float normalX = 0f, normalY = 0f;
 
@@ -91,7 +91,7 @@ public class AIComponent extends Component{
             int deltaX = Math.abs(nextX - owner.worldX);
             int deltaY = Math.abs(nextY - owner.worldY);
 
-            int threshold = 5;
+            float threshold = enemySpeed + 2;
 
             if(deltaX > threshold || deltaY > threshold){
                 if(deltaX > threshold)
@@ -158,7 +158,7 @@ public class AIComponent extends Component{
         int lineAmt = enemyWeapon.getLineAmt();
         float range = enemyWeapon.getRange();
 
-        float distanceToPlayer = getDistanceToPlayer();
+        float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY, owner.worldX, owner.worldY);
 
         for(int i = 0; i < lineAmt ; i++){
             if(distanceToPlayer <= range+18){
@@ -168,17 +168,40 @@ public class AIComponent extends Component{
         return false;
     }
 
+    public void enemyAim(WeaponComponent weaponComponent, GameWorld gameWorld, int targetX, int targetY){
+
+        int lineAmt = weaponComponent.getLineAmt();
+
+        float normalX = findNormalX(owner.worldX, owner.worldY, targetX, targetY);
+        float normalY = findNormalY(owner.worldX, owner.worldY, targetX, targetY);
+        float angle = 0f;
+
+        if(lineAmt > 1)
+            angle = (float) Math.toDegrees(Math.atan2(normalY, normalX));
+
+        weaponComponent.aim(normalX,normalY,angle, gameWorld);
+    }
+
+    public void enemyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){
+        aimingTimer = 0f;
+        shootingTimer = 0f;
+        weaponComponent.shoot(gameWorld);
+    }
+
     public void reset(){
         playerPositionTimer = 0f;
         aimingTimer = 0f;
         shootingTimer = 0f;
         reloadingTimer = 0f;
         playerInRange = false;
+
+        WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
+        weaponComponent.reload();
     }
 
-    public float getDistanceToPlayer() {
-        return (float) Math.sqrt(((lastPlayerX - owner.worldX) * (lastPlayerX - owner.worldX)) +
-                ((lastPlayerY - owner.worldY) * (lastPlayerY - owner.worldY)));
+    public float getDistance(int startX, int startY, int destinationX, int destinationY) {
+        return (float) Math.sqrt(((startX - destinationX) * (startX - destinationX)) +
+                ((startY - destinationY) * (startY - destinationY)));
     }
 
     @Override

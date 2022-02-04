@@ -43,7 +43,7 @@ public class GunComponent extends WeaponComponent{
 
     @Override
     public void reload() {
-        Log.d("GunComponent","reloading");
+        //Log.d("GunComponent","reloading");
         bullets = mag;
     }
 

@@ -82,6 +82,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
     }
 
     public Body getBody(){return body;}//getter
+    public float getSpeed() { return speed; }
 
     public void applyForce(Vec2 force, Vec2 point){
         body.applyForce(force, point, true);

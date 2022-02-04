@@ -50,8 +50,12 @@ public class EnemyGameObject extends GameObject {
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
 
         if(!killed){
+
+            dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
+            float enemySpeed = dynamicBodyComponent.getSpeed();
+
             aiComponent.updateAI(playerX, playerY, elapsedTime, cells, gWorld);
-            aiComponent.movement(); //parte solo se lo stack dei movimenti non è vuoto
+            aiComponent.movement(enemySpeed); //parte solo se lo stack dei movimenti non è vuoto
         }
     }
 

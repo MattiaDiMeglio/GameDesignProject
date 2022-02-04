@@ -61,6 +61,7 @@ public class GameObjectFactory {
 
         else{
             aiComponent = new WimpAI();
+            weaponComponent = new GunComponent();
             enemySpeed = 5;
         }
 
