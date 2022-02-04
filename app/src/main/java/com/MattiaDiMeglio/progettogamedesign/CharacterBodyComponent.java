@@ -16,7 +16,6 @@ import com.google.fpl.liquidfun.World;
 //the character body is a kinematic body
 //from jliquidfun
 public class CharacterBodyComponent extends PhysicsComponent{
-    private Body body;
 
 
     //needs a world position, sizes, the physical world and a name

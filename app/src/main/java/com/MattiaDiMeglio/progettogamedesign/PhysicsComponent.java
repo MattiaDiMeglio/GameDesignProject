@@ -3,12 +3,14 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.graphics.Color;
 
 import com.badlogic.androidgames.framework.Graphics;
+import com.google.fpl.liquidfun.Body;
 
 //general component class for every physics component
 abstract class PhysicsComponent extends Component{
     public String name;
     float x, y, lastX, lastY;
     float width, height;
+    Body body;
     @Override
     public ComponentType getType() {
         return ComponentType.Physics;

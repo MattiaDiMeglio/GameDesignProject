@@ -3,6 +3,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -33,6 +34,7 @@ public class GameScreen extends Screen {
     Box physicalSize, screenSize;
     AndroidFastRenderView renderView;
     JoystickView leftJoystick, rightJoystick;
+    MainMenuScreen mainMenuScreen;
 
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -55,9 +57,10 @@ public class GameScreen extends Screen {
 
     boolean isShooting = false;
 
-    public GameScreen(Game game, int width, int height, Context context) {
+    public GameScreen(Game game, int width, int height, Context context, MainMenuScreen mainMenuScreen) {
         super(game);
         this.context = context;
+        this.mainMenuScreen = mainMenuScreen;
 
         graphics = game.getGraphics();//we get the graphics from the framework, to draw on screen
         //world sizes
@@ -135,6 +138,9 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running: //if the game is running update the gameworld
+                leftJoystick.setEnabled(true);
+                rightJoystick.setEnabled(true);
+
                 gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
                 if(isShooting){
                     gameWorld.update(leftX, leftY, deltaTime, oldRightX, oldRightY, oldRightAngle, oldRightStrength, isShooting);
@@ -153,6 +159,9 @@ public class GameScreen extends Screen {
                 break;
             case Paused:
                 Log.d("Paused", "paused");
+                leftJoystick.setEnabled(false);
+                rightJoystick.setEnabled(false);
+
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
@@ -163,6 +172,10 @@ public class GameScreen extends Screen {
                             && event.y < gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2)
                                     + AssetManager.ResumeButtonPixmap.getHeight()){
                                 gameState = GameState.Running;
+                            } else if(event.y > gameWorld.bufferHeight/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2 - AssetManager.ExitButtonPixmap.getHeight())
+                                    && event.y < gameWorld.bufferHeight/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2)){
+                                gameWorld.destroyGameWorld();
+                                game.setScreen(mainMenuScreen);
                             }
                         }
 

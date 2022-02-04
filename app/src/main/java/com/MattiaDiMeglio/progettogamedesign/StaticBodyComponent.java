@@ -10,7 +10,6 @@ import com.google.fpl.liquidfun.SWIGTYPE_p_b2ContactEdge;
 import com.google.fpl.liquidfun.World;
 //the physics component for the elements that never move (walls
 public class StaticBodyComponent extends PhysicsComponent{
-    private Body body;
     float angle;
     public StaticBodyComponent(float x, float y, float angle, float width, float height, World world, String name){
         this.x = x;

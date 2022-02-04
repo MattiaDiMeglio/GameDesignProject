@@ -30,6 +30,7 @@ public class ProgettoGameDesign extends AndroidGame {
             width = getWindowManager().getDefaultDisplay().getWidth();
         }
 
+
         return new MainMenuScreen(this, width, height, getApplicationContext());
     }
 
@@ -56,5 +57,9 @@ public class ProgettoGameDesign extends AndroidGame {
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         }
+    }
+
+    public void ExitGame(){
+        this.finishAffinity();
     }
 }
