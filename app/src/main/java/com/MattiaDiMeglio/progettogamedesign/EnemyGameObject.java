@@ -68,15 +68,18 @@ public class EnemyGameObject extends GameObject {
         if(!killed) {
             AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
             aiComponent.emptyStack();
-            DynamicBodyComponent bodyComponent = (DynamicBodyComponent) getComponent(ComponentType.Physics);
-            outOfView();
-            Body body = bodyComponent.getBody();
-            body.destroyFixture(body.getFixtureList());
-            body.delete();
-            //gameWorld.removeActiveGameObject(this);
-            //gameWorld.removeGameObject(this);
-            drawableComponent.pixmap = AssetManager.enemyKilled;
+            //components.clear();
             killed = true;
+            outOfView();
+            //gameWorld.removeActiveGameObject(this);
+            gameWorld.removeGameObject(this);
+            PhysicsComponent physicsComponent = (PhysicsComponent) getComponent(ComponentType.Physics);
+            physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
+            physicsComponent.body.delete();
+            gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
+            removeComponent(ComponentType.Physics);
+            removeComponent(ComponentType.Drawable);
+
         }
     }
 
