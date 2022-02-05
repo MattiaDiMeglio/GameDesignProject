@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -13,8 +15,8 @@ public class WimpAI extends AIComponent{
 
     WimpAI() {
         super();
-        aimDelay = 0.7f;
-        shootDelay = 1.2f;
+        aimDelay = 0.3f;
+        shootDelay = 0.3f;
         reloadDelay = 0.5f;
         escapeDelay = 0.3f;
     }
@@ -26,37 +28,42 @@ public class WimpAI extends AIComponent{
         escape = findEscape(gameWorld, cells);
 
         if(escape){
-
-            if(!movementStack.isEmpty())
-                emptyStack();
-
             Movement escapeMovement = new Movement(escapeCellX, escapeCellY);
             movementStack.push(escapeMovement);
         }
         else{
-
             if(!movementStack.isEmpty())
                 emptyStack();
 
-            WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
+            playerInRange = checkPlayerInRange();
 
-            if(weaponComponent.bullets > 0){
-                if(aimingTimer >= aimDelay){
-                    enemyAim(weaponComponent, gameWorld, getLastPlayerX(), getLastPlayerY());
+            if(playerInRange){
+                WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
 
-                    if(shootingTimer >= shootDelay)
-                        enemyShoot(weaponComponent, gameWorld);
-                    else shootingTimer += elapsedTime;
+                if(weaponComponent.bullets > 0){
+                    if(aimingTimer >= aimDelay){
+                        enemyAim(weaponComponent, gameWorld, getLastPlayerX(), getLastPlayerY());
+
+                        if(shootingTimer >= shootDelay)
+                            enemyShoot(weaponComponent, gameWorld);
+                        else shootingTimer += elapsedTime;
+                    }
+                    else aimingTimer += elapsedTime;
                 }
-                else aimingTimer += elapsedTime;
+                else{
+                    reloadingTimer += elapsedTime;
+                    if(reloadingTimer > reloadDelay){
+                        weaponComponent.reload();
+                        reloadingTimer = 0f;
+                    }
+                }
             }
             else{
-                reloadingTimer += elapsedTime;
-                if(reloadingTimer > reloadDelay){
-                    weaponComponent.reload();
-                    reloadingTimer = 0f;
-                }
+                aimingTimer = 0;
+                shootingTimer = 0;
             }
+
+
         }
     }
 
@@ -76,7 +83,8 @@ public class WimpAI extends AIComponent{
                 continue;
 
             newDistance = getDistance(lastPlayerX, lastPlayerY, neighbor.getPosX(), neighbor.getPosY());
-            if(newDistance > distanceToPlayer + 20){
+
+            if(newDistance > distanceToPlayer +15){
                 escapeCellX = neighbor.getPosX();
                 escapeCellY = neighbor.getPosY();
                 return true;

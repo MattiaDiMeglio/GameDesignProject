@@ -24,7 +24,7 @@ public class GameWorld {
     protected List<GameObject> gameObjects;
     protected List<GameObject> activeGameObjects;
     //private final GameObjectFactory gameObjectFactory;
-    private final GameScreen gameScreen;
+    public GameScreen gameScreen;
     private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
     protected DoorGameObject door;

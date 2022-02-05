@@ -43,6 +43,14 @@ public class BoxGameObject extends GameObject {
                 gameWorld.levelGrid.removeObstacle(worldX, worldY);
                 //gameWorld.removeActiveGameObject(this);
                 gameWorld.removeGameObject(this);
+
+                PhysicsComponent physicsComponent = (PhysicsComponent) getComponent(ComponentType.Physics);
+                physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
+                physicsComponent.body.delete();
+                gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
+                removeComponent(ComponentType.Physics);
+                removeComponent(ComponentType.Drawable);
+
             }
         }
     }

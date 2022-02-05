@@ -64,7 +64,7 @@ public class LoadingScreen extends Screen {
             //making test enemy
             int testEnemyX = 250;
             int testEnemyY = 300;
-            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Wimp);
+            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
             gw.addGameObject(gw.testEnemy);
 
             //making the map
@@ -75,6 +75,17 @@ public class LoadingScreen extends Screen {
                     AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth() - 1, (Math.random() * 6) % 2 == 0);
 
             mapManager.constructMap(gw.mapCells, 50, 50);
+
+            int boxX = 63;
+            int boxY = 231;
+                for(int i = 0; i < 7; i++){
+                    gw.addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));
+                    if(i == 6){
+                         for(int j = 1; j < 5; j++)
+                    //if(j!=3)
+                    gw.addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY - (j * 42)));
+            }
+        }
 
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
