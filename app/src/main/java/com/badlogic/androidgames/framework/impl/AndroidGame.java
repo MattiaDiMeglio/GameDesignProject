@@ -34,8 +34,7 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-    JoystickView leftJ;
-    JoystickView rightJ;
+
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -75,45 +74,6 @@ public abstract class AndroidGame extends Activity implements Game {
         audio = new AndroidAudio(this);
         input = new AndroidInput(this, renderView, scaleX, scaleY);
         screen = getStartScreen();
-
-        RelativeLayout relativeLayout = new RelativeLayout(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,  RelativeLayout.LayoutParams.MATCH_PARENT);
-        relativeLayout.setLayoutParams(layoutParams);
-        relativeLayout.addView(renderView);
-
-        leftJ = new JoystickView(this);
-        leftJ.setButtonColor(Color.RED);
-        leftJ.setBackgroundColor(Color.BLACK);
-        //joystickView.setBackgroundSizeRatio(0.2f);
-        //joystickView.setButtonSizeRatio(0.1f);
-
-        int left = 50;
-        int top =  height - 300;
-        int right = 0;
-        int bottom = 0;
-
-        RelativeLayout.LayoutParams leftjParams=new RelativeLayout.LayoutParams(300,300);
-        leftjParams.setMargins(left,top,right,bottom);
-        leftJ.setLayoutParams(leftjParams);
-
-        relativeLayout.addView(leftJ);
-
-        rightJ = new JoystickView(this);
-        rightJ.setButtonColor(Color.YELLOW);
-        rightJ.setBackgroundColor(Color.BLACK);
-        //joystickView.setBackgroundSizeRatio(0.2f);
-        //joystickView.setButtonSizeRatio(0.1f);
-
-        //int left = 50;
-        int rleft = width - 500;
-
-        RelativeLayout.LayoutParams rightjParams=new RelativeLayout.LayoutParams(300,300);
-        rightjParams.setMargins(rleft,top,right,bottom);
-        rightJ.setLayoutParams(rightjParams);
-
-        relativeLayout.addView(rightJ);
-
-        setContentView(relativeLayout);
 
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
@@ -177,7 +137,5 @@ public abstract class AndroidGame extends Activity implements Game {
         return screen;
     }
 
-    public JoystickView getLeftJoystick() { return leftJ; }
 
-    public JoystickView getRightJoystick() { return rightJ; }
 }
