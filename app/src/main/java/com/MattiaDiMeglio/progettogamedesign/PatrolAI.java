@@ -2,12 +2,12 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import java.util.Random;
 
-public class WimpAI extends AIComponent{
+public class PatrolAI extends AIComponent{
 
     int randomPositionX = 0;
     int randomPositionY = 0;
 
-    WimpAI() {
+    PatrolAI() {
         super();
         aimDelay = 0.5f;
         shootDelay = 1.2f;
@@ -57,7 +57,7 @@ public class WimpAI extends AIComponent{
                     pathfind(randomPositionX, randomPositionY, cells);
 
                 //per controllare che abbia raggiunto la destinazione, così al prossimo frame ne cercherà un'altra
-                if(checkWimpDestination()){
+                if(checkPatrolDestination()){
                     randomPositionX = 0;
                     randomPositionY = 0;
                 }
@@ -102,13 +102,13 @@ public class WimpAI extends AIComponent{
         //se non trova una posizione valida, riproverà al prossimo frame
     }
 
-    public boolean checkWimpDestination(){
-        int wimpCellX = owner.worldX / gridSize;
-        int wimpCellY = owner.worldY / gridSize;
+    public boolean checkPatrolDestination(){
+        int patrolCellX = owner.worldX / gridSize;
+        int patrolCellY = owner.worldY / gridSize;
         int randomPositionCellX = randomPositionX / gridSize;
         int randomPositionCellY = randomPositionY / gridSize;
 
-        if(wimpCellX == randomPositionCellX && wimpCellY == randomPositionCellY)
+        if(patrolCellX == randomPositionCellX && patrolCellY == randomPositionCellY)
             return true;
 
         return false;

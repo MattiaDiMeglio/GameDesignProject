@@ -60,7 +60,7 @@ public class GameObjectFactory {
         }
 
         else{
-            aiComponent = new WimpAI();
+            aiComponent = new PatrolAI();
             weaponComponent = new GunComponent();
             enemySpeed = 5;
         }

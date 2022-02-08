@@ -3,7 +3,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 import java.util.List;
 import java.util.Stack;
 
-enum AIType {Dummy, Sniper, Wimp};
+enum AIType {Dummy, Sniper, Patrol};
 
 public class AIComponent extends Component{
 
