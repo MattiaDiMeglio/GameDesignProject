@@ -8,7 +8,7 @@ public class Pathfinder {
 
     Pathfinder(){}
 
-    public Node aStar(Node start, Node target){
+    public Node aStar(Node start, Node target, AIType aiType){
         PriorityQueue<Node> closedList = new PriorityQueue<>();
         PriorityQueue<Node> openList = new PriorityQueue<>();
 
@@ -35,6 +35,13 @@ public class Pathfinder {
             
             for(Node.Edge edge : n.neighbors){
                 Node m = edge.node;
+
+                if(m.isEnemy()) //vengono evitati i nodi con nemici al loro interno
+                    continue;
+
+                if(!aiType.equals(AIType.Dummy) && m.isBox()) //I dummy sparano alle scatole lungo il loro cammino,
+                    continue;                                 //gli altri nemici le evitano
+
                 float totalWeight = n.g + edge.weight;
 
                 if(!openList.contains(m) && !closedList.contains(m)){

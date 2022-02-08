@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.7f;
@@ -10,13 +8,11 @@ public class DummyAI extends AIComponent{
     private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/4;
     private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/4;
 
-    int aimPlayerX = 0, aimPlayerY = 0;
-
     DummyAI(){
         super();
         aimDelay = DEFAULT_AIM_DELAY;
         shootDelay = DEFAULT_SHOOT_DELAY;
-        reloadDelay = 0.5f;
+        reloadDelay = 1.0f;
     }
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
@@ -27,8 +23,10 @@ public class DummyAI extends AIComponent{
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){
-            if(aimingTimer < aimDelay)
-                playerInRange = checkPlayerInRange();
+            /*if(aimingTimer < aimDelay)
+                playerInRange = checkPlayerInRange();*/
+
+            playerInRange = checkPlayerInRange();
 
             if(playerInRange){
                 if(!movementStack.isEmpty())
@@ -38,35 +36,26 @@ public class DummyAI extends AIComponent{
                     aimDelay = DEFAULT_AIM_DELAY;
 
                 if(aimingTimer >= aimDelay){
-
-                    if(aimPlayerX == 0 && aimPlayerY == 0){
-                        aimPlayerX = lastPlayerX;
-                        aimPlayerY = lastPlayerY;
-                    }
-
-                    enemyAim(weaponComponent, gameWorld, aimPlayerX, aimPlayerY);
+                    enemyAim(weaponComponent, gameWorld, lastPlayerX, lastPlayerY);
 
                     if(shootDelay != DEFAULT_SHOOT_DELAY)
                         shootDelay = DEFAULT_SHOOT_DELAY;
 
                     if(shootingTimer >= shootDelay){
-                        aimPlayerX = 0;
-                        aimPlayerY = 0;
                         enemyShoot(weaponComponent, gameWorld);
                     }
-
                     else shootingTimer += elapsedTime;
                 }
                 else aimingTimer += elapsedTime;
             }
             else{
                 if(oldPlayerInRange){
-                    aimPlayerX = 0;
-                    aimPlayerY = 0;
+                    enemyTargetX = 0;
+                    enemyTargetY = 0;
                     aimingTimer = 0;
                     shootingTimer = 0;
                 }
-                pathfind(getLastPlayerX(), getLastPlayerY(),cells);
+                pathfind(lastPlayerX, lastPlayerY,cells);
                 checkBoxOnPath(weaponComponent, gameWorld, elapsedTime, cells);
             }
         }
@@ -84,7 +73,7 @@ public class DummyAI extends AIComponent{
             Movement nextMovement = movementStack.peek();
             int nextMovementX = nextMovement.cellX;
             int nextMovementY = nextMovement.cellY;
-            if(findNode(nextMovementX,nextMovementY, gameWorld.gridSize, cells).isBox()){
+            if(findNode(nextMovementX,nextMovementY, gridSize, cells).isBox()){
                 if(!movementStack.isEmpty())
                     emptyStack();
 

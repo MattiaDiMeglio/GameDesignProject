@@ -27,8 +27,8 @@ public class GameObjectFactory {
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
 
-        WeaponComponent weaponComponent = new GunComponent();
-        //WeaponComponent weaponComponent = new ShotgunComponent();
+        //WeaponComponent weaponComponent = new GunComponent();
+        WeaponComponent weaponComponent = new ShotgunComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
@@ -49,7 +49,7 @@ public class GameObjectFactory {
 
         if(aiType == AIType.Dummy){
             aiComponent = new DummyAI();
-            weaponComponent = new GunComponent();
+            weaponComponent = new ShotgunComponent();
             enemySpeed = 3;
         }
 
@@ -67,6 +67,9 @@ public class GameObjectFactory {
 
         aiComponent.setGridSize(gameWorld.gridSize);
         aiComponent.setAiType(aiType);
+        aiComponent.initializeCells(worldX, worldY);
+
+        weaponComponent.setShooter(enemy.name);
 
         DynamicBodyComponent bodyComponent = new DynamicBodyComponent(40, 40,
                 gameWorld.toMetersXLength(AssetManager.enemy.getWidth()),
@@ -80,7 +83,6 @@ public class GameObjectFactory {
         enemy.addComponent(pixMapComponent);
         enemy.addComponent(aiComponent);
         enemy.addComponent(weaponComponent);
-        weaponComponent.setShooter(enemy.name);
         return enemy;
     }
 

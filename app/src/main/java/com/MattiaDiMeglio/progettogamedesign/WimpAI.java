@@ -1,95 +1,116 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
-import java.util.Collections;
-import java.util.List;
+import java.util.Random;
 
 public class WimpAI extends AIComponent{
 
-    boolean escape = true;
-    int escapeCellX = 0;
-    int escapeCellY = 0;
-    float escapeTimer = 0;
-    float escapeDelay;
+    int randomPositionX = 0;
+    int randomPositionY = 0;
 
     WimpAI() {
         super();
-        aimDelay = 0.3f;
-        shootDelay = 0.3f;
+        aimDelay = 0.5f;
+        shootDelay = 1.2f;
         reloadDelay = 0.5f;
-        escapeDelay = 0.3f;
     }
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
 
+        WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
+        boolean oldPlayerInRange = playerInRange;
+
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
-        escape = findEscape(gameWorld, cells);
-
-        if(escape){
-            Movement escapeMovement = new Movement(escapeCellX, escapeCellY);
-            movementStack.push(escapeMovement);
-        }
-        else{
-            if(!movementStack.isEmpty())
-                emptyStack();
+        if(weaponComponent.bullets > 0){
 
             playerInRange = checkPlayerInRange();
 
             if(playerInRange){
-                WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
+                if(!movementStack.isEmpty())
+                    emptyStack();
 
-                if(weaponComponent.bullets > 0){
-                    if(aimingTimer >= aimDelay){
-                        enemyAim(weaponComponent, gameWorld, getLastPlayerX(), getLastPlayerY());
+                if(aimingTimer >= aimDelay){
+                    enemyAim(weaponComponent, gameWorld, lastPlayerX, lastPlayerY);
 
-                        if(shootingTimer >= shootDelay)
-                            enemyShoot(weaponComponent, gameWorld);
-                        else shootingTimer += elapsedTime;
-                    }
-                    else aimingTimer += elapsedTime;
-                }
-                else{
-                    reloadingTimer += elapsedTime;
-                    if(reloadingTimer > reloadDelay){
-                        weaponComponent.reload();
-                        reloadingTimer = 0f;
-                    }
-                }
+                    if(shootingTimer >= shootDelay)
+                        enemyShoot(weaponComponent, gameWorld);
+                    else shootingTimer += elapsedTime;
+
+                } else aimingTimer += elapsedTime;
             }
             else{
-                aimingTimer = 0;
-                shootingTimer = 0;
+                if(oldPlayerInRange){
+                    aimingTimer = 0;
+                    shootingTimer = 0;
+                    enemyTargetX = 0;
+                    enemyTargetY = 0;
+                    randomPositionX = 0;
+                    randomPositionY = 0;
+                }
+                //se il nemico non ha una posizione da raggiungere, ne cerchiamo una con setRandomPosition
+                if(randomPositionX == 0 && randomPositionY == 0)
+                    setRandomPosition(cells);
+
+                //la funzione precedente non è detto che trovi una posizione valida, potrebbe trovare una posizione fuori mappa,
+                //oppure una cella contenente un ostacolo, quindi il controllo nell'if è necessario
+                if(!(randomPositionX == 0 && randomPositionY == 0))
+                    pathfind(randomPositionX, randomPositionY, cells);
+
+                //per controllare che abbia raggiunto la destinazione, così al prossimo frame ne cercherà un'altra
+                if(checkWimpDestination()){
+                    randomPositionX = 0;
+                    randomPositionY = 0;
+                }
             }
-
-
+        }
+        else{
+            if(reloadingTimer > reloadDelay){
+                weaponComponent.reload();
+                reloadingTimer = 0f;
+            }
+            else reloadingTimer += elapsedTime;
         }
     }
 
-    public boolean findEscape(GameWorld gameWorld, Node[][] cells){
+    public void setRandomPosition(Node[][] cells){
 
-        float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY, owner.worldX, owner.worldY);
-        float newDistance = 0;
+        Random random = new Random();
 
-        Node actualWimpCell = findNode(owner.worldX, owner.worldY, gameWorld.gridSize, cells);
-        List<Node.Edge> cellNeighbors = actualWimpCell.neighbors;
-        Collections.shuffle(cellNeighbors);
+        int minRadius = gridSize * 3;
+        //Il raggio è compreso tra 126 e 378
+        int randomRadius = (int) (minRadius + (minRadius * 2 * Math.sqrt(random.nextFloat())));
+        //L'angolo è compreso tra 0 e 2 PI
+        float randomAngle = (float) (random.nextFloat()  * 2 * Math.PI);
 
-        for(Node.Edge edge: cellNeighbors){
-            Node neighbor = edge.node;
+        int centerX = owner.worldX;
+        int centerY = owner.worldY;
 
-            if(neighbor.isBox())
-                continue;
+        int x = (int) (centerX + randomRadius * Math.cos(randomAngle));
+        int y = (int) (centerY + randomRadius * Math.sin(randomAngle));
 
-            newDistance = getDistance(lastPlayerX, lastPlayerY, neighbor.getPosX(), neighbor.getPosY());
+        int cellX = x / gridSize;
+        int cellY = y / gridSize;
 
-            if(newDistance > distanceToPlayer +15){
-                escapeCellX = neighbor.getPosX();
-                escapeCellY = neighbor.getPosY();
-                return true;
+        //controllo che sia all'interno della griglia
+        if((cellX >= 0 && cellX <= 49) && (cellY >= 0 && cellY <= 49)){
+            //controllo che sia una cella libera
+            if(!cells[cellY][cellX].isEnemy() && !cells[cellY][cellX].isBox() && !cells[cellY][cellX].isObstacle()){
+                randomPositionX = cells[cellY][cellX].getPosX();
+                randomPositionY = cells[cellY][cellX].getPosY();
             }
         }
+        //se non trova una posizione valida, riproverà al prossimo frame
+    }
+
+    public boolean checkWimpDestination(){
+        int wimpCellX = owner.worldX / gridSize;
+        int wimpCellY = owner.worldY / gridSize;
+        int randomPositionCellX = randomPositionX / gridSize;
+        int randomPositionCellY = randomPositionY / gridSize;
+
+        if(wimpCellX == randomPositionCellX && wimpCellY == randomPositionCellY)
+            return true;
+
         return false;
     }
 

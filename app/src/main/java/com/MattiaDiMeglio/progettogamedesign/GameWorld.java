@@ -56,7 +56,7 @@ public class GameWorld {
     //grid variables and parameters
     GridManager levelGrid;
     int gridSize = 42;
-    EnemyGameObject testEnemy; // pathfinding test
+    EnemyGameObject testEnemy, testEnemy2; // pathfinding test
 
     int[][]mapCells;
 
@@ -229,7 +229,7 @@ public class GameWorld {
                         if(shooter.equals("Enemy"))
                             break;
                         EnemyGameObject enemyGameObject = (EnemyGameObject) casteduserData.getOwner();
-                        enemyGameObject.killed();
+                        enemyGameObject.killed(levelGrid.getCells());
                         //destroy enemy
                         break;
                     case "Player":
@@ -247,7 +247,7 @@ public class GameWorld {
                         PhysicsComponent touchedGO = (PhysicsComponent) casteduserData;
                         if (touchedGO.name.equals("Enemy")) {
                             enemyGameObject = (EnemyGameObject) touchedGO.getOwner();
-                            enemyGameObject.killed();
+                            enemyGameObject.killed(levelGrid.getCells());
                         }
                         break;
                     case "Box":

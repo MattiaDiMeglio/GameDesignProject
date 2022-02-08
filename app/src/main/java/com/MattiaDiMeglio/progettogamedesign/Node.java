@@ -8,6 +8,7 @@ public class Node implements Comparable<Node>{
     private int posX, posY; // cell center coordinates
     private boolean isObstacle;
     private boolean isBox;
+    private boolean isEnemy;
 
     // Parent in the path
     public Node parent = null;
@@ -20,12 +21,13 @@ public class Node implements Comparable<Node>{
     //Heuristic
     public float h;
 
-    Node(float h, int x, int y, boolean isObstacle, boolean isBox){
+    Node(float h, int x, int y, boolean isObstacle, boolean isBox, boolean isEnemy){
         this.h = h;
         this.posX = x;
         this.posY = y;
         this.isObstacle = isObstacle;
         this.isBox = isBox;
+        this.isEnemy = isEnemy;
         this.neighbors = new ArrayList<>();
     }
 
@@ -70,10 +72,12 @@ public class Node implements Comparable<Node>{
     public void setPosY(int posY) { this.posY = posY; }
     public void setObstacle(boolean obstacle) { isObstacle = obstacle; }
     public void setBox(boolean isBox) { this.isBox = isBox; }
+    public void setEnemy(boolean enemy) { isEnemy = enemy; }
 
     public int getPosX() { return posX; }
     public int getPosY() { return posY; }
     public boolean isObstacle() { return isObstacle; }
     public boolean isBox() { return isBox; }
+    public boolean isEnemy() { return isEnemy; }
 
 }

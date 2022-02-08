@@ -64,8 +64,13 @@ public class LoadingScreen extends Screen {
             //making test enemy
             int testEnemyX = 250;
             int testEnemyY = 300;
-            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
+            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Wimp);
             gw.addGameObject(gw.testEnemy);
+
+            testEnemyX = 100;
+            testEnemyY = 100;
+            gw.testEnemy2 = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
+            gw.addGameObject(gw.testEnemy2);
 
             //making the map
             MapManager mapManager = new MapManager(gw, gameObjectFactory, context);
@@ -76,7 +81,7 @@ public class LoadingScreen extends Screen {
 
             mapManager.constructMap(gw.mapCells, 50, 50);
 
-            int boxX = 63;
+            /*int boxX = 63;
             int boxY = 231;
                 for(int i = 0; i < 7; i++){
                     gw.addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));
@@ -85,12 +90,12 @@ public class LoadingScreen extends Screen {
                     //if(j!=3)
                     gw.addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY - (j * 42)));
             }
-        }
+        }*/
 
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
             int levelHeight = AssetManager.backgroundPixmap.getHeight();
-            gw.levelGrid = new GridManager(levelWidth, levelHeight, gw.gridSize, gw);
+            gw.levelGrid = new GridManager(levelWidth, levelHeight, gw.gridSize);
             gw.levelGrid.addObstacles(gw.gameObjects, gw);
             created = true;
         }

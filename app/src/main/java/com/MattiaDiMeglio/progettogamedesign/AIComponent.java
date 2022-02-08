@@ -9,11 +9,13 @@ public class AIComponent extends Component{
 
     private Pathfinder pathfinder;
     protected Stack<Movement> movementStack;
-    private int gridSize;
+    protected int gridSize;
 
     private AIType aiType;
+    private int previousCellX, previousCellY, currentCellX, currentCellY;
 
     int lastPlayerX, lastPlayerY;
+    int enemyTargetX = 0, enemyTargetY = 0;
 
     final float playerPositionUpdateDelay = 0.2f;
     float playerPositionTimer;
@@ -39,7 +41,7 @@ public class AIComponent extends Component{
 
         Node start = findNode(owner.worldX,owner.worldY,gridSize,cells); // da wX e wY a celle
         Node target = findNode(targetX,targetY,gridSize,cells);
-        Node res = pathfinder.aStar(start,target);
+        Node res = pathfinder.aStar(start,target,aiType);
         List<Node> path =  pathfinder.getPath(res);
         if(path != null)
             initializeStack(targetX, targetY, path);
@@ -143,6 +145,8 @@ public class AIComponent extends Component{
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
 
+        updateCells(cells, gameWorld);
+
         playerPositionTimer += elapsedTime;
 
         if(playerPositionTimer > playerPositionUpdateDelay){
@@ -170,11 +174,15 @@ public class AIComponent extends Component{
 
     public void enemyAim(WeaponComponent weaponComponent, GameWorld gameWorld, int targetX, int targetY){
 
-        int lineAmt = weaponComponent.getLineAmt();
+        if(enemyTargetX == 0 || enemyTargetY == 0){
+            enemyTargetX = targetX;
+            enemyTargetY = targetY;
+        }
 
-        float normalX = findNormalX(owner.worldX, owner.worldY, targetX, targetY);
-        float normalY = findNormalY(owner.worldX, owner.worldY, targetX, targetY);
+        float normalX = findNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
+        float normalY = findNormalY(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         float angle = 0f;
+        int lineAmt = weaponComponent.getLineAmt();
 
         if(lineAmt > 1)
             angle = (float) Math.toDegrees(Math.atan2(normalY, normalX));
@@ -183,6 +191,8 @@ public class AIComponent extends Component{
     }
 
     public void enemyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){
+        enemyTargetX = 0;
+        enemyTargetY = 0;
         aimingTimer = 0f;
         shootingTimer = 0f;
         weaponComponent.shoot(gameWorld);
@@ -196,7 +206,11 @@ public class AIComponent extends Component{
         playerInRange = false;
 
         WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
-        weaponComponent.reload();
+        if(weaponComponent.bullets < weaponComponent.mag)
+            weaponComponent.reload();
+
+        if(!movementStack.isEmpty())
+            emptyStack();
     }
 
     public float getDistance(int startX, int startY, int destinationX, int destinationY) {
@@ -204,20 +218,37 @@ public class AIComponent extends Component{
                 ((startY - destinationY) * (startY - destinationY)));
     }
 
+    public void initializeCells(int worldX, int worldY){
+        currentCellX = worldX / gridSize;
+        currentCellY = worldY / gridSize;
+        previousCellX = currentCellX;
+        previousCellY = currentCellY;
+    }
+
+    public void updateCells(Node[][] cells, GameWorld gameWorld){
+
+        currentCellX = owner.worldX / gridSize;
+        currentCellY = owner.worldY / gridSize;
+
+        if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
+            cells[previousCellY][previousCellX].setEnemy(false);
+            cells[currentCellY][currentCellX].setEnemy(true);
+            previousCellX = currentCellX;
+            previousCellY = currentCellY;
+        }
+    }
+
+    public void freeCurrentCell(Node[][] cells){ cells[currentCellY][currentCellX].setEnemy(false); }
+
     @Override
     public ComponentType getType() { return ComponentType.AI; }
 
     public AIType getAiType() { return aiType; }
-
     public int getLastPlayerX() { return lastPlayerX; }
-
     public int getLastPlayerY() { return lastPlayerY; }
 
     public void setLastPlayerX(int lastPlayerX) { this.lastPlayerX = lastPlayerX; }
-
     public void setLastPlayerY(int lastPlayerY) { this.lastPlayerY = lastPlayerY; }
-
     public void setAiType(AIType aiType) { this.aiType = aiType; }
-
     public void setGridSize(int gridSize) { this.gridSize = gridSize; }
 }

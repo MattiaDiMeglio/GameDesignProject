@@ -64,10 +64,11 @@ public class EnemyGameObject extends GameObject {
         dynamicBodyComponent.setTransform(40, 40);
     }
 
-    public void killed(){
+    public void killed(Node[][] cells){
         if(!killed) {
             AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
             aiComponent.emptyStack();
+            aiComponent.freeCurrentCell(cells);
             //components.clear();
             killed = true;
             outOfView();
@@ -79,7 +80,6 @@ public class EnemyGameObject extends GameObject {
             gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
             removeComponent(ComponentType.Physics);
             removeComponent(ComponentType.Drawable);
-
         }
     }
 
