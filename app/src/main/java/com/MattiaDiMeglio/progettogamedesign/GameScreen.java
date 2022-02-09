@@ -35,6 +35,9 @@ public class GameScreen extends Screen {
     AndroidFastRenderView renderView;
     JoystickView leftJoystick, rightJoystick;
     MainMenuScreen mainMenuScreen;
+    LoadingScreen loadingScreen;
+
+    int width, height;
 
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
@@ -57,10 +60,13 @@ public class GameScreen extends Screen {
 
     boolean isShooting = false;
 
-    public GameScreen(Game game, int width, int height, Context context, MainMenuScreen mainMenuScreen) {
+    public GameScreen(Game game, int width, int height, Context context, MainMenuScreen mainMenuScreen, LoadingScreen loadingScreen) {
         super(game);
+        this.width = width;
+        this.height = height;
         this.context = context;
         this.mainMenuScreen = mainMenuScreen;
+        this.loadingScreen = loadingScreen;
 
         graphics = game.getGraphics();//we get the graphics from the framework, to draw on screen
         //world sizes
@@ -183,6 +189,18 @@ public class GameScreen extends Screen {
                 }
                 break;
             case GameOver:
+                for(int i = 0; i < len; i++){
+                    Input.TouchEvent event = touchEvents.get(i);
+                    if(event.type == Input.TouchEvent.TOUCH_DOWN){
+                        if(event.x > gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2 && event.x < gameWorld.bufferWidth/2 + AssetManager.EndLevelPixmap.getWidth()/2
+                        && event.y > gameWorld.bufferHeight/2 - AssetManager.EndLevelPixmap.getHeight()/2 && event.y < gameWorld.bufferHeight/2 + AssetManager.EndLevelPixmap.getHeight()/2){
+                            loadingScreen.setNonCreated();
+                            currentBackgroundY = 0;
+                            currentBackgroundX = 0;
+                            game.setScreen(loadingScreen);
+                        }
+                    }
+                }
                 break;
         }
 
@@ -217,6 +235,9 @@ public class GameScreen extends Screen {
             graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
 
             //pipo
+        }
+        if(gameState == GameState.GameOver){
+            graphics.drawPixmap(AssetManager.EndLevelPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2, (int) gameWorld.bufferHeight/2 - AssetManager.EndLevelPixmap.getHeight()/2);
         }
     }
 
@@ -341,6 +362,12 @@ public class GameScreen extends Screen {
     //background x and y
     public float getBackgroundX(){return currentBackgroundX;}
     public float getBackgroundY(){return currentBackgroundY;}
+
+    public void levelEnded(){
+        gameWorld.level++;
+        gameState = GameState.GameOver;
+        gameWorld.destroyGameWorld();
+    }
 
     public GameWorld getGameWorld() {
         return gameWorld;

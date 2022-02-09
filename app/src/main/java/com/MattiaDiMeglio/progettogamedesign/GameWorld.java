@@ -60,6 +60,9 @@ public class GameWorld {
 
     int[][]mapCells;
 
+    int enemyNum;
+    int level = 1;
+
     //to get the touched fixture
     private class TouchQueryCallback extends QueryCallback
     {
@@ -134,7 +137,8 @@ public class GameWorld {
 
     public synchronized void update(float leftX, float leftY, float elapsedTime, float rightX,
                                     float rightY, float rightAngle, float rightStrength, boolean isShooting){
-
+        if(enemyNum == 0)
+            gameScreen.levelEnded();
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         //Log.d("touched", "" + player.isInContact());
         for(GameObject gameObject : activeGameObjects){
@@ -371,8 +375,10 @@ public class GameWorld {
         }
         activeGameObjects.clear();
         gameObjects.clear();
-        world.delete();
-        player = null;
+        if(gameScreen.gameState == GameScreen.GameState.Paused) {
+            player = null;
+            world.delete();
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-# GameDesignProject
+ # GameDesignProject
 
 A small game project made for my Game Design exam, still a work in progress.
 

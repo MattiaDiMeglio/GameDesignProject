@@ -1,6 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -47,19 +48,25 @@ public class LoadingScreen extends Screen {
                 AssetManager.PausePixmap = graphics.newPixmap("PauseImg.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.PlayPixmap = graphics.newPixmap("PlayImg.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.ResumeButtonPixmap = graphics.newPixmap("ResumeButton.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.EndLevelPixmap = graphics.newPixmap("EndLevel.png", Graphics.PixmapFormat.ARGB4444);
             }
             //setting the screen and gameworld
 
-            nextScreen = new GameScreen(game, width, height, context, mainMenuScreen);
+            if(nextScreen == null) {
+                nextScreen = new GameScreen(game, width, height, context, mainMenuScreen, this);
+            }
             GameScreen gs = (GameScreen) nextScreen;
+            gs.gameState = GameScreen.GameState.Ready;
             GameWorld gw = gs.getGameWorld();
             GameObjectFactory gameObjectFactory = new GameObjectFactory(gw, gw.world);
 
             //making the player
             int x = graphics.getWidth() / 2;
             int y = graphics.getHeight() / 2;
-            gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
-            gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
+            if(gw.player == null) {
+                gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
+                gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
+            }
 
             //making test enemy
             int testEnemyX = 250;
@@ -98,6 +105,7 @@ public class LoadingScreen extends Screen {
             gw.levelGrid = new GridManager(levelWidth, levelHeight, gw.gridSize);
             gw.levelGrid.addObstacles(gw.gameObjects, gw);
             created = true;
+            Log.d("loading", "level: " + gw.level + " enemies: " + gw.enemyNum);
         }
 
         //sets the next screen

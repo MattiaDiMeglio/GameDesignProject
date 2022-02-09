@@ -29,4 +29,5 @@ public class AssetManager {
     public static Pixmap ExitButtonPixmap;
     public static Pixmap PlayButtonPixmap;
     public static Pixmap Lizard;
+    public static Pixmap EndLevelPixmap;
 }

@@ -66,6 +66,7 @@ public class EnemyGameObject extends GameObject {
 
     public void killed(Node[][] cells){
         if(!killed) {
+            gameWorld.enemyNum--;
             AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
             aiComponent.emptyStack();
             aiComponent.freeCurrentCell(cells);
