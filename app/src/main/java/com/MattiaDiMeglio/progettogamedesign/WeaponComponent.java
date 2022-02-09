@@ -10,9 +10,12 @@ abstract class WeaponComponent extends Component{
     protected float[] aimLineY; //y coordinates of the aim lines
     protected String shooter;
 
+    public abstract void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld); //compute aim lines
+    public abstract void addAimLine(GameWorld gameWorld); //draw aim lines
     public abstract void shoot(GameWorld gameWorld);
+    public abstract boolean checkLineOfFire(GameWorld gameWorld); //to check that the line of fire is free (used by enemies)
     public abstract void reload();
-    public abstract void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld); //draw aim lines
+
     public abstract float getRange();
     public abstract int getLineAmt();
     public abstract float[] getAimLineX();

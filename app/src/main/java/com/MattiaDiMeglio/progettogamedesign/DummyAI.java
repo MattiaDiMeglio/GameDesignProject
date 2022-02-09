@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.badlogic.androidgames.framework.Game;
+
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.7f;
@@ -26,7 +28,7 @@ public class DummyAI extends AIComponent{
             /*if(aimingTimer < aimDelay)
                 playerInRange = checkPlayerInRange();*/
 
-            playerInRange = checkPlayerInRange();
+            playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
                 if(!movementStack.isEmpty())
@@ -36,7 +38,7 @@ public class DummyAI extends AIComponent{
                     aimDelay = DEFAULT_AIM_DELAY;
 
                 if(aimingTimer >= aimDelay){
-                    enemyAim(weaponComponent, gameWorld, lastPlayerX, lastPlayerY);
+                    weaponComponent.addAimLine(gameWorld);
 
                     if(shootDelay != DEFAULT_SHOOT_DELAY)
                         shootDelay = DEFAULT_SHOOT_DELAY;
@@ -71,17 +73,19 @@ public class DummyAI extends AIComponent{
     public void checkBoxOnPath(WeaponComponent weaponComponent, GameWorld gameWorld, float elapsedTime, Node[][] cells){
         if(!movementStack.isEmpty()){
             Movement nextMovement = movementStack.peek();
-            int nextMovementX = nextMovement.cellX;
-            int nextMovementY = nextMovement.cellY;
-            if(findNode(nextMovementX,nextMovementY, gridSize, cells).isBox()){
+            int nextCellX = nextMovement.cellX;
+            int nextCellY = nextMovement.cellY;
+            if(findNode(nextCellX,nextCellY, gridSize, cells).isBox()){
                 if(!movementStack.isEmpty())
                     emptyStack();
 
                 if(aimDelay != BOX_AIM_DELAY)
                     aimDelay = BOX_AIM_DELAY;
 
+                enemyAim(weaponComponent, gameWorld, nextCellX, nextCellY);
+
                 if(aimingTimer >= aimDelay){
-                    enemyAim(weaponComponent, gameWorld, nextMovementX, nextMovementY);
+                    weaponComponent.addAimLine(gameWorld);
 
                     if(shootDelay != BOX_SHOOT_DELAY)
                         shootDelay = BOX_SHOOT_DELAY;

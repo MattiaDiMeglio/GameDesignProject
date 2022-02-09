@@ -49,15 +49,23 @@ public class RifleComponent extends WeaponComponent{
 
     @Override
     public void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld) {
-
         aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
         aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
+    }
 
+    @Override
+    public void addAimLine(GameWorld gameWorld){
         PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
 
         gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
+    }
+
+    public boolean checkLineOfFire(GameWorld gameWorld){
+        PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+
+        return gameWorld.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class ShotgunComponent extends WeaponComponent{
     public ShotgunComponent(){
         mag = 3;
         bullets = mag;
-        range = 60;
+        range = 75;
         lineAmt = 5;
         aimLineX = new float[lineAmt];
         aimLineY = new float[lineAmt];
@@ -64,14 +64,17 @@ public class ShotgunComponent extends WeaponComponent{
             sinAngle /= length;
 
             normalX = cosAngle;
-            if(!owner.name.equals("Player"))
+            if(!shooter.equals("Player"))
                 normalY = sinAngle;
             else normalY = -sinAngle;
 
             aimLineX[i] = gameWorld.toMetersXLength(range) * (normalX);
             aimLineY[i] = gameWorld.toMetersYLength(range) * (normalY);
         }
+    }
 
+    @Override
+    public void addAimLine(GameWorld gameWorld) {
         PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
@@ -79,7 +82,13 @@ public class ShotgunComponent extends WeaponComponent{
         gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
     }
 
+    public boolean checkLineOfFire(GameWorld gameWorld){
+        PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+        int centralAimLine = lineAmt/2;
 
+        return gameWorld.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(),
+                aimLineX[centralAimLine], aimLineY[centralAimLine]);
+    }
 
     @Override
     public void reload() {

@@ -23,14 +23,14 @@ public class PatrolAI extends AIComponent{
 
         if(weaponComponent.bullets > 0){
 
-            playerInRange = checkPlayerInRange();
+            playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
                 if(!movementStack.isEmpty())
                     emptyStack();
 
                 if(aimingTimer >= aimDelay){
-                    enemyAim(weaponComponent, gameWorld, lastPlayerX, lastPlayerY);
+                    weaponComponent.addAimLine(gameWorld);
 
                     if(shootingTimer >= shootDelay)
                         enemyShoot(weaponComponent, gameWorld);

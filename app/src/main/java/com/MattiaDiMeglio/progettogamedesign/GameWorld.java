@@ -50,6 +50,7 @@ public class GameWorld {
     //for the touch and the raycast
     private Fixture touchedFixture;
     private Fixture rayCastFixture;
+    private Fixture lineOfFireFixture;
     private Body castedBody;
     private final QueryCallback touchQueryCallback = new TouchQueryCallback();
 
@@ -156,6 +157,7 @@ public class GameWorld {
         if(rightStrength > 0 && !(rightX == 0 && rightY == 0)){
             WeaponComponent playerWeapon = (WeaponComponent) player.getComponent(ComponentType.Weapon);
             playerWeapon.aim(rightX, rightY, rightAngle,this);
+            playerWeapon.addAimLine(this);
 
             if(isShooting){
                 playerWeapon.shoot(this);
@@ -266,6 +268,42 @@ public class GameWorld {
             }
         }
         return returnFixture;
+    }
+
+    protected boolean checkLineOfFire(float bodyX, float bodyY, float aimX, float aimY){
+        RayCastCallback rayCastCallback = new RayCastCallback() {
+            @Override
+            public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
+                lineOfFireFixture = fixture;
+                Body castedBody = fixture.getBody();
+                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+                return fraction;
+            }
+        };
+
+        float targetX = bodyX + (aimX);
+        float targetY = bodyY + (aimY);
+
+        world.rayCast(rayCastCallback, bodyX, bodyY, targetX, targetY);
+
+        boolean freeLineOfFire = false;
+
+        if (lineOfFireFixture != null) {
+            Body castedBody = lineOfFireFixture.getBody();
+            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
+            if (casteduserData != null) {
+                switch (casteduserData.name) {
+                    case "Player":
+                        freeLineOfFire = true;
+                        break;
+                    default:
+                        freeLineOfFire = false;
+                        break;
+                }
+                lineOfFireFixture = null;
+            }
+        }
+        return freeLineOfFire;
     }
 
     //methods to add and remove GO

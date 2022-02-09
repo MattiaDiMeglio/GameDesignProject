@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.Stack;
 
@@ -156,19 +158,21 @@ public class AIComponent extends Component{
         }
     }
 
-    public boolean checkPlayerInRange(){
+    public boolean checkPlayerInRange(GameWorld gameWorld){
 
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
-        int lineAmt = enemyWeapon.getLineAmt();
         float range = enemyWeapon.getRange();
+        enemyAim(enemyWeapon, gameWorld, lastPlayerX, lastPlayerY);
 
         float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY, owner.worldX, owner.worldY);
 
-        for(int i = 0; i < lineAmt ; i++){
-            if(distanceToPlayer <= range+18){
+        if(distanceToPlayer <= range+18){
+            if(enemyWeapon.checkLineOfFire(gameWorld))
                 return true;
-            }
         }
+
+        enemyTargetX = 0;
+        enemyTargetY = 0;
         return false;
     }
 
