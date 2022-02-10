@@ -226,7 +226,7 @@ public class MapManager {
 
     }
 
-    private int toActualCoordX(int x){return (AssetManager.WallPixmap.getWidth()/2 + x * AssetManager.WallPixmap.getWidth());}
+    public int toActualCoordX(int x){return (AssetManager.WallPixmap.getWidth()/2 + x * AssetManager.WallPixmap.getWidth());}
 
     //called by the parser. Calls the corrispondent factory method based on the wall type
     public void makeWall(String type, int worldX, int worldY){

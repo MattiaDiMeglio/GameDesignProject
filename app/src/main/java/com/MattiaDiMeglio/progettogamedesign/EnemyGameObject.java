@@ -24,6 +24,8 @@ public class EnemyGameObject extends GameObject {
         drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
         dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
 
+        dynamicBodyComponent.update(0, 0, 0);
+
         drawableComponent.setPosition(x, y);
 
         float touchX = gameWorld.toPixelsTouchX(x);
@@ -50,6 +52,7 @@ public class EnemyGameObject extends GameObject {
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
 
         if(!killed){
+            dynamicBodyComponent.update(0, 0, 0);
 
             dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
             float enemySpeed = dynamicBodyComponent.getSpeed();

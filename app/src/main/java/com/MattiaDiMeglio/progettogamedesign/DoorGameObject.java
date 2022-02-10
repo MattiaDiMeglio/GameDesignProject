@@ -10,9 +10,6 @@ import com.google.fpl.liquidfun.RevoluteJointDef;
 import com.google.fpl.liquidfun.Vec2;
 
 public class DoorGameObject extends GameObject {
-    /*objects different from the player, will have "world coordinates"
-    * that represent the point of the background in which they are.
-    * depending on that the object will be drawn or not*/
     WallGameObject wall;
     private GameWorld gameWorld;
     private DrawableComponent drawableComponent;
@@ -28,7 +25,7 @@ public class DoorGameObject extends GameObject {
     }
 
     public void makeJoint(){
-        dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
+        dynamicBodyComponent = (DynamicBodyComponent) getComponent(ComponentType.Physics);
         StaticBodyComponent staticBodyComponent = (StaticBodyComponent) wall.getComponent(ComponentType.Physics);
         RevoluteJointDef jointDef = new RevoluteJointDef();
         jointDef.setBodyA(dynamicBodyComponent.getBody());

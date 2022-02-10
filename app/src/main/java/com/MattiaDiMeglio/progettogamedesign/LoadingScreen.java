@@ -59,10 +59,11 @@ public class LoadingScreen extends Screen {
             gs.gameState = GameScreen.GameState.Ready;
             GameWorld gw = gs.getGameWorld();
             GameObjectFactory gameObjectFactory = new GameObjectFactory(gw, gw.world);
+            MapManager mapManager = new MapManager(gw, gameObjectFactory, context);
 
             //making the player
-            int x = graphics.getWidth() / 2;
-            int y = graphics.getHeight() / 2;
+            int x = mapManager.toActualCoordX(5);
+            int y = mapManager.toActualCoordX(5);
             if(gw.player == null) {
                 gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
@@ -80,7 +81,6 @@ public class LoadingScreen extends Screen {
             gw.addGameObject(gw.testEnemy2);
 
             //making the map
-            MapManager mapManager = new MapManager(gw, gameObjectFactory, context);
             gw.mapCells = mapManager.initMapResized(gw.mapCells, AssetManager.backgroundPixmap.getWidth() / AssetManager.WallPixmap.getWidth(),
                     AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth());
             gw.mapCells = mapManager.generateMapResized(gw.mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth() / AssetManager.WallPixmap.getWidth() - 1,
@@ -88,6 +88,9 @@ public class LoadingScreen extends Screen {
 
             mapManager.constructMap(gw.mapCells, 50, 50);
 
+            WallGameObject wall = (WallGameObject) gameObjectFactory.makeHorizontalWall(mapManager.toActualCoordX(5), mapManager.toActualCoordX(6));
+            gw.addGameObject(wall);
+            gw.addGameObject(gameObjectFactory.makeDoor(wall, mapManager.toActualCoordX(4), mapManager.toActualCoordX(6) ));
             /*int boxX = 63;
             int boxY = 231;
                 for(int i = 0; i < 7; i++){

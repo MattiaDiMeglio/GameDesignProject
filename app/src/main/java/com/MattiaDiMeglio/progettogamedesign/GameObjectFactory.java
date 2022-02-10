@@ -27,8 +27,8 @@ public class GameObjectFactory {
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
 
-        //WeaponComponent weaponComponent = new GunComponent();
-        WeaponComponent weaponComponent = new ShotgunComponent();
+        WeaponComponent weaponComponent = new GunComponent();
+        //WeaponComponent weaponComponent = new ShotgunComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
@@ -167,15 +167,15 @@ public class GameObjectFactory {
         float doorSpeed = 1;
 
         DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(wallBody.x, wallBody.y,
-                gameWorld.toMetersXLength(AssetManager.horizontalWall.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.horizontalWall.getHeight())/2,
-                world, door.name,doorSpeed);
+                gameWorld.toMetersXLength(AssetManager.BoxPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.BoxPixmap.getHeight())/2,
+                world, door.name, doorSpeed);
 
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.door, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.BoxPixmap, -100, -100);
 
         door.addComponent(dynamicBodyComponent);
         door.addComponent(pixMapComponent);
-        //door.makeJoint();
+        door.makeJoint();
         return door;
     }
 }
