@@ -28,6 +28,7 @@ public class GameWorld {
     private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
     protected DoorGameObject door;
+    public mRayCastCallback rayCastCallback;
     Draw draw;
 
     //AndroidGraphics buffer
@@ -89,7 +90,7 @@ public class GameWorld {
 
         contactListener = new PhysicsContactListener();
         world.setContactListener(contactListener);
-
+        rayCastCallback = new mRayCastCallback(world);
         gameObjects = new ArrayList<GameObject>();//list of all game objects
         activeGameObjects = new ArrayList<GameObject>(); //list of on-screen game objects
         //gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
@@ -413,10 +414,6 @@ public class GameWorld {
         }
         activeGameObjects.clear();
         gameObjects.clear();
-        if(gameScreen.gameState == GameScreen.GameState.Paused) {
-            player = null;
-            world.delete();
-        }
     }
 }
 

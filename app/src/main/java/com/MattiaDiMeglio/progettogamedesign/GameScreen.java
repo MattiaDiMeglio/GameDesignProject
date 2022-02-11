@@ -181,6 +181,8 @@ public class GameScreen extends Screen {
                             } else if(event.y > gameWorld.bufferHeight/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2 - AssetManager.ExitButtonPixmap.getHeight())
                                     && event.y < gameWorld.bufferHeight/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2)){
                                 gameWorld.destroyGameWorld();
+                                currentBackgroundY = 0;
+                                currentBackgroundX = 0;
                                 game.setScreen(mainMenuScreen);
                             }
                         }

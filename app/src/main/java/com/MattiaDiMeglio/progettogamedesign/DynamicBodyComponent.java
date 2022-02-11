@@ -73,6 +73,11 @@ public class DynamicBodyComponent extends PhysicsComponent{
         return body.getContactList();
     }
 
+    public void applyForce(float x, float y){
+        Vec2 dir = new Vec2(x, y);
+        Vec2 point = new Vec2(width, height);
+        body.applyForce(dir, point, true);
+    }
     @Override
     public void Draw(Graphics graphics, GameWorld gameWorld, int color) {
         int sx = (int) (gameWorld.toPixelsX(body.getPositionX()) - (gameWorld.toPixelsXLength(width)/2));

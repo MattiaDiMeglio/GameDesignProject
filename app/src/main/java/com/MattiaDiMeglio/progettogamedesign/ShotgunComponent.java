@@ -28,8 +28,8 @@ public class ShotgunComponent extends WeaponComponent{
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
         for(int i = 0; i < lineAmt; i++){
-            Fixture fixture = gameWorld.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
-                    aimLineX[i], aimLineY[i],shooter);
+            Fixture fixture = gameWorld.rayCastCallback.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
+                    aimLineX[i], aimLineY[i],shooter, gameWorld.levelGrid);
 
             if(shooter.equals("Enemy") && fixture != null){
                 Body castedBody = fixture.getBody();

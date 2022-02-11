@@ -63,7 +63,7 @@ public class LoadingScreen extends Screen {
 
             //making the player
             int x = mapManager.toActualCoordX(5);
-            int y = mapManager.toActualCoordX(5);
+            int y = mapManager.toActualCoordX(8);
             if(gw.player == null) {
                 gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
@@ -75,8 +75,8 @@ public class LoadingScreen extends Screen {
             gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Patrol);
             gw.addGameObject(gw.testEnemy);
 
-            testEnemyX = 100;
-            testEnemyY = 100;
+            testEnemyX = mapManager.toActualCoordX(6);
+            testEnemyY = mapManager.toActualCoordX(4);
             gw.testEnemy2 = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
             gw.addGameObject(gw.testEnemy2);
 
@@ -91,16 +91,16 @@ public class LoadingScreen extends Screen {
             WallGameObject wall = (WallGameObject) gameObjectFactory.makeHorizontalWall(mapManager.toActualCoordX(5), mapManager.toActualCoordX(6));
             gw.addGameObject(wall);
             gw.addGameObject(gameObjectFactory.makeDoor(wall, mapManager.toActualCoordX(4), mapManager.toActualCoordX(6) ));
-            /*int boxX = 63;
+            int boxX = 63;
             int boxY = 231;
                 for(int i = 0; i < 7; i++){
-                    gw.addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));
+                    gw.addGameObject(gameObjectFactory.makeHorizontalHalfWall(boxX + (i * 42), boxY));
                     if(i == 6){
                          for(int j = 1; j < 5; j++)
                     //if(j!=3)
-                    gw.addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY - (j * 42)));
+                    gw.addGameObject(gameObjectFactory.makeHorizontalHalfWall(boxX + (i * 42), boxY - (j * 42)));
             }
-        }*/
+        }
 
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
