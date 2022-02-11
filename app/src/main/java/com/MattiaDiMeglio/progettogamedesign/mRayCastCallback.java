@@ -70,6 +70,9 @@ public class mRayCastCallback {
                     case "Box":
                         BoxGameObject boxGameObject = (BoxGameObject) casteduserData.getOwner();
                         boxGameObject.Damage();
+                    case "MovableBox":
+                        MovableBoxGameObject movableBoxGameObject = (MovableBoxGameObject) casteduserData.getOwner();
+                        movableBoxGameObject.applyForce(aimX * 10000, aimY * 10000);
                     default:
                         Log.d("RaycastEvent", "raycast object with no name");
                         break;

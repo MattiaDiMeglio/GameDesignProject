@@ -89,12 +89,25 @@ public class GameObjectFactory {
     public GameObject makeBox(int worldX, int worldY){
         BoxGameObject box = new BoxGameObject(gameWorld, worldX, worldY);
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.WallPixmap.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.WallPixmap.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.BoxPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.BoxPixmap.getHeight()),
                 world, box.name);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.BoxPixmap, -100, -100);
 
         box.addComponent(staticBodyComponent);
+        box.addComponent(pixMapComponent);
+        return box;
+    }
+
+    public GameObject makeMovableBox(int worldX, int worldY){
+        MovableBoxGameObject box = new MovableBoxGameObject(gameWorld, worldX, worldY);
+        DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(40f, 40f,
+                gameWorld.toMetersXLength(AssetManager.BoxPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.BoxPixmap.getHeight()),
+                world, box.name, 0);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.BoxPixmap, -100, -100);
+
+        box.addComponent(dynamicBodyComponent);
         box.addComponent(pixMapComponent);
         return box;
     }

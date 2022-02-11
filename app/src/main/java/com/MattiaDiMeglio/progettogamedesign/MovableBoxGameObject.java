@@ -12,7 +12,19 @@ public class MovableBoxGameObject extends GameObject {
         this.worldX = worldX;
         this.worldY = worldY;
         this.gameWorld = gameWorld;
-        this.name = "Box";
+        this.name = "MovableBox";
+    }
+
+    @Override
+    public void update() {
+        dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
+        dynamicBodyComponent.update(0, 0, 0);
+        int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
+        int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
+        drawableComponent.setPosition(currentGX, currentGY);
+
+        worldX = gameWorld.updateWorldX(drawableComponent.getPositionX());
+        worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());
     }
 
     @Override
@@ -34,8 +46,16 @@ public class MovableBoxGameObject extends GameObject {
     }
 
     public void applyForce(float x, float y){
+        drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
         dynamicBodyComponent.applyForce(x, y);
+
+        int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
+        int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
+        drawableComponent.setPosition(currentGX, currentGY);
+
+        worldX = gameWorld.updateWorldX(drawableComponent.getPositionX());
+        worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());
     }
 
     public void Damage() {

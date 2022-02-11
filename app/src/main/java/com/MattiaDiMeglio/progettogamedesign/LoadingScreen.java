@@ -94,11 +94,11 @@ public class LoadingScreen extends Screen {
             int boxX = 63;
             int boxY = 231;
                 for(int i = 0; i < 7; i++){
-                    gw.addGameObject(gameObjectFactory.makeHorizontalHalfWall(boxX + (i * 42), boxY));
+                    gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY));
                     if(i == 6){
                          for(int j = 1; j < 5; j++)
                     //if(j!=3)
-                    gw.addGameObject(gameObjectFactory.makeHorizontalHalfWall(boxX + (i * 42), boxY - (j * 42)));
+                    gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY - (j * 42)));
             }
         }
 

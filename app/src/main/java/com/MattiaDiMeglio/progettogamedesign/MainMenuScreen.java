@@ -49,22 +49,24 @@ public class MainMenuScreen extends Screen {
         game.getInput().getKeyEvents();
         int len = touchEvents.size();
         for(int i = 0; i < len; i++){
-            Input.TouchEvent event = touchEvents.get(i);
-            if(event.type == Input.TouchEvent.TOUCH_DOWN){
-                if(event.x > graphics.getWidth()/2 - AssetManager.PlayButtonPixmap.getWidth()/2){
-                    if(event.y > graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
-                            && event.y < graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
-                            + AssetManager.PlayButtonPixmap.getHeight()){
-                        LoadingScreen loadingScreen = (LoadingScreen) nextScreen;
-                        loadingScreen.setNonCreated();
-                        game.setScreen(nextScreen);
-                    } else if(event.y > graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2 - AssetManager.ExitButtonPixmap.getHeight())
-                            && event.y < graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight() * 2)){
-                        ProgettoGameDesign progettoGameDesign = (ProgettoGameDesign) game;
-                        progettoGameDesign.ExitGame();
+            if(!touchEvents.isEmpty()) {
+                Input.TouchEvent event = touchEvents.get(i);
+                if (event.type == Input.TouchEvent.TOUCH_DOWN) {
+                    if (event.x > graphics.getWidth() / 2 - AssetManager.PlayButtonPixmap.getWidth() / 2) {
+                        if (event.y > graphics.getHeight() / 2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
+                                && event.y < graphics.getHeight() / 2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
+                                + AssetManager.PlayButtonPixmap.getHeight()) {
+                            LoadingScreen loadingScreen = (LoadingScreen) nextScreen;
+                            loadingScreen.setNonCreated();
+                            game.setScreen(nextScreen);
+                        } else if (event.y > graphics.getHeight() / 2 + (AssetManager.ExitButtonPixmap.getHeight() * 2 - AssetManager.ExitButtonPixmap.getHeight())
+                                && event.y < graphics.getHeight() / 2 + (AssetManager.ExitButtonPixmap.getHeight() * 2)) {
+                            ProgettoGameDesign progettoGameDesign = (ProgettoGameDesign) game;
+                            progettoGameDesign.ExitGame();
+                        }
                     }
-                }
 
+                }
             }
         }
     }
