@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 
+import com.badlogic.androidgames.framework.Color;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
 
@@ -134,6 +135,13 @@ public class AndroidGraphics implements Graphics {
         canvas.rotate(-angle, x + halfWidth, y + halfHeight);
         canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
         canvas.restore();
+    }
+
+    @Override
+    public void drawText(String string, int x, int y, int color){
+        canvas.save();
+        paint.setColor(color);
+        canvas.drawText(string, x, y, paint);
     }
 
     @Override

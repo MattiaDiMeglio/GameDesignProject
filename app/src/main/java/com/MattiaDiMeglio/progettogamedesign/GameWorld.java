@@ -63,6 +63,7 @@ public class GameWorld {
     int[][]mapCells;
 
     int enemyNum;
+    int totalEnemies;
     int level = 1;
 
     //to get the touched fixture

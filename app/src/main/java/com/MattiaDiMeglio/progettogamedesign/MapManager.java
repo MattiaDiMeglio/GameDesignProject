@@ -188,7 +188,6 @@ public class MapManager {
 
     public void constructMap(int[][]map, int width, int height){
         map[5][5] = 5;
-        gameWorld.enemyNum = (10 * gameWorld.level) - (gameWorld.level * 2);
         for(int i = 0; i< gameWorld.enemyNum; i++){
             generateEnemyPos(map);
         }

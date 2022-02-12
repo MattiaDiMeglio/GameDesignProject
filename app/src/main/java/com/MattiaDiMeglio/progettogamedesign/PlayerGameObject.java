@@ -92,6 +92,15 @@ public class PlayerGameObject extends GameObject {
         }
     }
 
+    public int getCurrentProjectiles(){
+        weaponComponent = (WeaponComponent)getComponent(ComponentType.Weapon);
+        return weaponComponent.bullets;
+    }
+    public int getMaxProjectiles(){
+        weaponComponent = (WeaponComponent)getComponent(ComponentType.Weapon);
+        return weaponComponent.mag;
+    }
+
     public int getWorldX(){return worldX;}
     public int getWorldY(){return worldY;}
 

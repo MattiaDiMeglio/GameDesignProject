@@ -79,7 +79,8 @@ public class LoadingScreen extends Screen {
             testEnemyY = mapManager.toActualCoordX(4);
             gw.testEnemy2 = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
             gw.addGameObject(gw.testEnemy2);
-
+            gw.enemyNum = (10 * gw.level) - (gw.level * 2);
+            gw.totalEnemies = gw.enemyNum;
             //making the map
             gw.mapCells = mapManager.initMapResized(gw.mapCells, AssetManager.backgroundPixmap.getWidth() / AssetManager.WallPixmap.getWidth(),
                     AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth());

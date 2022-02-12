@@ -241,6 +241,8 @@ public class GameScreen extends Screen {
         if(gameState == GameState.GameOver){
             graphics.drawPixmap(AssetManager.EndLevelPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2, (int) gameWorld.bufferHeight/2 - AssetManager.EndLevelPixmap.getHeight()/2);
         }
+        graphics.drawText(gameWorld.enemyNum + "/" + gameWorld.totalEnemies + " remaining", (gameWorld.bufferWidth/2) - 20, 10, Color.BLACK);
+        graphics.drawText( gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - 55, gameWorld.bufferHeight - 60, Color.BLACK);
     }
 
     private void drawBodies(){
