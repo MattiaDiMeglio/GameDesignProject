@@ -22,9 +22,6 @@ public class GunComponent extends WeaponComponent{
         Log.d("GunComponent","shooting");
         bullets--;
 
-        if(bullets == 0 && shooter.equals("Player"))
-            reload();
-
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
         Fixture fixture = gameWorld.rayCastCallback.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
@@ -65,7 +62,7 @@ public class GunComponent extends WeaponComponent{
     public boolean checkLineOfFire(GameWorld gameWorld){
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
-        return gameWorld.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
+        return gameWorld.rayCastCallback.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
     }
 
     @Override

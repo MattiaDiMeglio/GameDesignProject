@@ -86,7 +86,7 @@ public class ShotgunComponent extends WeaponComponent{
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
         int centralAimLine = lineAmt/2;
 
-        return gameWorld.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(),
+        return gameWorld.rayCastCallback.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(),
                 aimLineX[centralAimLine], aimLineY[centralAimLine]);
     }
 

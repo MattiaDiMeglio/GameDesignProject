@@ -10,12 +10,19 @@ public class EnemyGameObject extends GameObject {
     private ControllableComponent controllableComponent;
     protected boolean killed = false;//has it been killed?
 
+    private int previousCellX, previousCellY, currentCellX, currentCellY;
+
     public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){//constructor
         this.gameWorld = gameWorld;//gw
         this.name = "Enemy";//name
         //gives the enemy a random position on the background
         this.worldX = worldX;//worldPos are the GO position on the map
         this.worldY = worldY;
+
+        currentCellX = worldX / gameWorld.gridSize;
+        currentCellY = worldY / gameWorld.gridSize;
+        previousCellX = currentCellX;
+        previousCellY = currentCellY;
     }
 
     //updates the graphical and physical positions
@@ -57,6 +64,8 @@ public class EnemyGameObject extends GameObject {
             dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
             float enemySpeed = dynamicBodyComponent.getSpeed();
 
+            updateCells(cells, gWorld);
+
             aiComponent.updateAI(playerX, playerY, elapsedTime, cells, gWorld);
             aiComponent.movement(enemySpeed); //parte solo se lo stack dei movimenti non è vuoto
         }
@@ -72,7 +81,7 @@ public class EnemyGameObject extends GameObject {
             gameWorld.enemyNum--;
             AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
             aiComponent.emptyStack();
-            aiComponent.freeCurrentCell(cells);
+            freeCurrentCell(cells);
             //components.clear();
             killed = true;
             outOfView();
@@ -88,5 +97,20 @@ public class EnemyGameObject extends GameObject {
     }
 
     public boolean isKilled(){return killed;}
+
+    public void updateCells(Node[][] cells, GameWorld gameWorld){
+
+        currentCellX = worldX / gameWorld.gridSize;
+        currentCellY = worldY / gameWorld.gridSize;
+
+        if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
+            cells[previousCellY][previousCellX].setEnemy(false);
+            cells[currentCellY][currentCellX].setEnemy(true);
+            previousCellX = currentCellX;
+            previousCellY = currentCellY;
+        }
+    }
+
+    public void freeCurrentCell(Node[][] cells){ cells[currentCellY][currentCellX].setEnemy(false); }
 
 }

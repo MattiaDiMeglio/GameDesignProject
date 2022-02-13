@@ -7,10 +7,12 @@ import com.google.fpl.liquidfun.Fixture;
 
 public class RifleComponent extends WeaponComponent{
 
+    private float fixedRange = 0f;
+
     public RifleComponent(){
         mag = 1;
         bullets = mag;
-        range = 220;
+        range = 250;
         lineAmt = 1;
         aimLineX = new float[lineAmt];
         aimLineY = new float[lineAmt];
@@ -43,14 +45,14 @@ public class RifleComponent extends WeaponComponent{
 
     @Override
     public void reload() {
-        Log.d("GunComponent","reloading");
+        Log.d("RifleComponent","reloading");
         bullets = mag;
     }
 
     @Override
     public void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld) {
-        aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
-        aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
+        aimLineX[0] = gameWorld.toMetersXLength(fixedRange) * normalizedX;
+        aimLineY[0] = gameWorld.toMetersYLength(fixedRange) * normalizedY;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class RifleComponent extends WeaponComponent{
     public boolean checkLineOfFire(GameWorld gameWorld){
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
-        return gameWorld.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
+        return gameWorld.rayCastCallback.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
     }
 
     @Override
@@ -84,4 +86,6 @@ public class RifleComponent extends WeaponComponent{
 
     @Override
     public void setShooter(String shooter) {this.shooter = shooter;}
+
+    public void setFixedRange(float fixedRange) { this.fixedRange = fixedRange; }
 }

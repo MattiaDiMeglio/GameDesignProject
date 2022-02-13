@@ -39,8 +39,9 @@ public class Pathfinder {
                 if(m.isEnemy()) //vengono evitati i nodi con nemici al loro interno
                     continue;
 
-                if(!aiType.equals(AIType.Dummy) && m.isBox()) //I dummy sparano alle scatole lungo il loro cammino,
-                    continue;                                 //gli altri nemici le evitano
+                //I dummy sparano alle scatole lungo il loro cammino, gli altri nemici le evitano
+                if(!aiType.equals(AIType.Dummy) && (m.isBox() || m.isMovableBox()))
+                    continue;
 
                 float totalWeight = n.g + edge.weight;
 

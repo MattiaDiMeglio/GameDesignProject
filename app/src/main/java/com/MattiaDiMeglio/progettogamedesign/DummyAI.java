@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import com.badlogic.androidgames.framework.Game;
 
 public class DummyAI extends AIComponent{
@@ -26,7 +28,7 @@ public class DummyAI extends AIComponent{
 
         if(weaponComponent.bullets > 0){
             /*if(aimingTimer < aimDelay)
-                playerInRange = checkPlayerInRange();*/
+                playerInRange = checkPlayerInRange(gameWorld);*/
 
             playerInRange = checkPlayerInRange(gameWorld);
 
@@ -75,7 +77,8 @@ public class DummyAI extends AIComponent{
             Movement nextMovement = movementStack.peek();
             int nextCellX = nextMovement.cellX;
             int nextCellY = nextMovement.cellY;
-            if(findNode(nextCellX,nextCellY, gridSize, cells).isBox()){
+            Node nextNode = findNode(nextCellX,nextCellY, gridSize, cells);
+            if(nextNode.isBox() || nextNode.isMovableBox()){
                 if(!movementStack.isEmpty())
                     emptyStack();
 

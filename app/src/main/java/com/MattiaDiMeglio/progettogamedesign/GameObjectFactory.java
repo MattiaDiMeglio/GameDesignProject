@@ -67,7 +67,6 @@ public class GameObjectFactory {
 
         aiComponent.setGridSize(gameWorld.gridSize);
         aiComponent.setAiType(aiType);
-        aiComponent.initializeCells(worldX, worldY);
 
         weaponComponent.setShooter(enemy.name);
 

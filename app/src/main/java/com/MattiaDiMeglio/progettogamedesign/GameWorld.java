@@ -145,26 +145,26 @@ public class GameWorld {
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         //Log.d("touched", "" + player.isInContact());
         for(GameObject gameObject : activeGameObjects){
-            if(gameObject.name.equals("Enemy")){
-                EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
-                enemyGameObject.update(player.worldX, player.worldY, elapsedTime, levelGrid.getCells(),this);
+            switch(gameObject.name){
+                case "Player":
+                    player.update(rightStrength,rightX,rightY,rightAngle,isShooting,this, elapsedTime);
+                    break;
+                case "Enemy":
+                    EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
+                    enemyGameObject.update(player.worldX, player.worldY, elapsedTime, levelGrid.getCells(),this);
+                    break;
+                case "MovableBox":
+                    MovableBoxGameObject movableBoxGameObject = (MovableBoxGameObject) gameObject;
+                    movableBoxGameObject.update(levelGrid.getCells(), this);
+                default:
+                    gameObject.update();
+                    break;
             }
-            else gameObject.update();
         }
 
         checkOutOfBound();
 
         gameScreen.setWorldDestination(leftX, leftY, elapsedTime);
-
-        if(rightStrength > 0 && !(rightX == 0 && rightY == 0)){
-            WeaponComponent playerWeapon = (WeaponComponent) player.getComponent(ComponentType.Weapon);
-            playerWeapon.aim(rightX, rightY, rightAngle,this);
-            playerWeapon.addAimLine(this);
-
-            if(isShooting){
-                playerWeapon.shoot(this);
-            }
-        }
     }
 
     private void checkOutOfBound(){

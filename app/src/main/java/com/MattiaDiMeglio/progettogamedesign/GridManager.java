@@ -36,7 +36,8 @@ public class GridManager {
 
     public void addObstacles(List<GameObject> gameObjects, GameWorld gameWorld){
         for(GameObject go : gameObjects){
-            if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("Box") || go.name.equals("Enemy"))
+            if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("Box")
+                    || go.name.equals("Enemy") || go.name.equals("MovableBox"))
                 addSingleObstacle(go, gameWorld);
         }
         computeNeighbors(); // dopo aver aggiunto gli ostacoli, calcoliamo i vicini dei nodi
@@ -61,6 +62,8 @@ public class GridManager {
             case "Enemy":
                 cells[gridObstacleY][gridObstacleX].setEnemy(true);
                 break;
+            case "MovableBox":
+                cells[gridObstacleY][gridObstacleX].setMovableBox(true);
             default: //Wall - HalfWall
                 cells[gridObstacleY][gridObstacleX].setObstacle(true);
                 break;

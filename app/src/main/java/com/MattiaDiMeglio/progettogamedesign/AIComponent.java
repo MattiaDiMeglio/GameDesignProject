@@ -14,7 +14,6 @@ public class AIComponent extends Component{
     protected int gridSize;
 
     private AIType aiType;
-    private int previousCellX, previousCellY, currentCellX, currentCellY;
 
     int lastPlayerX, lastPlayerY;
     int enemyTargetX = 0, enemyTargetY = 0;
@@ -147,13 +146,11 @@ public class AIComponent extends Component{
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
 
-        updateCells(cells, gameWorld);
-
         playerPositionTimer += elapsedTime;
 
         if(playerPositionTimer > playerPositionUpdateDelay){
-            setLastPlayerX(playerX);
-            setLastPlayerY(playerY);
+            lastPlayerX = playerX;
+            lastPlayerY = playerY;
             playerPositionTimer = 0;
         }
     }
@@ -162,11 +159,11 @@ public class AIComponent extends Component{
 
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
         float range = enemyWeapon.getRange();
-        enemyAim(enemyWeapon, gameWorld, lastPlayerX, lastPlayerY);
 
         float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY, owner.worldX, owner.worldY);
 
         if(distanceToPlayer <= range+18){
+            enemyAim(enemyWeapon, gameWorld, lastPlayerX, lastPlayerY);
             if(enemyWeapon.checkLineOfFire(gameWorld))
                 return true;
         }
@@ -222,37 +219,11 @@ public class AIComponent extends Component{
                 ((startY - destinationY) * (startY - destinationY)));
     }
 
-    public void initializeCells(int worldX, int worldY){
-        currentCellX = worldX / gridSize;
-        currentCellY = worldY / gridSize;
-        previousCellX = currentCellX;
-        previousCellY = currentCellY;
-    }
-
-    public void updateCells(Node[][] cells, GameWorld gameWorld){
-
-        currentCellX = owner.worldX / gridSize;
-        currentCellY = owner.worldY / gridSize;
-
-        if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
-            cells[previousCellY][previousCellX].setEnemy(false);
-            cells[currentCellY][currentCellX].setEnemy(true);
-            previousCellX = currentCellX;
-            previousCellY = currentCellY;
-        }
-    }
-
-    public void freeCurrentCell(Node[][] cells){ cells[currentCellY][currentCellX].setEnemy(false); }
-
     @Override
     public ComponentType getType() { return ComponentType.AI; }
 
     public AIType getAiType() { return aiType; }
-    public int getLastPlayerX() { return lastPlayerX; }
-    public int getLastPlayerY() { return lastPlayerY; }
 
-    public void setLastPlayerX(int lastPlayerX) { this.lastPlayerX = lastPlayerX; }
-    public void setLastPlayerY(int lastPlayerY) { this.lastPlayerY = lastPlayerY; }
     public void setAiType(AIType aiType) { this.aiType = aiType; }
     public void setGridSize(int gridSize) { this.gridSize = gridSize; }
 }

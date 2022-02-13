@@ -8,6 +8,7 @@ public class Node implements Comparable<Node>{
     private int posX, posY; // cell center coordinates
     private boolean isObstacle;
     private boolean isBox;
+    private boolean isMovableBox;
     private boolean isEnemy;
 
     // Parent in the path
@@ -72,6 +73,7 @@ public class Node implements Comparable<Node>{
     public void setPosY(int posY) { this.posY = posY; }
     public void setObstacle(boolean obstacle) { isObstacle = obstacle; }
     public void setBox(boolean isBox) { this.isBox = isBox; }
+    public void setMovableBox(boolean movableBox) { isMovableBox = movableBox; }
     public void setEnemy(boolean enemy) { isEnemy = enemy; }
 
     public int getPosX() { return posX; }
@@ -79,5 +81,6 @@ public class Node implements Comparable<Node>{
     public boolean isObstacle() { return isObstacle; }
     public boolean isBox() { return isBox; }
     public boolean isEnemy() { return isEnemy; }
+    public boolean isMovableBox() { return isMovableBox; }
 
 }

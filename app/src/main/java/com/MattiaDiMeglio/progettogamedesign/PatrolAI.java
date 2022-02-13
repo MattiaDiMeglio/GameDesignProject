@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import java.util.Random;
 
 public class PatrolAI extends AIComponent{
@@ -76,7 +78,7 @@ public class PatrolAI extends AIComponent{
 
         Random random = new Random();
 
-        int minRadius = gridSize * 3;
+        int minRadius = gridSize * 3; // 42 * 3 = 126
         //Il raggio è compreso tra 126 e 378
         int randomRadius = (int) (minRadius + (minRadius * 2 * Math.sqrt(random.nextFloat())));
         //L'angolo è compreso tra 0 e 2 PI
@@ -92,7 +94,7 @@ public class PatrolAI extends AIComponent{
         int cellY = y / gridSize;
 
         //controllo che sia all'interno della griglia
-        if((cellX >= 0 && cellX <= 49) && (cellY >= 0 && cellY <= 49)){
+        if((cellX >= 0 && cellX < cells.length) && (cellY >= 0 && cellY < cells.length)){
             //controllo che sia una cella libera
             if(!cells[cellY][cellX].isEnemy() && !cells[cellY][cellX].isBox() && !cells[cellY][cellX].isObstacle()){
                 randomPositionX = cells[cellY][cellX].getPosX();

@@ -12,6 +12,9 @@ public class PlayerGameObject extends GameObject {
     protected boolean canMove = true;
     protected boolean killed = false;//has it been killed?
 
+    float reloadingTimer = 0f;
+    float reloadDelay = 0.8f;
+
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
         this.name = "Player";
@@ -33,6 +36,26 @@ public class PlayerGameObject extends GameObject {
 
      //   drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
        //         (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
+    }
+
+    public void update(float rightStrength, float rightX, float rightY, float rightAngle,
+                       boolean isShooting, GameWorld gameWorld, float elapsedTime){
+
+        weaponComponent = (WeaponComponent) components.get(ComponentType.Weapon);
+
+        if(weaponComponent.bullets > 0){
+            if(rightStrength > 0 && !(rightX == 0 && rightY == 0)){
+                weaponComponent.aim(rightX, rightY, rightAngle,gameWorld);
+                weaponComponent.addAimLine(gameWorld);
+                if(isShooting)
+                    weaponComponent.shoot(gameWorld);
+            }
+        }
+        else if(reloadingTimer >= reloadDelay){
+            weaponComponent.reload();
+            reloadingTimer = 0;
+        }
+        else reloadingTimer += elapsedTime;
     }
 
     public void updatePosition(float x, float y, float angle, float strength, float deltaTime){

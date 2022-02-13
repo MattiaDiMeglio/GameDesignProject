@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.badlogic.androidgames.framework.Game;
+
 public class MovableBoxGameObject extends GameObject {
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;
@@ -7,16 +9,33 @@ public class MovableBoxGameObject extends GameObject {
     private int life = 3;
     private boolean destroyed = false;
 
+    private int previousCellX, previousCellY, currentCellX, currentCellY;
 
     public MovableBoxGameObject(GameWorld gameWorld, int worldX, int worldY){
         this.worldX = worldX;
         this.worldY = worldY;
         this.gameWorld = gameWorld;
         this.name = "MovableBox";
+
+        currentCellX = worldX / gameWorld.gridSize;
+        currentCellY = worldY / gameWorld.gridSize;
+        previousCellX = currentCellX;
+        previousCellY = currentCellY;
     }
 
     @Override
     public void update() {
+        /*dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
+        dynamicBodyComponent.update(0, 0, 0);
+        int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
+        int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
+        drawableComponent.setPosition(currentGX, currentGY);
+
+        worldX = gameWorld.updateWorldX(drawableComponent.getPositionX());
+        worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());*/
+    }
+
+    public void update(Node[][] cells, GameWorld gWorld){
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
         dynamicBodyComponent.update(0, 0, 0);
         int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
@@ -25,6 +44,8 @@ public class MovableBoxGameObject extends GameObject {
 
         worldX = gameWorld.updateWorldX(drawableComponent.getPositionX());
         worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());
+
+        updateCells(cells, gameWorld);
     }
 
     @Override
@@ -77,6 +98,19 @@ public class MovableBoxGameObject extends GameObject {
                 removeComponent(ComponentType.Drawable);
 
             }
+        }
+    }
+
+    public void updateCells(Node[][] cells, GameWorld gameWorld){
+
+        currentCellX = worldX / gameWorld.gridSize;
+        currentCellY = worldY / gameWorld.gridSize;
+
+        if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
+            cells[previousCellY][previousCellX].setEnemy(false);
+            cells[currentCellY][currentCellX].setEnemy(true);
+            previousCellX = currentCellX;
+            previousCellY = currentCellY;
         }
     }
 

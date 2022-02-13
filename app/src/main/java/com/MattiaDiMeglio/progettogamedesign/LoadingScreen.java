@@ -94,14 +94,14 @@ public class LoadingScreen extends Screen {
             gw.addGameObject(gameObjectFactory.makeDoor(wall, mapManager.toActualCoordX(4), mapManager.toActualCoordX(6) ));
             int boxX = 63;
             int boxY = 231;
-                for(int i = 0; i < 7; i++){
-                    gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY));
-                    if(i == 6){
-                         for(int j = 1; j < 5; j++)
-                    //if(j!=3)
-                    gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY - (j * 42)));
+            for(int i = 0; i < 7; i++){
+                gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY));
+                if(i == 6){
+                    for(int j = 1; j < 5; j++)
+                        //if(j!=3)
+                        gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY - (j * 42)));
+                }
             }
-        }
 
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
