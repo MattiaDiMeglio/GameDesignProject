@@ -27,7 +27,6 @@ public class GameWorld {
     public GameScreen gameScreen;
     private PhysicsContactListener contactListener;
     protected PlayerGameObject player;
-    protected DoorGameObject door;
     public mRayCastCallback rayCastCallback;
     Draw draw;
 

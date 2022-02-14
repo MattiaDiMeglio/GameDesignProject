@@ -182,7 +182,6 @@ public class MapManager {
                     boxInPosition = true;
                 }
             }
-
         }
     }
 
