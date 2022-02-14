@@ -107,8 +107,8 @@ public class MovableBoxGameObject extends GameObject {
         currentCellY = worldY / gameWorld.gridSize;
 
         if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
-            cells[previousCellY][previousCellX].setEnemy(false);
-            cells[currentCellY][currentCellX].setEnemy(true);
+            cells[previousCellY][previousCellX].setMovableBox(false);
+            cells[currentCellY][currentCellX].setMovableBox(true);
             previousCellX = currentCellX;
             previousCellY = currentCellY;
         }
