@@ -211,10 +211,10 @@ public class MapManager {
                         makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Dummy);
                         break;
                     case 7:
-                        //makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Sniper);
+                        makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Sniper);
                         break;
                     case 8:
-                       // makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Patrol);
+                        makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Patrol);
                         break;
                     case 9:
                         gameWorld.addGameObject(gameObjectFactory.makeBox(toActualCoordX(i), toActualCoordX(j)));

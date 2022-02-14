@@ -89,8 +89,11 @@ public class ProgettoGameDesign extends AndroidGame {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             final WindowInsetsController controller = getWindow().getInsetsController();
 
-            if (controller != null)
+            if (controller != null) {
                 controller.hide(WindowInsets.Type.statusBars());
+                controller.hide(WindowInsets.Type.navigationBars());
+            }
+
         }
         else {
             //noinspection deprecation
