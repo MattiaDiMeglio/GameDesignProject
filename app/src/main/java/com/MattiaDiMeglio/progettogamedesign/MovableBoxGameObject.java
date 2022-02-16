@@ -6,8 +6,6 @@ public class MovableBoxGameObject extends GameObject {
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;
     private DynamicBodyComponent dynamicBodyComponent;
-    private int life = 3;
-    private boolean destroyed = false;
 
     private int previousCellX, previousCellY, currentCellX, currentCellY;
 
@@ -79,36 +77,14 @@ public class MovableBoxGameObject extends GameObject {
         worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());
     }
 
-    public void Damage() {
-        if(!destroyed) {
-            life -= 1;
-            if (life == 0) {
-                //components.clear();
-                outOfView();
-                destroyed = true;
-                gameWorld.levelGrid.removeBox(worldX, worldY);
-                //gameWorld.removeActiveGameObject(this);
-                gameWorld.removeGameObject(this);
-
-                PhysicsComponent physicsComponent = (PhysicsComponent) getComponent(ComponentType.Physics);
-                physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
-                physicsComponent.body.delete();
-                gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
-                removeComponent(ComponentType.Physics);
-                removeComponent(ComponentType.Drawable);
-
-            }
-        }
-    }
-
     public void updateCells(Node[][] cells, GameWorld gameWorld){
 
         currentCellX = worldX / gameWorld.gridSize;
         currentCellY = worldY / gameWorld.gridSize;
 
         if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
-            cells[previousCellY][previousCellX].setMovableBox(false);
-            cells[currentCellY][currentCellX].setMovableBox(true);
+            cells[previousCellY][previousCellX].setBox(false);
+            cells[currentCellY][currentCellX].setBox(true);
             previousCellX = currentCellX;
             previousCellY = currentCellY;
         }

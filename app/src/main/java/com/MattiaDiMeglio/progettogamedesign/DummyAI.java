@@ -33,8 +33,11 @@ public class DummyAI extends AIComponent{
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
-                if(!movementStack.isEmpty())
+                if(!movementStack.isEmpty()){
+                    //Log.d("DummyAI","Svuoto lo stack dei movimenti");
                     emptyStack();
+                }
+
 
                 if(aimDelay != DEFAULT_AIM_DELAY)
                     aimDelay = DEFAULT_AIM_DELAY;
@@ -78,7 +81,7 @@ public class DummyAI extends AIComponent{
             int nextCellX = nextMovement.cellX;
             int nextCellY = nextMovement.cellY;
             Node nextNode = findNode(nextCellX,nextCellY, gridSize, cells);
-            if(nextNode.isBox() || nextNode.isMovableBox()){
+            if(nextNode.isBox()){
                 if(!movementStack.isEmpty())
                     emptyStack();
 

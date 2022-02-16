@@ -40,7 +40,7 @@ public class Pathfinder {
                     continue;
 
                 //I dummy sparano alle scatole lungo il loro cammino, gli altri nemici le evitano
-                if(!aiType.equals(AIType.Dummy) && (m.isBox() || m.isMovableBox()))
+                if(!aiType.equals(AIType.Dummy) && m.isBox())
                     continue;
 
                 float totalWeight = n.g + edge.weight;

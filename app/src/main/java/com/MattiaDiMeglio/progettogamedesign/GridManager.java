@@ -38,14 +38,12 @@ public class GridManager {
         for(GameObject go : gameObjects){
             if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("Box")
                     || go.name.equals("Enemy") || go.name.equals("MovableBox"))
-                addSingleObstacle(go, gameWorld);
+                addSingleObstacle(go);
         }
         computeNeighbors(); // dopo aver aggiunto gli ostacoli, calcoliamo i vicini dei nodi
     }
 
-    public void addSingleObstacle(GameObject obstacle, GameWorld gameWorld){
-
-        //PhysicsComponent physicsComponent = (PhysicsComponent) obstacle.getComponent(ComponentType.Physics);
+    public void addSingleObstacle(GameObject obstacle){
 
         int obstacleX = obstacle.worldX;
         int obstacleY = obstacle.worldY;
@@ -53,17 +51,14 @@ public class GridManager {
         int gridObstacleX = obstacleX / gridSize;
         int gridObstacleY = obstacleY / gridSize;
 
-        //int wallWeight = 10000;
-
         switch (obstacle.name){
             case "Box":
+            case "MovableBox":
                 cells[gridObstacleY][gridObstacleX].setBox(true);
                 break;
             case "Enemy":
                 cells[gridObstacleY][gridObstacleX].setEnemy(true);
                 break;
-            case "MovableBox":
-                cells[gridObstacleY][gridObstacleX].setMovableBox(true);
             default: //Wall - HalfWall
                 cells[gridObstacleY][gridObstacleX].setObstacle(true);
                 break;
@@ -137,55 +132,6 @@ public class GridManager {
         int gridBoxX = boxX / gridSize;
         int gridBoxY = boxY / gridSize;
         cells[gridBoxY][gridBoxX].setBox(false);
-        //computeNodeNeighbor(gridObstacleY, gridObstacleX);
-    }
-
-    public void computeNodeNeighbor(int x, int y){
-
-        int edgeWeight = 1;
-
-        // N = North, S = South, W = West, E = East
-
-        if(!(cells[x-1][y-1].isObstacle() || cells[x-1][y-1].isBox())){//NW Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x-1][y-1]);
-            cells[x-1][y-1].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x-1][y].isObstacle() || cells[x-1][y].isBox())){//N Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x-1][y]);
-            cells[x-1][y].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x+1][y+1].isObstacle() || cells[x+1][y+1].isBox())){//NE Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x+1][y+1]);
-            cells[x+1][y+1].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x][y-1].isObstacle() || cells[x][y-1].isBox())){//W Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x][y-1]);
-            cells[x][y-1].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x][y+1].isObstacle() || cells[x][y+1].isBox())){//E Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x][y+1]);
-            cells[x][y+1].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x+1][y-1].isObstacle() || cells[x+1][y-1].isBox())){//SW Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x+1][y-1]);
-            cells[x+1][y-1].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x+1][y].isObstacle() || cells[x+1][y].isBox())){//S Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x+1][y]);
-            cells[x+1][y].addBranch(edgeWeight, cells[x][y]);
-        }
-
-        if(!(cells[x+1][y+1].isObstacle() || cells[x+1][y+1].isBox())){//SE Neighbor
-            cells[x][y].addBranch(edgeWeight, cells[x+1][y+1]);
-            cells[x+1][y+1].addBranch(edgeWeight, cells[x][y]);
-        }
-
     }
 
     public Node[][] getCells() { return cells; }

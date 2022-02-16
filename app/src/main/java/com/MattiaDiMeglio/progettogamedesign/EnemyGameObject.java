@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import com.google.fpl.liquidfun.Body;
 
 //the enemyGo
@@ -9,6 +11,8 @@ public class EnemyGameObject extends GameObject {
     private DynamicBodyComponent dynamicBodyComponent;
     private ControllableComponent controllableComponent;
     protected boolean killed = false;//has it been killed?
+
+    private int facingAngle = 0;
 
     private int previousCellX, previousCellY, currentCellX, currentCellY;
 
@@ -57,6 +61,8 @@ public class EnemyGameObject extends GameObject {
           //      (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
 
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
+        if(aiComponent.getAiType().equals(AIType.Dummy))
+            Log.d("EnemyGO Update","Facing angle = "+facingAngle);
 
         if(!killed){
             dynamicBodyComponent.update(0, 0, 0);
@@ -96,8 +102,6 @@ public class EnemyGameObject extends GameObject {
         }
     }
 
-    public boolean isKilled(){return killed;}
-
     public void updateCells(Node[][] cells, GameWorld gameWorld){
 
         currentCellX = worldX / gameWorld.gridSize;
@@ -112,5 +116,10 @@ public class EnemyGameObject extends GameObject {
     }
 
     public void freeCurrentCell(Node[][] cells){ cells[currentCellY][currentCellX].setEnemy(false); }
+
+    public boolean isKilled(){return killed;}
+    public int getFacingAngle() { return facingAngle; }
+
+    public void setFacingAngle(int facingAngle) { this.facingAngle = facingAngle; }
 
 }

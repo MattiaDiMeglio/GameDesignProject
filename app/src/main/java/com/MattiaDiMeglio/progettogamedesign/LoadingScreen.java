@@ -78,7 +78,7 @@ public class LoadingScreen extends Screen {
             //making test enemy
             int testEnemyX = 250;
             int testEnemyY = 300;
-            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Patrol);
+            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Sniper);
             gw.addGameObject(gw.testEnemy);
 
             testEnemyX = mapManager.toActualCoordX(6);
@@ -95,9 +95,7 @@ public class LoadingScreen extends Screen {
 
             mapManager.constructMap(gw.mapCells, 50, 50);
 
-            WallGameObject wall = (WallGameObject) gameObjectFactory.makeHorizontalWall(mapManager.toActualCoordX(5), mapManager.toActualCoordX(6));
-            gw.addGameObject(wall);
-            int boxX = 63;
+            /*int boxX = 63;
             int boxY = 231;
             for(int i = 0; i < 7; i++){
                 gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY));
@@ -106,7 +104,7 @@ public class LoadingScreen extends Screen {
                         //if(j!=3)
                         gw.addGameObject(gameObjectFactory.makeMovableBox(boxX + (i * 42), boxY - (j * 42)));
                 }
-            }
+            }*/
 
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();

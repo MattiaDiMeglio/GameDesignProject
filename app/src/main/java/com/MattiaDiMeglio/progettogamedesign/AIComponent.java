@@ -78,9 +78,11 @@ public class AIComponent extends Component{
     }
 
     public void emptyStack(){
+
         while(!movementStack.isEmpty())
             movementStack.pop();
-        owner.updatePosition(0,0,0);
+        owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
+
     }
 
     public void movement(float enemySpeed){
@@ -109,31 +111,32 @@ public class AIComponent extends Component{
                 normalX = findNormalX(owner.worldX, owner.worldY , newX, newY);
                 normalY = findNormalY(owner.worldX, owner.worldY , newX, newY);
             }
-            owner.updatePosition(normalX,normalY,0);
+            ((EnemyGameObject) owner).setFacingAngle(-(int) Math.toDegrees(Math.atan2(normalY,normalX)));
+            owner.updatePosition(normalX,normalY,((EnemyGameObject) owner).getFacingAngle());
 
             if(movementStack.isEmpty()) //se si è appena svuotato lo stack, il nemico si ferma
-                owner.updatePosition(0,0,0);
+                owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
         }
     }
 
     public float findNormalX(float startX, float startY, float targetX, float targetY){
-        float deltaX = targetX - startX;
-        if(deltaX == 0)
+        if(startX == targetX)
             return 0f;
 
+        float deltaX = targetX - startX;
         float deltaY = targetY - startY;
         float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-        return (float) deltaX/length;
+        return deltaX/length;
     }
 
     public float findNormalY(float startX, float startY, float targetX, float targetY){
-        float deltaY = targetY - startY;
-        if(deltaY == 0)
+        if(startY == targetY)
             return 0f;
 
+        float deltaY = targetY - startY;
         float deltaX = targetX - startX;
         float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-        return (float) deltaY/length;
+        return deltaY/length;
     }
 
     public Node findNode(int x, int y, int gridSize, Node[][] cells){
@@ -182,13 +185,11 @@ public class AIComponent extends Component{
 
         float normalX = findNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         float normalY = findNormalY(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
-        float angle = 0f;
-        int lineAmt = weaponComponent.getLineAmt();
 
-        if(lineAmt > 1)
-            angle = (float) Math.toDegrees(Math.atan2(normalY, normalX));
+        ((EnemyGameObject) owner).setFacingAngle((int) Math.toDegrees(Math.atan2(normalY,normalX)));
 
-        weaponComponent.aim(normalX,normalY,angle, gameWorld);
+        weaponComponent.aim(normalX,normalY,((EnemyGameObject) owner).getFacingAngle(), gameWorld);
+        owner.updatePosition(0,0,-((EnemyGameObject) owner).getFacingAngle());
     }
 
     public void enemyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){
@@ -204,6 +205,8 @@ public class AIComponent extends Component{
         aimingTimer = 0f;
         shootingTimer = 0f;
         reloadingTimer = 0f;
+        enemyTargetX = 0;
+        enemyTargetY = 0;
         playerInRange = false;
 
         WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);

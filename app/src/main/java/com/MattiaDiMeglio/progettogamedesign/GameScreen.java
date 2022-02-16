@@ -246,7 +246,7 @@ public class GameScreen extends Screen {
         }
         drawAimLines();
         //To test the body positions
-        drawBodies();
+        //drawBodies();
         if(gameState == GameState.Running)
             graphics.drawPixmap(AssetManager.PausePixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
         if(gameState == GameState.Paused){
