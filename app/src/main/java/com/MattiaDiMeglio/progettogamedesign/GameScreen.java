@@ -247,8 +247,10 @@ public class GameScreen extends Screen {
         drawAimLines();
         //To test the body positions
         //drawBodies();
-        if(gameState == GameState.Running)
-            graphics.drawPixmap(AssetManager.PausePixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+        if(gameState == GameState.Running) {
+            graphics.drawPixmap(AssetManager.PausePixmap, (int) gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+            graphics.drawText(gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - 55, gameWorld.bufferHeight - 60, Color.BLACK);
+        }
         if(gameState == GameState.Paused){
             graphics.drawPixmap(AssetManager.PlayPixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
             graphics.drawPixmap(AssetManager.ResumeButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2));
@@ -261,7 +263,6 @@ public class GameScreen extends Screen {
             graphics.drawPixmap(AssetManager.EndLevelPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2, (int) gameWorld.bufferHeight/2 - AssetManager.EndLevelPixmap.getHeight()/2);
         }
         graphics.drawText(gameWorld.enemyNum + "/" + gameWorld.totalEnemies + " remaining", (gameWorld.bufferWidth/2) - 20, 10, Color.BLACK);
-        graphics.drawText( gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - 55, gameWorld.bufferHeight - 60, Color.BLACK);
     }
 
     private void drawBodies(){

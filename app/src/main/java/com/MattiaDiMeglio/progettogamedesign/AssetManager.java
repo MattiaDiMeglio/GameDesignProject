@@ -12,6 +12,8 @@ public class AssetManager {
     public static Pixmap player;
     public static Pixmap playerKilled;
     public static Pixmap enemy;
+    public static Pixmap enemy1;
+    public static Pixmap enemy2;
     public static Pixmap enemyKilled;
     public static Pixmap horizontalWall;
     public static Pixmap horizontalHalfWall;
@@ -22,6 +24,7 @@ public class AssetManager {
     public static Pixmap HorizontalHalfWallPixmap;
     public static Pixmap VerticalHalfWallPixmap;
     public static Pixmap BoxPixmap;
+    public static Pixmap MovableBoxPixmap;
     public static Pixmap PausePixmap;
     public static Pixmap PlayPixmap;
     public static Pixmap ResumeButtonPixmap;

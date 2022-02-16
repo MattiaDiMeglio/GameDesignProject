@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.badlogic.androidgames.framework.Pixmap;
 import com.google.fpl.liquidfun.World;
 
 //the factory class to create the GO
@@ -46,7 +47,7 @@ public class GameObjectFactory {
 
         AIComponent aiComponent;
         WeaponComponent weaponComponent = null;
-
+        Pixmap pixmap = AssetManager.enemy;
         if(aiType == AIType.Dummy){
             aiComponent = new DummyAI();
             weaponComponent = new ShotgunComponent();
@@ -54,12 +55,14 @@ public class GameObjectFactory {
         }
 
         else if(aiType == AIType.Sniper){
+            pixmap = AssetManager.enemy2;
             aiComponent = new SniperAI();
             weaponComponent = new RifleComponent();
             enemySpeed = 1.5f;
         }
 
         else{
+            pixmap = AssetManager.enemy1;
             aiComponent = new PatrolAI();
             weaponComponent = new GunComponent();
             enemySpeed = 5;
@@ -74,7 +77,7 @@ public class GameObjectFactory {
                 gameWorld.toMetersXLength(AssetManager.enemy.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.enemy.getHeight()),
                 world, enemy.name, enemySpeed);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.enemy, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(pixmap, -100, -100);
         ControllableComponent controllableComponent = new ControllableComponent(gameWorld);
 
         enemy.addComponent(controllableComponent);
@@ -101,10 +104,10 @@ public class GameObjectFactory {
     public GameObject makeMovableBox(int worldX, int worldY){
         MovableBoxGameObject box = new MovableBoxGameObject(gameWorld, worldX, worldY);
         DynamicBodyComponent dynamicBodyComponent = new DynamicBodyComponent(40f, 40f,
-                gameWorld.toMetersXLength(AssetManager.BoxPixmap.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.BoxPixmap.getHeight()),
+                gameWorld.toMetersXLength(AssetManager.MovableBoxPixmap.getWidth()),
+                gameWorld.toMetersYLength(AssetManager.MovableBoxPixmap.getHeight()),
                 world, box.name, 0);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.BoxPixmap, -100, -100);
+        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.MovableBoxPixmap, -100, -100);
 
         box.addComponent(dynamicBodyComponent);
         box.addComponent(pixMapComponent);

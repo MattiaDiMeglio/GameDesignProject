@@ -33,9 +33,11 @@ public class LoadingScreen extends Screen {
                 //loads the pixmaps
                 AssetManager.background = graphics.newPixmap("RoadPixmap.png", Graphics.PixmapFormat.RGB565);
                 AssetManager.backgroundPixmap = graphics.newPixmap("BackgroundPixmap.png", Graphics.PixmapFormat.RGB565);
-                AssetManager.player = graphics.newPixmap("testCharacter.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.player = graphics.newPixmap("Player.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.playerKilled = graphics.newPixmap("testCharacterKilled.png", Graphics.PixmapFormat.ARGB4444);
-                AssetManager.enemy = graphics.newPixmap("testEnemy.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.enemy = graphics.newPixmap("Enemy.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.enemy1 = graphics.newPixmap("Enemy1.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.enemy2 = graphics.newPixmap("Enemy2.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.enemyKilled = graphics.newPixmap("testEnemyKilled.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.horizontalWall = graphics.newPixmap("testWallHorizontal.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.horizontalHalfWall = graphics.newPixmap("testWallHorizontalHalf.png", Graphics.PixmapFormat.ARGB4444);
@@ -46,6 +48,7 @@ public class LoadingScreen extends Screen {
                 AssetManager.VerticalHalfWallPixmap = graphics.newPixmap("VerticalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.HorizontalHalfWallPixmap = graphics.newPixmap("HorizontalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.BoxPixmap = graphics.newPixmap("Box.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.MovableBoxPixmap = graphics.newPixmap("MovableBox.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.PausePixmap = graphics.newPixmap("PauseImg.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.PlayPixmap = graphics.newPixmap("PlayImg.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.ResumeButtonPixmap = graphics.newPixmap("ResumeButton.png", Graphics.PixmapFormat.ARGB4444);
