@@ -124,6 +124,11 @@ public class PlayerGameObject extends GameObject {
         return weaponComponent.mag;
     }
 
+    public void resetProjectiles(){
+        weaponComponent = (WeaponComponent)getComponent(ComponentType.Weapon);
+        weaponComponent.reload();
+    }
+
     public int getWorldX(){return worldX;}
     public int getWorldY(){return worldY;}
 

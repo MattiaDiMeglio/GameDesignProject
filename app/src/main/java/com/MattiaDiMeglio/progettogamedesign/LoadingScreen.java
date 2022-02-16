@@ -1,6 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
@@ -63,10 +64,15 @@ public class LoadingScreen extends Screen {
 
             //making the player
             int x = mapManager.toActualCoordX(5);
-            int y = mapManager.toActualCoordX(8);
+            int y = mapManager.toActualCoordX(5);
             if(gw.player == null) {
                 gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
+            }else {
+                gw.player.updatePosition(x, y);
+                gw.player.resetProjectiles();
+                if(!gw.activeGameObjects.contains(gw.player))
+                    gw.addActiveGameObject(gw.player);
             }
 
             //making test enemy
@@ -91,7 +97,6 @@ public class LoadingScreen extends Screen {
 
             WallGameObject wall = (WallGameObject) gameObjectFactory.makeHorizontalWall(mapManager.toActualCoordX(5), mapManager.toActualCoordX(6));
             gw.addGameObject(wall);
-            gw.addGameObject(gameObjectFactory.makeDoor(wall, mapManager.toActualCoordX(4), mapManager.toActualCoordX(6) ));
             int boxX = 63;
             int boxY = 231;
             for(int i = 0; i < 7; i++){
@@ -114,6 +119,8 @@ public class LoadingScreen extends Screen {
 
         //sets the next screen
         game.setScreen(nextScreen);
+
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -144,8 +145,13 @@ public class GameScreen extends Screen {
                 gameState = GameState.Running;
                 break;
             case Running: //if the game is running update the gameworld
-                leftJoystick.setEnabled(true);
-                rightJoystick.setEnabled(true);
+                ((Activity)game).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.getRightJoystick().setVisibility(View.VISIBLE);
+                        game.getLeftJoystick().setVisibility(View.VISIBLE);
+                    }
+                });
 
                 gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
                 if(isShooting){
@@ -165,8 +171,14 @@ public class GameScreen extends Screen {
                 break;
             case Paused:
                 Log.d("Paused", "paused");
-                leftJoystick.setEnabled(false);
-                rightJoystick.setEnabled(false);
+                ((Activity)game).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.getRightJoystick().setVisibility(View.GONE);
+                        game.getLeftJoystick().setVisibility(View.GONE);
+                    }
+                });
+
 
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
@@ -183,6 +195,7 @@ public class GameScreen extends Screen {
                                 gameWorld.destroyGameWorld();
                                 currentBackgroundY = 0;
                                 currentBackgroundX = 0;
+
                                 game.setScreen(mainMenuScreen);
                             }
                         }
@@ -205,6 +218,7 @@ public class GameScreen extends Screen {
                 }
                 break;
         }
+
 
     }
 

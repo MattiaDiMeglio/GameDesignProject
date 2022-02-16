@@ -1,8 +1,10 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.method.Touch;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 
@@ -15,6 +17,8 @@ import com.badlogic.androidgames.framework.Input.TouchEvent;
 import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
+
+import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 //main menu screen. Not yet implemented
 public class MainMenuScreen extends Screen {
