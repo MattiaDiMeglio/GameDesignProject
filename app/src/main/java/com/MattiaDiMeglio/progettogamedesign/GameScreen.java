@@ -204,6 +204,13 @@ public class GameScreen extends Screen {
                 }
                 break;
             case GameOver:
+                ((Activity)game).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.getRightJoystick().setVisibility(View.GONE);
+                        game.getLeftJoystick().setVisibility(View.GONE);
+                    }
+                });
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
@@ -218,8 +225,6 @@ public class GameScreen extends Screen {
                 }
                 break;
         }
-
-
     }
 
     //the methods to draw on screen
