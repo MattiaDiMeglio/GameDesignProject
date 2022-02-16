@@ -80,7 +80,6 @@ public class MapManager {
                   if(i != 0 && i != mapHeight-1)
                       map[j][i] = 0;
                 }
-                if(i>startingY) {
                     if(i>startingY + 2 && i < endingY - 3) {
                         map[randomIndex - 2][i] = randomWall(1);
                         map[randomIndex + 2][i] = randomWall(1);
@@ -88,7 +87,6 @@ public class MapManager {
                         map[randomIndex - 2][i] = 2;
                         map[randomIndex + 2][i] = 2;
                     }
-                }
             }
             //creiamo una porta casuale per ognuna delle due partiin un muro random che non sia un bordo della mappa
             makeDoors(map, startingX, startingY, randomIndex-2, endingY);
@@ -107,7 +105,6 @@ public class MapManager {
                     if(i != 0 && i != mapWidth-1)
                         map[i][j] = 0;
                 }
-                if(i > startingX) {
                     if(i > startingX+2 && i < endingX - 3) {
                         map[i][randomIndex - 2] = randomWall(0);
                         map[i][randomIndex + 2] = randomWall(0);
@@ -115,7 +112,6 @@ public class MapManager {
                         map[i][randomIndex - 2] = 2;
                         map[i][randomIndex + 2] = 2;
                     }
-                }
             }
             makeDoors(map, startingX, startingY, endingX, randomIndex-2);
             makeDoors(map, startingX, randomIndex+2, endingX, endingY);
