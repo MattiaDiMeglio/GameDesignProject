@@ -45,8 +45,8 @@ public class ProgettoGameDesign extends AndroidGame {
         //joystickView.setBackgroundSizeRatio(0.2f);
         //joystickView.setButtonSizeRatio(0.1f);
 
-        int jWidth =(int)(0.117 * width);
-        int jHeight = (int)(0.208 * height);
+        int jWidth =(int)(0.120 * width);
+        int jHeight = (int)(0.22 * height);
         int left = (int)(0.020 * width);
         int top =  height - (int)(0.208 * height);
         int right = 0;
