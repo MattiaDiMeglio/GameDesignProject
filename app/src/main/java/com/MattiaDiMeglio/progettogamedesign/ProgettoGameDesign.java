@@ -47,8 +47,8 @@ public class ProgettoGameDesign extends AndroidGame {
 
         int jWidth =(int)(0.117 * width);
         int jHeight = (int)(0.208 * height);
-        int left = 50;
-        int top =  height - 300;
+        int left = (int)(0.020 * width);
+        int top =  height - (int)(0.208 * height);
         int right = 0;
         int bottom = 0;
 
