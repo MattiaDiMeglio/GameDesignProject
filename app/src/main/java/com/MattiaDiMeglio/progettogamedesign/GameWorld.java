@@ -192,8 +192,10 @@ public class GameWorld {
                     activeGameObjects.remove(gameObject);
 
                     if(gameObject.name.equals("Enemy")){
-                        AIComponent aiComponent = (AIComponent) gameObject.getComponent(ComponentType.AI);
-                        aiComponent.reset();
+                        if(!((EnemyGameObject)gameObject).killed) {
+                            AIComponent aiComponent = (AIComponent) gameObject.getComponent(ComponentType.AI);
+                            aiComponent.reset();
+                        }
                     }
 
                     if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
@@ -205,107 +207,6 @@ public class GameWorld {
         }
     }
 
-    protected Fixture checkRaycast (float bodyX, float bodyY, float aimX, float aimY, String shooter){//does the raycast callback
-
-        //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
-        RayCastCallback rayCastCallback = new RayCastCallback() {
-            @Override
-            public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-                rayCastFixture = fixture;//raycast callback
-                Body castedBody = fixture.getBody();
-                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-                return fraction;//stops at the first hit/
-            }
-        };
-
-        float targetX = bodyX + (aimX);
-        float targetY = bodyY + (aimY);
-
-        Log.d("raycast", "body: " + bodyX + ", " + bodyY + " and target: " + targetX + ", " + targetY);
-        world.rayCast(rayCastCallback, bodyX, bodyY, targetX, targetY);//calls the raycast
-
-        Fixture returnFixture = rayCastFixture;
-
-        if (rayCastFixture != null) {//if the ray met a fixture
-            Body castedBody = rayCastFixture.getBody();//we get the body
-            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
-            if (casteduserData != null) {//if there's user data
-                Log.d("Raycast", "hit : " + casteduserData.name);
-                switch (casteduserData.name) {
-                    case "Enemy"://raycast met an enemy first
-                        if(shooter.equals("Enemy"))
-                            break;
-                        EnemyGameObject enemyGameObject = (EnemyGameObject) casteduserData.getOwner();
-                        enemyGameObject.killed(levelGrid.getCells());
-                        //destroy enemy
-                        break;
-                    case "Player":
-                        /*PlayerGameObject playerGameObject = (PlayerGameObject) casteduserData.getOwner();
-                        playerGameObject.killed();*/
-                        break;
-                    case "Wall"://met a wall
-                        //hit wall
-                        break;
-                    case "Door"://met a door
-                        //open door
-                        break;
-                    case "HalfWall":
-                        //Object userData = touchedBody.getUserData();
-                        PhysicsComponent touchedGO = (PhysicsComponent) casteduserData;
-                        if (touchedGO.name.equals("Enemy")) {
-                            enemyGameObject = (EnemyGameObject) touchedGO.getOwner();
-                            enemyGameObject.killed(levelGrid.getCells());
-                        }
-                        break;
-                    case "Box":
-                        BoxGameObject boxGameObject = (BoxGameObject) casteduserData.getOwner();
-                        boxGameObject.Damage();
-                    default:
-                        Log.d("RaycastEvent", "raycast object with no name");
-                        break;
-                }
-                rayCastFixture = null;
-                Log.d("Raycast", "Raycast terminato");
-            }
-        }
-        return returnFixture;
-    }
-
-    protected boolean checkLineOfFire(float bodyX, float bodyY, float aimX, float aimY){
-        RayCastCallback rayCastCallback = new RayCastCallback() {
-            @Override
-            public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) {
-                lineOfFireFixture = fixture;
-                Body castedBody = fixture.getBody();
-                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-                return fraction;
-            }
-        };
-
-        float targetX = bodyX + (aimX);
-        float targetY = bodyY + (aimY);
-
-        world.rayCast(rayCastCallback, bodyX, bodyY, targetX, targetY);
-
-        boolean freeLineOfFire = false;
-
-        if (lineOfFireFixture != null) {
-            Body castedBody = lineOfFireFixture.getBody();
-            PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-            if (casteduserData != null) {
-                switch (casteduserData.name) {
-                    case "Player":
-                        freeLineOfFire = true;
-                        break;
-                    default:
-                        freeLineOfFire = false;
-                        break;
-                }
-                lineOfFireFixture = null;
-            }
-        }
-        return freeLineOfFire;
-    }
 
     //methods to add and remove GO
     public synchronized GameObject addGameObject (GameObject gameObject){
@@ -401,9 +302,11 @@ public class GameWorld {
 
     public void destroyGameWorld(){
         for (GameObject gameObject: gameObjects) {
-            PhysicsComponent physicsComponent = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
-            physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
-            physicsComponent.body.delete();
+            if(gameObject.components.containsKey(ComponentType.Physics)) {
+                PhysicsComponent physicsComponent = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
+                physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
+                physicsComponent.body.delete();
+            }
             gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
             gameObject.removeComponent(ComponentType.Physics);
             gameObject.removeComponent(ComponentType.Drawable);
@@ -412,6 +315,7 @@ public class GameWorld {
             gameObject.removeComponent(ComponentType.Controllable);
             gameObject.removeComponent(ComponentType.Joint);
         }
+        //gameScreen.drawables.clear();
         activeGameObjects.clear();
         gameObjects.clear();
     }

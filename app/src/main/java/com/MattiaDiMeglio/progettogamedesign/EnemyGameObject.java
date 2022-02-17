@@ -28,17 +28,19 @@ public class EnemyGameObject extends GameObject {
     //updates the graphical and physical positions
     @Override
     public void updatePosition(int x, int y){
-        drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
-        dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
+            drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+            drawableComponent.setPosition(x, y);
+        if(!killed) {
+            dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
 
-        dynamicBodyComponent.update(0, 0, 0);
+            dynamicBodyComponent.update(0, 0, 0);
 
-        drawableComponent.setPosition(x, y);
 
-        float touchX = gameWorld.toPixelsTouchX(x);
-        float touchY = gameWorld.toPixelsTouchY(y);
-        dynamicBodyComponent.setTransform(gameWorld.toMetersX(touchX),
-                gameWorld.toMetersY(touchY));
+            float touchX = gameWorld.toPixelsTouchX(x);
+            float touchY = gameWorld.toPixelsTouchY(y);
+            dynamicBodyComponent.setTransform(gameWorld.toMetersX(touchX),
+                    gameWorld.toMetersY(touchY));
+        }
     }
 
     public void updatePosition(float x, float y, float angle){
@@ -84,15 +86,18 @@ public class EnemyGameObject extends GameObject {
             freeCurrentCell(cells);
             //components.clear();
             killed = true;
-            outOfView();
+            //outOfView();
             //gameWorld.removeActiveGameObject(this);
-            gameWorld.removeGameObject(this);
+            //gameWorld.removeGameObject(this);
             PhysicsComponent physicsComponent = (PhysicsComponent) getComponent(ComponentType.Physics);
             physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
             physicsComponent.body.delete();
-            gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
+            //gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
             removeComponent(ComponentType.Physics);
-            removeComponent(ComponentType.Drawable);
+            removeComponent(ComponentType.Controllable);
+            removeComponent(ComponentType.AI);
+            //removeComponent(ComponentType.Drawable);
+            drawableComponent.pixmap = AssetManager.enemyKilled;
         }
     }
 
