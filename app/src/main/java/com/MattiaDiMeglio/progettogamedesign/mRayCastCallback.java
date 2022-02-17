@@ -4,15 +4,24 @@ import android.util.Log;
 
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
+import com.google.fpl.liquidfun.QueryCallback;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
-
 
 public class mRayCastCallback {
     World world;
     private Fixture rayCastFixture;
     private Fixture lineOfFireFixture;
+    private final QueryCallback touchQueryCallback = new TouchQueryCallback();
+    private Fixture touchedFixture;
 
+    private class TouchQueryCallback extends QueryCallback
+    {
+        public boolean reportFixture(Fixture fixture) {
+            touchedFixture = fixture;
+            return true;
+        }
+    }
     public mRayCastCallback(World world){
         this.world = world;
     }

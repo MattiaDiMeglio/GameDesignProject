@@ -7,28 +7,34 @@ enum AIType {Dummy, Sniper, Patrol};
 
 public class AIComponent extends Component{
 
+    //Pathfinding Variables
     private Pathfinder pathfinder;
     protected Stack<Movement> movementStack;
     protected int gridSize;
 
+    //AiType
     private AIType aiType;
 
-    int lastPlayerX, lastPlayerY;
-    int enemyTargetX = 0, enemyTargetY = 0;
-
-    final float playerPositionUpdateDelay = 0.2f;
-    float playerPositionTimer;
+    //targeting
     boolean playerInRange = false;
+    int lastPlayerX, lastPlayerY;
+    int enemyTargetX = 0, enemyTargetY = 0;//target coordinates
 
-    float aimDelay;
-    float shootDelay;
-    float reloadDelay;
 
+    //timers Variables
+    float playerPositionTimer;
     float aimingTimer = 0;
     float shootingTimer = 0;
     float reloadingTimer = 0;
 
-    public AIComponent(){
+    //delay variables
+    final float playerPositionUpdateDelay = 0.2f;
+    float aimDelay;
+    float shootDelay;
+    float reloadDelay;
+
+    public AIComponent(AIType aiType){
+        this.aiType = aiType;
         pathfinder = new Pathfinder();
         movementStack = new Stack<>();
         lastPlayerX = 0;
@@ -37,50 +43,32 @@ public class AIComponent extends Component{
     }
 
     public void pathfind(int targetX, int targetY, Node[][] cells){
-
-        Node start = findNode(owner.worldX,owner.worldY,gridSize,cells); // da wX e wY a celle
-        Node target = findNode(targetX,targetY,gridSize,cells);
-        Node res = pathfinder.aStar(start,target,aiType);
+        Node start = findNode(owner.worldX, owner.worldY, gridSize,cells); // da wX e wY a celle
+        Node target = findNode(targetX, targetY, gridSize, cells);
+        Node res = pathfinder.aStar(start, target, aiType);
         List<Node> path =  pathfinder.getPath(res);
         if(path != null)
             initializeStack(targetX, targetY, path);
     }
 
     public void initializeStack(int targetX, int targetY, List<Node> path){
-
         //Il path restituito dal pathfinder è "al contrario", ossia:
         //se il percorso da far compiere al nemico è A->B->C,
         //path sarà ordinato così: C-B-A
-
         if(!movementStack.isEmpty())
             emptyStack(); //se c'era un vecchio path da percorrere, lo stack viene svuotato
                           //per far posto al nuovo path
 
-        int i = 1;
-
-        for(Node n: path){
-            if(i == 1){ //cosi facendo l'ultima posizione raggiunta sarà effettivamente (tX,tY),
-                        //invece di prendere le coordinate del relativo nodo
-                        //NB: potrebbe portare i nemici a schiantarsi nei muri?
-                Movement lastMovement = new Movement(targetX, targetY);
-                movementStack.push(lastMovement);
-            }
-            else if(i == path.size())
-                break; //viene saltato il nodo di partenza nel path, per evitare strani movimenti iniziali
-            else{
+        for(int i = 0; i<(path.size() - 1); i++){
+            Node n = path.get(i);
                 Movement m = new Movement(n.getPosX(),n.getPosY());
                 movementStack.push(m);
-            }
-            i++;
         }
     }
 
     public void emptyStack(){
-
         while(!movementStack.isEmpty())
             movementStack.pop();
-        //owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
-
     }
 
     public void movement(float enemySpeed){
@@ -139,14 +127,12 @@ public class AIComponent extends Component{
 
     public Node findNode(int x, int y, int gridSize, Node[][] cells){
         //date le coordinate worldX e worldY, ricava il il relativo nodo della griglia
-
         int gridX = x / gridSize;
         int gridY = y / gridSize;
         return cells[gridY][gridX];
     }
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
-
         playerPositionTimer += elapsedTime;
 
         if(playerPositionTimer > playerPositionUpdateDelay){
@@ -157,11 +143,10 @@ public class AIComponent extends Component{
     }
 
     public boolean checkPlayerInRange(GameWorld gameWorld){
-
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
         float range = enemyWeapon.getRange();
 
-        float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY, owner.worldX, owner.worldY);
+        float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY);
 
         if(distanceToPlayer <= range+18){
             enemyAim(enemyWeapon, gameWorld, lastPlayerX, lastPlayerY);
@@ -214,9 +199,9 @@ public class AIComponent extends Component{
             emptyStack();
     }
 
-    public float getDistance(int startX, int startY, int destinationX, int destinationY) {
-        return (float) Math.sqrt(((startX - destinationX) * (startX - destinationX)) +
-                ((startY - destinationY) * (startY - destinationY)));
+    public float getDistance(int targetX, int targetY) {
+        return (float) Math.sqrt(((targetX - getOwner().worldX) * (targetX - getOwner().worldX)) +
+                ((targetY - getOwner().worldY) * (targetY - getOwner().worldY)));
     }
 
     @Override

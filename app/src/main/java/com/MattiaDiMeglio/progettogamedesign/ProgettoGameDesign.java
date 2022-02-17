@@ -62,7 +62,8 @@ public class ProgettoGameDesign extends AndroidGame {
         rightJ.setButtonColor(Color.YELLOW);
         rightJ.setBackgroundColor(Color.BLACK);
         //joystickView.setBackgroundSizeRatio(0.2f);
-        //joystickView.setButtonSizeRatio(0.1f);
+        //rightJ.setButtonSizeRatio(0.35f);
+        //leftJ.setButtonSizeRatio(0.35f);
 
         //int left = 50;
         int rleft = width - jWidth - left;

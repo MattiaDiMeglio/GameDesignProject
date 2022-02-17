@@ -10,7 +10,7 @@ public class PatrolAI extends AIComponent{
     int randomPositionY = 0;
 
     PatrolAI() {
-        super();
+        super(AIType.Patrol);
         aimDelay = 0.5f;
         shootDelay = 1.2f;
         reloadDelay = 0.5f;

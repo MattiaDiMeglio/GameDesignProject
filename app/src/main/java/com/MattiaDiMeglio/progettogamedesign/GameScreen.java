@@ -28,6 +28,7 @@ public class GameScreen extends Screen {
         Paused,
         GameOver
     }
+
     GameWorld gameWorld;//GW
     Graphics graphics;
     List<DrawableComponent> drawables;
@@ -152,13 +153,11 @@ public class GameScreen extends Screen {
                         game.getLeftJoystick().setVisibility(View.VISIBLE);
                     }
                 });
-
-                gameWorld.movePlayer(leftX, leftY, rightAngle, leftAngle, deltaTime);
+                gameWorld.update(deltaTime);
                 if(isShooting){
-                    gameWorld.update(leftX, leftY, deltaTime, oldRightX, oldRightY, oldRightAngle, oldRightStrength, isShooting);
                     isShooting = false;
                 }
-                else gameWorld.update(leftX, leftY, deltaTime, rightX, rightY, rightAngle, rightStrength, isShooting);
+                setWorldDestination(leftX, leftY, deltaTime);
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
@@ -178,8 +177,6 @@ public class GameScreen extends Screen {
                         game.getLeftJoystick().setVisibility(View.GONE);
                     }
                 });
-
-
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
@@ -226,6 +223,14 @@ public class GameScreen extends Screen {
                 break;
         }
     }
+    @Override
+    public void pause() { }
+
+    @Override
+    public void resume() { }
+
+    @Override
+    public void dispose() { }
 
     //the methods to draw on screen
     @Override
@@ -235,9 +240,6 @@ public class GameScreen extends Screen {
         //draw the background
         graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX - 250, (int)currentBackgroundY - 250);
         graphics.drawPixmap(AssetManager.backgroundPixmap, (int)currentBackgroundX, (int)currentBackgroundY);
-        //draw the grid
-        //graphics.drawLine((int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(-15f),
-          //      (int)gameWorld.toPixelsX(0), (int)gameWorld.toPixelsY(15), Color.WHITE);
         //draw the drawables
         if(!drawables.isEmpty()) {
             for (DrawableComponent drawable : drawables) {
@@ -256,8 +258,6 @@ public class GameScreen extends Screen {
             graphics.drawPixmap(AssetManager.ResumeButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2));
             graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight()/2));
             graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
-
-            //pipo
         }
         if(gameState == GameState.GameOver){
             graphics.drawPixmap(AssetManager.EndLevelPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2, (int) gameWorld.bufferHeight/2 - AssetManager.EndLevelPixmap.getHeight()/2);
@@ -295,20 +295,6 @@ public class GameScreen extends Screen {
         }
     }
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
 
     //adds and remove drawables
     public void addDrawable(DrawableComponent drawable){
@@ -323,65 +309,63 @@ public class GameScreen extends Screen {
     //sets the destination for the world movement. It moves the map and all the GO other than the player
     public void setWorldDestination(float jx, float jy, float deltaTime){
         gameWorld.player.CantMove();
+        currentBackgroundX = -(gameWorld.player.worldX - gameWorld.bufferWidth/2);
+        currentBackgroundY = -(gameWorld.player.worldY - gameWorld.bufferHeight/2);
+        for (DrawableComponent drawable : drawables) {
+            GameObject gameObject = drawable.owner;
+                gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
+                        (int) (gameWorld.inViewPositionY(gameObject.worldY)));
 
-
-        float normalizedX = -(jx);//*50);
-        float normalizedY = -(jy);//*50);
-
-        //settati i wordposX e Y del player basare il movimento sulla differenza
-        //destinationX = currentBackgroundX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()) * normalizedX));// * deltaTime);
-        //destinationY = currentBackgroundY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()) * normalizedY));// * deltaTime);
-
-        destinationX = -(gameWorld.player.worldX - gameWorld.bufferWidth/2); //(int)(currentBackgroundX + normalizedX * 8);
-        destinationY = -(gameWorld.player.worldY - gameWorld.bufferHeight/2); //(int)(currentBackgroundY + normalizedY * 8);
-        //Log.d("playerWorld", "w: " + gameWorld.player.worldX + ", " +gameWorld.player.worldY);
-
-        onBorderX = false;
-        onBorderY = false;
-
-        //check that we don't move outside the background boundaries
-        /*
-        if(destinationX > 0){
-            destinationX = 0;
-            onBorderX = true;
-        }
-        if(destinationY > 0){
-            destinationY = 0;
-            onBorderY = true;
-        }
-        if(destinationX < -(AssetManager.backgroundPixmap.getWidth() - graphics.getWidth())){
-            destinationX = -(AssetManager.backgroundPixmap.getWidth() - graphics.getWidth());
-            onBorderX = true;
-        }
-        if(destinationY < - (AssetManager.backgroundPixmap.getHeight() - graphics.getHeight())){
-            destinationY = - (AssetManager.backgroundPixmap.getHeight() - graphics.getHeight());
-            onBorderY = true;
-        }*/
-
-        if((currentBackgroundX != destinationX || currentBackgroundY != destinationY)) {
-            if(!onBorderX)
-                currentBackgroundX = destinationX;//movementX(currentBackgroundX, normalizedX, deltaTime);
-            if(!onBorderY)
-                currentBackgroundY = destinationY;//movementY(currentBackgroundY, normalizedY, deltaTime);
-            for (DrawableComponent drawable : drawables) {
-                GameObject gameObject = drawable.owner;
-                //if (!gameObject.name.equals("Player")){
-                    gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
-                            (int) (gameWorld.inViewPositionY(gameObject.worldY)));
-                //}
-            }
         }
 
         gameWorld.player.CanMove();
     }
 
-    public int movementX(float startingX, float normalizedX, float deltaTime){
-        return (int) (startingX + (int)((gameWorld.toPixelsXLengthNonBuffer(gameWorld.player.getMovedX()*2) * normalizedX) ));// * deltaTime));
-    }
-    public int movementY(float startingY, float normalizedY, float deltaTime){
-        return (int) (startingY + (int)((gameWorld.toPixelsYLengthNonBuffer(gameWorld.player.getMovedY()*2) * normalizedY)));// * deltaTime));
+    public float getLeftX() {
+        return leftX;
     }
 
+    public float getLeftY() {
+        return leftY;
+    }
+
+    public float getLeftAngle() { return leftAngle; }
+
+    public float getLeftStrength() { return leftStrength; }
+
+    public float getRightX(){
+        return  rightX;
+    }
+
+    public float getRightY() {
+        return rightY;
+    }
+
+    public float getRightAngle() {
+        return rightAngle;
+    }
+
+    public float getRightStrength() {
+        return rightStrength;
+    }
+
+    public float getOldRightX() {
+        return oldRightX;
+    }
+
+    public float getOldRightY() {
+        return oldRightY;
+    }
+
+    public float getOldRightAngle() {
+        return oldRightAngle;
+    }
+
+    public float getOldRightStrength() {
+        return oldRightStrength;
+    }
+
+    public boolean isShooting() { return isShooting; }
 
     //background x and y
     public float getBackgroundX(){return currentBackgroundX;}

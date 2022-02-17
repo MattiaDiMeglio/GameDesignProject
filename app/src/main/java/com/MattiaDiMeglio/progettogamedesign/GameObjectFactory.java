@@ -70,7 +70,6 @@ public class GameObjectFactory {
         }
 
         aiComponent.setGridSize(gameWorld.gridSize);
-        aiComponent.setAiType(aiType);
 
         weaponComponent.setShooter(enemy.name);
 

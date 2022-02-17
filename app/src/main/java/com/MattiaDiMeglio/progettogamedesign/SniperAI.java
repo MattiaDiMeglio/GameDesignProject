@@ -5,22 +5,24 @@ import android.util.Log;
 public class SniperAI extends AIComponent{
 
     SniperAI(){
-        super();
+        super(AIType.Sniper);
         aimDelay = 0.3f;
         shootDelay = 0.8f;
         reloadDelay = 1.5f;}
 
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
-        WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
+        RifleComponent weaponComponent = (RifleComponent) owner.getComponent(ComponentType.Weapon);
         boolean oldPlayerInRange = playerInRange;
 
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){
 
+            weaponComponent.setFixedRange(weaponComponent.getRange());
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
+                weaponComponent.setFixedRange(getDistance(lastPlayerX, lastPlayerY)-13);
                 owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
                 if(aimingTimer >= aimDelay){
                     weaponComponent.addAimLine(gameWorld);
@@ -48,7 +50,7 @@ public class SniperAI extends AIComponent{
         }
     }
 
-    public boolean checkPlayerInRange(GameWorld gameWorld){
+   /* public boolean checkPlayerInRange(GameWorld gameWorld){
 
         RifleComponent sniperWeapon = (RifleComponent) owner.getComponent(ComponentType.Weapon);
         float range = sniperWeapon.getRange();
@@ -65,5 +67,5 @@ public class SniperAI extends AIComponent{
         enemyTargetX = 0;
         enemyTargetY = 0;
         return false;
-    }
+    }*/
 }

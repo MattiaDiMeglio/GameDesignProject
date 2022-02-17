@@ -75,7 +75,8 @@ public class EnemyGameObject extends GameObject {
 
     @Override//puts enemy out of view
     public void outOfView() {
-        dynamicBodyComponent.setTransform(40, 40);
+        if(!isKilled())
+            dynamicBodyComponent.setTransform(40, 40);
     }
 
     public void killed(Node[][] cells){

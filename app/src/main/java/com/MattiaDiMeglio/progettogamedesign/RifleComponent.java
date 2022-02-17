@@ -8,12 +8,13 @@ import com.google.fpl.liquidfun.Fixture;
 
 public class RifleComponent extends WeaponComponent{
 
-    private float fixedRange = 0f;
+    private float fixedRange;
 
     public RifleComponent(){
         mag = 1;
         bullets = mag;
         range = 250;
+        fixedRange = range;
         lineAmt = 1;
         aimLineX = new float[lineAmt];
         aimLineY = new float[lineAmt];
@@ -52,8 +53,8 @@ public class RifleComponent extends WeaponComponent{
 
     @Override
     public void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld) {
-        aimLineX[0] = gameWorld.toMetersXLength(fixedRange) * normalizedX;
-        aimLineY[0] = gameWorld.toMetersYLength(fixedRange) * normalizedY;
+        aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
+        aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
     }
 
     @Override
@@ -62,6 +63,10 @@ public class RifleComponent extends WeaponComponent{
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
 
+        float percent = ((AIComponent) owner.getComponent(ComponentType.AI)).getDistance(((AIComponent) owner.getComponent(ComponentType.AI)).lastPlayerX,
+                ((AIComponent) owner.getComponent(ComponentType.AI)).lastPlayerY) / getRange();
+        aimLineX[0] = aimLineX[0] * percent;
+        aimLineY[0] = aimLineY[0] * percent;
         gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY, Color.RED);
     }
 

@@ -19,40 +19,28 @@ import java.util.List;
 
 //Gestione degli elementi in gioco
 public class GameWorld {
-    private Game game;
     protected World world;
+    public GameScreen gameScreen;
+    int bufferWidth, bufferHeight;
+
+    //GO pool
     protected List<GameObject> gameObjects;
     protected List<GameObject> activeGameObjects;
-    //private final GameObjectFactory gameObjectFactory;
-    public GameScreen gameScreen;
-    private PhysicsContactListener contactListener;
-    protected PlayerGameObject player;
-    public mRayCastCallback rayCastCallback;
-    Draw draw;
 
-    //AndroidGraphics buffer
-    int bufferWidth, bufferHeight;
+    private PhysicsContactListener contactListener;
+    public mRayCastCallback rayCastCallback;
+    protected PlayerGameObject player;
 
     Context context;
 
     final Box physicalSize, screenSize, currentView;
 
     //physics sim parameter
-    private static final float TIME_STEP = 1 /60f;
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATION = 3;
     private static final int PARTICLE_ITERATION = 3;
-    ParticleSystem particleSystem;
-    private static final int MAXPARTICLECOUNT = 1000;
-    private static final float PARTICLE_RADIUS = 0.3f;
 
 
-    //for the touch and the raycast
-    private Fixture touchedFixture;
-    private Fixture rayCastFixture;
-    private Fixture lineOfFireFixture;
-    private Body castedBody;
-    private final QueryCallback touchQueryCallback = new TouchQueryCallback();
 
     //grid variables and parameters
     GridManager levelGrid;
@@ -65,14 +53,6 @@ public class GameWorld {
     int totalEnemies;
     int level = 1;
 
-    //to get the touched fixture
-    private class TouchQueryCallback extends QueryCallback
-    {
-        public boolean reportFixture(Fixture fixture) {
-            touchedFixture = fixture;
-            return true;
-        }
-    }
 
     public GameWorld(GameScreen gameScreen, Context context, Box physicalSize, Box screenSize){
         //sizes
@@ -82,71 +62,31 @@ public class GameWorld {
         this.gameScreen = gameScreen;//the main game screen
         this.world = new World(0, 0);//new phyisics world
         this.context = context;
-        ParticleSystemDef ps = new ParticleSystemDef();
-        particleSystem = world.createParticleSystem(ps);
-        particleSystem.setRadius(PARTICLE_RADIUS);
-        particleSystem.setMaxParticleCount(MAXPARTICLECOUNT);
-        ps.delete();
 
         contactListener = new PhysicsContactListener();
         world.setContactListener(contactListener);
         rayCastCallback = new mRayCastCallback(world);
         gameObjects = new ArrayList<GameObject>();//list of all game objects
         activeGameObjects = new ArrayList<GameObject>(); //list of on-screen game objects
-        //gameObjectFactory = new GameObjectFactory(this, world);//factory class for the various GO
-
         bufferWidth = gameScreen.graphics.getWidth();
         bufferHeight = gameScreen.graphics.getHeight();
-
-        //JUST FOR TESTING, creates a player and some GO
-        //player = (PlayerGameObject) addActiveGameObject(gameObjectFactory.makePlayer(bufferWidth/2, bufferHeight/2));
-        //gameScreen.addDrawable((DrawableComponent) player.getComponent(ComponentType.Drawable));
-
-        //int testEnemyX = 250;
-        //int testEnemyY = 300;
-        //testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX,testEnemyY,AIType.Dummy);
-        //addGameObject(testEnemy);
-
-        //MapManager mapManager = new MapManager(this, gameObjectFactory, context);
-        //mapCells = mapManager.initMapResized(mapCells, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth(),
-       //         AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth());
-        //mapCells = mapManager.generateMapResized(mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth()/AssetManager.WallPixmap.getWidth()-1,
-         //       AssetManager.backgroundPixmap.getHeight()/AssetManager.WallPixmap.getWidth()-1, (Math.random() * 6) % 2 == 0);
-
-        //mapManager.constructMap(mapCells, 50, 50);
-        //mapManager.makeEnemies();
-
-        //int levelWidth = AssetManager.backgroundPixmap.getWidth();
-        //int levelHeight = AssetManager.backgroundPixmap.getHeight();
-        //levelGrid = new GridManager(levelWidth, levelHeight, gridSize, this);
-
-        /*int boxX = 63;
-        int boxY = 231;
-        for(int i = 0; i < 7; i++){
-            addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY));
-            if(i == 6){
-                for(int j = 1; j < 5; j++)
-                    if(j!=3)
-                    addGameObject(gameObjectFactory.makeBox(boxX + (i * 42), boxY - (j * 42)));
-            }
-        }*/
-
-        //levelGrid.addObstacles(gameObjects, this);
     }
 
 
     //Game World update, calls the world step, then responds to touch events
-
-    public synchronized void update(float leftX, float leftY, float elapsedTime, float rightX,
-                                    float rightY, float rightAngle, float rightStrength, boolean isShooting){
+    public synchronized void update(float elapsedTime){
         if(enemyNum == 0)
             gameScreen.levelEnded();
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        //Log.d("touched", "" + player.isInContact());
+        player.updatePosition(gameScreen.getLeftX(), gameScreen.getLeftY(), gameScreen.getRightAngle(), gameScreen.getLeftAngle(), elapsedTime);
         for(GameObject gameObject : activeGameObjects){
             switch(gameObject.name){
                 case "Player":
-                    player.update(rightStrength,rightX,rightY,rightAngle,isShooting,this, elapsedTime);
+                    if(gameScreen.isShooting()) {
+                        player.update(gameScreen.getOldRightStrength(), gameScreen.getOldRightX(), gameScreen.getOldRightY(), gameScreen.getOldRightAngle(), gameScreen.isShooting(), this, elapsedTime);
+                    }else {
+                        player.update(gameScreen.getRightStrength(), gameScreen.getRightX(), gameScreen.getRightY(), gameScreen.getRightAngle(), gameScreen.isShooting(), this, elapsedTime);
+                    }
                     break;
                 case "Enemy":
                     EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
@@ -160,10 +100,8 @@ public class GameWorld {
                     break;
             }
         }
-
         checkOutOfBound();
-
-        gameScreen.setWorldDestination(leftX, leftY, elapsedTime);
+        //gameScreen.setWorldDestination(gameScreen.getLeftX(), gameScreen.getLeftY(), elapsedTime);
     }
 
     private void checkOutOfBound(){
@@ -188,16 +126,13 @@ public class GameWorld {
                         }
                     }
                 } else { //if they're not in view we remove the drawable
-
                     activeGameObjects.remove(gameObject);
-
                     if(gameObject.name.equals("Enemy")){
                         if(!((EnemyGameObject)gameObject).killed) {
                             AIComponent aiComponent = (AIComponent) gameObject.getComponent(ComponentType.AI);
                             aiComponent.reset();
                         }
                     }
-
                     if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
                         gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
                         gameObject.outOfView();
@@ -220,7 +155,6 @@ public class GameWorld {
     }
 
     public synchronized void removeGameObject (GameObject gameObject){
-        //gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
         gameObjects.remove(gameObject);
     }
 
@@ -231,13 +165,10 @@ public class GameWorld {
     //to check if a GO is in view, based on it's world coordinates
     private boolean isInView (GameObject gameObject){
         PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
-        if (gameObject.worldX + (drawableComponent.pixmap.getWidth() / 2) > -gameScreen.getBackgroundX()
+        return gameObject.worldX + (drawableComponent.pixmap.getWidth() / 2) > -gameScreen.getBackgroundX()
                 && gameObject.worldX - (drawableComponent.pixmap.getWidth() / 2) < -(gameScreen.currentBackgroundX - bufferWidth)
                 && gameObject.worldY + (drawableComponent.pixmap.getHeight() / 2) > -gameScreen.getBackgroundY()
-                && gameObject.worldY - (drawableComponent.pixmap.getHeight() / 2) < -((gameScreen.currentBackgroundY) - bufferHeight)) {
-            return true;
-        }
-        return false;
+                && gameObject.worldY - (drawableComponent.pixmap.getHeight() / 2) < -((gameScreen.currentBackgroundY) - bufferHeight);
     }
 
     //called by gamescreen, calls movement in playergo

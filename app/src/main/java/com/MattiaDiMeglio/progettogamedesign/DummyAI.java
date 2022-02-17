@@ -11,7 +11,7 @@ public class DummyAI extends AIComponent{
     private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/4;
 
     DummyAI(){
-        super();
+        super(AIType.Dummy);
         aimDelay = DEFAULT_AIM_DELAY;
         shootDelay = DEFAULT_SHOOT_DELAY;
         reloadDelay = 1.0f;

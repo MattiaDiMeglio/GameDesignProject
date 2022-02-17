@@ -100,7 +100,7 @@ public class LoadingScreen extends Screen {
                     AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth() - 1, (Math.random() * 6) % 2 == 0);
 
             mapManager.constructMap(gw.mapCells, 50, 50);
-
+            /*
             int boxX = 63;
             int boxY = 231;
             for(int i = 0; i < 7; i++){
@@ -110,7 +110,7 @@ public class LoadingScreen extends Screen {
                         //if(j!=3)
                         gw.addGameObject(gameObjectFactory.makeVerticalHalfWall(boxX + (i * 42), boxY - (j * 42)));
                 }
-            }
+            }*/
 
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
