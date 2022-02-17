@@ -2,8 +2,6 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.util.Log;
 
-import com.badlogic.androidgames.framework.Game;
-
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.7f;
@@ -34,10 +32,8 @@ public class DummyAI extends AIComponent{
 
             if(playerInRange){
                 if(!movementStack.isEmpty()){
-                    //Log.d("DummyAI","Svuoto lo stack dei movimenti");
                     emptyStack();
                 }
-
 
                 if(aimDelay != DEFAULT_AIM_DELAY)
                     aimDelay = DEFAULT_AIM_DELAY;

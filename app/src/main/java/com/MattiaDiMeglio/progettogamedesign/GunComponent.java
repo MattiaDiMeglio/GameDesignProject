@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
+import android.graphics.Color;
 
 public class GunComponent extends WeaponComponent{
 
@@ -55,8 +56,9 @@ public class GunComponent extends WeaponComponent{
         PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
+        int aimLineColor = (shooter.equals("Player")) ? Color.BLUE: Color.RED;
 
-        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
+        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY, aimLineColor);
     }
 
     public boolean checkLineOfFire(GameWorld gameWorld){

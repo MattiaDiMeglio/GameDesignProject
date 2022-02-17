@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.google.fpl.liquidfun.Body;
@@ -63,10 +64,13 @@ public class ShotgunComponent extends WeaponComponent{
             cosAngle /= length;
             sinAngle /= length;
 
-            normalX = cosAngle;
+            /*normalX = cosAngle;
             if(!shooter.equals("Player"))
                 normalY = sinAngle;
-            else normalY = -sinAngle;
+            else normalY = -sinAngle;*/
+
+            normalX = cosAngle;
+            normalY = -sinAngle;
 
             aimLineX[i] = gameWorld.toMetersXLength(range) * (normalX);
             aimLineY[i] = gameWorld.toMetersYLength(range) * (normalY);
@@ -79,7 +83,7 @@ public class ShotgunComponent extends WeaponComponent{
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
 
-        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
+        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY, Color.RED);
     }
 
     public boolean checkLineOfFire(GameWorld gameWorld){

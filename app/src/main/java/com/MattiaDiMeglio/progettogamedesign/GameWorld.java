@@ -340,15 +340,15 @@ public class GameWorld {
     }
 
     //called by gamescreen, calls movement in playergo
-    public void movePlayer (float normalizedX, float normalizedY, float angle, float strength, float deltaTime){
-        player.updatePosition(normalizedX, normalizedY, angle, strength, deltaTime);
+    public void movePlayer (float normalizedX, float normalizedY, float rightAngle, float leftAngle, float deltaTime){
+        player.updatePosition(normalizedX, normalizedY, rightAngle, leftAngle, deltaTime);
     }
 
     public void killPlayer(){
         player.killed();
     }
 
-    public void addAimLine(int lineAmt, float sx, float sy, float[] aimLineX, float[] aimLineY){
+    public void addAimLine(int lineAmt, float sx, float sy, float[] aimLineX, float[] aimLineY, int color){
 
         int startX = (int) toPixelsX(sx);
         int startY = (int) toPixelsY(sy);
@@ -358,7 +358,7 @@ public class GameWorld {
         for(int i = 0; i < lineAmt; i++){
             targetX = (int)(toPixelsX(aimLineX[i] + sx));
             targetY = (int)(toPixelsY(aimLineY[i] + sy));
-            AimLine aimLine = new AimLine(startX, startY, targetX, targetY);
+            AimLine aimLine = new AimLine(startX, startY, targetX, targetY, color);
             gameScreen.aimLineStack.push(aimLine);
         }
     }

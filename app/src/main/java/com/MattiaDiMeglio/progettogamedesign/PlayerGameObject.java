@@ -14,6 +14,7 @@ public class PlayerGameObject extends GameObject {
 
     float reloadingTimer = 0f;
     float reloadDelay = 0.8f;
+    float lastAngle = 0f;
 
     public PlayerGameObject(GameWorld gameWorld){
         this.gameWorld = gameWorld;
@@ -58,12 +59,25 @@ public class PlayerGameObject extends GameObject {
         else reloadingTimer += elapsedTime;
     }
 
-    public void updatePosition(float x, float y, float angle, float strength, float deltaTime){
+    public void updatePosition(float x, float y, float rightAngle, float leftAngle, float deltaTime){
         if(canMove) {
            // Log.d("playerPos1", "world: " + worldX + ", " + worldY);
             controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
             assert controllableComponent != null;
-            controllableComponent.moveCharacter(x, y, angle);
+
+            if(rightAngle != 0){
+                controllableComponent.moveCharacter(x, y, rightAngle);
+                lastAngle = rightAngle;
+            }
+
+            else if(leftAngle != 0){
+                controllableComponent.moveCharacter(x, y, leftAngle);
+                lastAngle = leftAngle;
+            }
+            else controllableComponent.moveCharacter(x, y, lastAngle);
+
+
+
           //  Log.d("playerPos2", "world: " + worldX + ", " + worldY);
         }
     }

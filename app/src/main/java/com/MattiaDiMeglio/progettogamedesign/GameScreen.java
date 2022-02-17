@@ -291,7 +291,7 @@ public class GameScreen extends Screen {
     public void drawAimLines(){
         while(!aimLineStack.isEmpty()){
             AimLine aimLine = aimLineStack.pop();
-            graphics.drawLine(aimLine.startX, aimLine.startY, aimLine.targetX, aimLine.targetY, Color.GREEN);
+            graphics.drawLine(aimLine.startX, aimLine.startY, aimLine.targetX, aimLine.targetY, aimLine.color);
         }
     }
 

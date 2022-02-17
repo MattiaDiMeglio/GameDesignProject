@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ public class GameObject {
 
     public void updatePosition(int x, int y){};
 
-    public void updatePosition(float x, float y, int angle){};
+    public void updatePosition(float x, float y, float angle){};
 
     //public void updatePosition(int x, int y, int angle, int strength){};
 

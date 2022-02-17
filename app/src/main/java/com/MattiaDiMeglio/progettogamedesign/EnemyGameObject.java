@@ -1,9 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
-import com.google.fpl.liquidfun.Body;
-
 //the enemyGo
 public class EnemyGameObject extends GameObject {
     private GameWorld gameWorld;//the gameWorld,
@@ -12,7 +8,7 @@ public class EnemyGameObject extends GameObject {
     private ControllableComponent controllableComponent;
     protected boolean killed = false;//has it been killed?
 
-    private int facingAngle = 0;
+    private float facingAngle = 0f;
 
     private int previousCellX, previousCellY, currentCellX, currentCellY;
 
@@ -45,7 +41,7 @@ public class EnemyGameObject extends GameObject {
                 gameWorld.toMetersY(touchY));
     }
 
-    public void updatePosition(float x, float y, int angle){
+    public void updatePosition(float x, float y, float angle){
         controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
         controllableComponent.moveCharacter(x,y,angle);
     }
@@ -61,8 +57,6 @@ public class EnemyGameObject extends GameObject {
           //      (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
 
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
-        if(aiComponent.getAiType().equals(AIType.Dummy))
-            Log.d("EnemyGO Update","Facing angle = "+facingAngle);
 
         if(!killed){
             dynamicBodyComponent.update(0, 0, 0);
@@ -118,8 +112,8 @@ public class EnemyGameObject extends GameObject {
     public void freeCurrentCell(Node[][] cells){ cells[currentCellY][currentCellX].setEnemy(false); }
 
     public boolean isKilled(){return killed;}
-    public int getFacingAngle() { return facingAngle; }
+    public float getFacingAngle() { return facingAngle; }
 
-    public void setFacingAngle(int facingAngle) { this.facingAngle = facingAngle; }
+    public void setFacingAngle(float facingAngle) { this.facingAngle = facingAngle; }
 
 }

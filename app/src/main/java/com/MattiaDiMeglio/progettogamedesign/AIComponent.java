@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import java.util.List;
 import java.util.Stack;
 
@@ -111,7 +109,7 @@ public class AIComponent extends Component{
                 normalX = findNormalX(owner.worldX, owner.worldY , newX, newY);
                 normalY = findNormalY(owner.worldX, owner.worldY , newX, newY);
             }
-            ((EnemyGameObject) owner).setFacingAngle(-(int) Math.toDegrees(Math.atan2(normalY,normalX)));
+            ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
             owner.updatePosition(normalX,normalY,((EnemyGameObject) owner).getFacingAngle());
 
             if(movementStack.isEmpty()) //se si è appena svuotato lo stack, il nemico si ferma
@@ -186,10 +184,10 @@ public class AIComponent extends Component{
         float normalX = findNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         float normalY = findNormalY(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
 
-        ((EnemyGameObject) owner).setFacingAngle((int) Math.toDegrees(Math.atan2(normalY,normalX)));
+        ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
 
         weaponComponent.aim(normalX,normalY,((EnemyGameObject) owner).getFacingAngle(), gameWorld);
-        owner.updatePosition(0,0,-((EnemyGameObject) owner).getFacingAngle());
+        owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
     }
 
     public void enemyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){

@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.google.fpl.liquidfun.Body;
@@ -61,7 +62,7 @@ public class RifleComponent extends WeaponComponent{
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
 
-        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY);
+        gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY, Color.RED);
     }
 
     public boolean checkLineOfFire(GameWorld gameWorld){
