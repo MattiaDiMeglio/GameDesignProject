@@ -27,7 +27,7 @@ public class mRayCastCallback {
                 Body castedBody = fixture.getBody();
                 PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
                 if(casteduserData.name.equals("HalfWall")){
-                    return 1;
+                    return -1;
                 }
                 return fraction;
             }

@@ -30,6 +30,7 @@ public class GameObjectFactory {
 
         WeaponComponent weaponComponent = new GunComponent();
         //WeaponComponent weaponComponent = new ShotgunComponent();
+        //WeaponComponent weaponComponent = new RifleComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
