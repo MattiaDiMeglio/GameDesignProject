@@ -33,7 +33,7 @@ public class EnemyGameObject extends GameObject {
         if(!killed) {
             dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
 
-            dynamicBodyComponent.update(0, 0, 0);
+            //dynamicBodyComponent.update(0, 0, 0);
 
 
             float touchX = gameWorld.toPixelsTouchX(x);
