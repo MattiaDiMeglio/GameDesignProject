@@ -79,7 +79,7 @@ public class AIComponent extends Component{
 
         while(!movementStack.isEmpty())
             movementStack.pop();
-        owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
+        //owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
 
     }
 
@@ -187,7 +187,6 @@ public class AIComponent extends Component{
         ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
 
         weaponComponent.aim(normalX,normalY,((EnemyGameObject) owner).getFacingAngle(), gameWorld);
-        owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
     }
 
     public void enemyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){

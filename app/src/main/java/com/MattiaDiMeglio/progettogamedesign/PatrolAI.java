@@ -31,6 +31,8 @@ public class PatrolAI extends AIComponent{
                 if(!movementStack.isEmpty())
                     emptyStack();
 
+                owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
+
                 if(aimingTimer >= aimDelay){
                     weaponComponent.addAimLine(gameWorld);
 

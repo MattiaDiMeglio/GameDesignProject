@@ -25,15 +25,14 @@ public class DummyAI extends AIComponent{
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){
-            /*if(aimingTimer < aimDelay)
-                playerInRange = checkPlayerInRange(gameWorld);*/
 
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
-                if(!movementStack.isEmpty()){
+                if(!movementStack.isEmpty())
                     emptyStack();
-                }
+
+                owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
 
                 if(aimDelay != DEFAULT_AIM_DELAY)
                     aimDelay = DEFAULT_AIM_DELAY;

@@ -17,12 +17,11 @@ public class SniperAI extends AIComponent{
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){
-            /*if(aimingTimer < aimDelay)
-                playerInRange = checkPlayerInRange(gameWorld);*/
 
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
+                owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
                 if(aimingTimer >= aimDelay){
                     weaponComponent.addAimLine(gameWorld);
 
