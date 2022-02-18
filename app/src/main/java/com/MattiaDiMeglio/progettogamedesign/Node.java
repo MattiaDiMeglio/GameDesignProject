@@ -64,12 +64,9 @@ public class Node implements Comparable<Node>{
         float deltaX = Math.abs(this.posX - target.posX);
         float deltaY = Math.abs(this.posY - target.posY);
 
-        //return deltaX+deltaY;
         return h+deltaX+deltaY;
     }
 
-    public void setPosX(int posX) { this.posX = posX; }
-    public void setPosY(int posY) { this.posY = posY; }
     public void setObstacle(boolean obstacle) { isObstacle = obstacle; }
     public void setBox(boolean isBox) { this.isBox = isBox; }
     public void setEnemy(boolean enemy) { isEnemy = enemy; }

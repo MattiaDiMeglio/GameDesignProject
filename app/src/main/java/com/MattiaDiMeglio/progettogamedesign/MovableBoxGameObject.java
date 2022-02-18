@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import com.badlogic.androidgames.framework.Game;
-
 public class MovableBoxGameObject extends GameObject {
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;
@@ -67,14 +65,21 @@ public class MovableBoxGameObject extends GameObject {
 
     public void updateCells(Node[][] cells, GameWorld gameWorld){
 
-        currentCellX = worldX / gameWorld.gridSize;
-        currentCellY = worldY / gameWorld.gridSize;
+        int newCellX = worldX / gameWorld.gridSize;
+        int newCellY = worldY / gameWorld.gridSize;
 
-        if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
-            cells[previousCellY][previousCellX].setBox(false);
-            cells[currentCellY][currentCellX].setBox(true);
-            previousCellX = currentCellX;
-            previousCellY = currentCellY;
+        if(newCellX >= 0 && newCellX < gameWorld.levelGrid.getCells().length &&
+                newCellY >= 0 && newCellY < gameWorld.levelGrid.getCells().length){
+
+            currentCellX = newCellX;
+            currentCellY = newCellY;
+
+            if(!((previousCellX == currentCellX) && (previousCellY == currentCellY))){
+                cells[previousCellY][previousCellX].setBox(false);
+                cells[currentCellY][currentCellX].setBox(true);
+                previousCellX = currentCellX;
+                previousCellY = currentCellY;
+            }
         }
     }
 

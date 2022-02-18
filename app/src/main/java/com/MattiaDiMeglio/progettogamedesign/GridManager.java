@@ -12,20 +12,18 @@ public class GridManager {
     private Node[][] cells;
 
     public GridManager(int levelWidth, int levelHeight, int gridS){
-
         this.gridSize = gridS;
         this.gridWidth = levelWidth / gridSize;
         this.gridHeight = levelHeight / gridSize;
         cells = new Node[gridWidth][gridHeight];
-
         computeNodePositions();
     }
 
     public void computeNodePositions(){
         int halfGridSize = gridSize / 2;
         int h = 0;
-        for(int i = 0; i < gridWidth ; i++){ // indice che gestisce le worldY
-            for(int j = 0 ; j < gridHeight ; j++){ // indice che gestisce le worldX
+        for(int i = 0; i < gridWidth ; i++){
+            for(int j = 0 ; j < gridHeight ; j++){
                 Node n = new Node(h,halfGridSize + (j * gridSize),
                         halfGridSize + (i * gridSize), false,false, false);
 
@@ -135,8 +133,5 @@ public class GridManager {
     }
 
     public Node[][] getCells() { return cells; }
-
-    public int getGridWidth() {return gridWidth;}
-    public int getGridHeight() {return gridHeight;}
 
 }

@@ -5,7 +5,7 @@ import android.util.Log;
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.4f;
-    private static final float DEFAULT_SHOOT_DELAY = 0.5f;
+    private static final float DEFAULT_SHOOT_DELAY = 0.25f;
 
     private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/4;
     private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/4;
@@ -20,8 +20,6 @@ public class DummyAI extends AIComponent{
     public void updateAI(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gameWorld){
 
         WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
-        boolean oldPlayerInRange = playerInRange;
-
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){

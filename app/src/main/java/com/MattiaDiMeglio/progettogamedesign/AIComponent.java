@@ -145,7 +145,6 @@ public class AIComponent extends Component{
     public boolean checkPlayerInRange(GameWorld gameWorld){
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
         float range = enemyWeapon.getRange();
-
         float distanceToPlayer = getDistanceToPlayer();
 
         if(distanceToPlayer <= range+18){
@@ -158,9 +157,7 @@ public class AIComponent extends Component{
     public void enemyAim(WeaponComponent weaponComponent, GameWorld gameWorld){
         float normalX = findNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         float normalY = findNormalY(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
-
         ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
-
         weaponComponent.aim(normalX,normalY,((EnemyGameObject) owner).getFacingAngle(), gameWorld);
     }
 
@@ -205,8 +202,5 @@ public class AIComponent extends Component{
     @Override
     public ComponentType getType() { return ComponentType.AI; }
 
-    public AIType getAiType() { return aiType; }
-
-    public void setAiType(AIType aiType) { this.aiType = aiType; }
     public void setGridSize(int gridSize) { this.gridSize = gridSize; }
 }

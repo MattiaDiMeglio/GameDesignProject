@@ -52,14 +52,14 @@ public class GameObjectFactory {
         if(aiType == AIType.Dummy){
             aiComponent = new DummyAI();
             weaponComponent = new ShotgunComponent();
-            enemySpeed = 3;
+            enemySpeed = 7.5f;
         }
 
         else if(aiType == AIType.Sniper){
             pixmap = AssetManager.enemy2;
             aiComponent = new SniperAI();
             weaponComponent = new RifleComponent();
-            enemySpeed = 1.5f;
+            enemySpeed = 0.5f;
         }
 
         else{
