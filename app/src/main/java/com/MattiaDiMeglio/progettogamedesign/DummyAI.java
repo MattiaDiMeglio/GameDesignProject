@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class DummyAI extends AIComponent{
 
-    private static final float DEFAULT_AIM_DELAY = 0.7f;
+    private static final float DEFAULT_AIM_DELAY = 0.4f;
     private static final float DEFAULT_SHOOT_DELAY = 0.5f;
 
     private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/4;
@@ -26,6 +26,7 @@ public class DummyAI extends AIComponent{
 
         if(weaponComponent.bullets > 0){
 
+            setEnemyTarget(lastPlayerX, lastPlayerY);
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
@@ -51,12 +52,8 @@ public class DummyAI extends AIComponent{
                 else aimingTimer += elapsedTime;
             }
             else{
-                if(oldPlayerInRange){
-                    enemyTargetX = 0;
-                    enemyTargetY = 0;
-                    aimingTimer = 0;
-                    shootingTimer = 0;
-                }
+                targetingReset();
+
                 pathfind(lastPlayerX, lastPlayerY,cells);
                 checkBoxOnPath(weaponComponent, gameWorld, elapsedTime, cells);
             }
@@ -83,7 +80,9 @@ public class DummyAI extends AIComponent{
                 if(aimDelay != BOX_AIM_DELAY)
                     aimDelay = BOX_AIM_DELAY;
 
-                enemyAim(weaponComponent, gameWorld, nextCellX, nextCellY);
+                setEnemyTarget(nextCellX,nextCellY);
+
+                enemyAim(weaponComponent, gameWorld);
 
                 if(aimingTimer >= aimDelay){
                     weaponComponent.addAimLine(gameWorld);

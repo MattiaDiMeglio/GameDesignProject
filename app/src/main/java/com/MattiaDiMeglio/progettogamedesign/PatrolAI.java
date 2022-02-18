@@ -12,7 +12,7 @@ public class PatrolAI extends AIComponent{
     PatrolAI() {
         super(AIType.Patrol);
         aimDelay = 0.5f;
-        shootDelay = 1.2f;
+        shootDelay = 0.8f;
         reloadDelay = 0.5f;
     }
 
@@ -25,6 +25,7 @@ public class PatrolAI extends AIComponent{
 
         if(weaponComponent.bullets > 0){
 
+            setEnemyTarget(lastPlayerX, lastPlayerY);
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
@@ -43,14 +44,13 @@ public class PatrolAI extends AIComponent{
                 } else aimingTimer += elapsedTime;
             }
             else{
+                targetingReset();
+
                 if(oldPlayerInRange){
-                    aimingTimer = 0;
-                    shootingTimer = 0;
-                    enemyTargetX = 0;
-                    enemyTargetY = 0;
                     randomPositionX = 0;
                     randomPositionY = 0;
                 }
+
                 //se il nemico non ha una posizione da raggiungere, ne cerchiamo una con setRandomPosition
                 if(randomPositionX == 0 && randomPositionY == 0)
                     setRandomPosition(cells);
@@ -112,10 +112,7 @@ public class PatrolAI extends AIComponent{
         int randomPositionCellX = randomPositionX / gridSize;
         int randomPositionCellY = randomPositionY / gridSize;
 
-        if(patrolCellX == randomPositionCellX && patrolCellY == randomPositionCellY)
-            return true;
-
-        return false;
+        return patrolCellX == randomPositionCellX && patrolCellY == randomPositionCellY;
     }
 
 }

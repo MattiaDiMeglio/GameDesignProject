@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 public class SniperAI extends AIComponent{
 
     SniperAI(){
@@ -18,11 +16,30 @@ public class SniperAI extends AIComponent{
 
         if(weaponComponent.bullets > 0){
 
+            if(aimingTimer >= aimDelay){
+
+                setEnemyTarget(lastPlayerX, lastPlayerY);
+                weaponComponent.setFixedRange(weaponComponent.getRange());
+                playerInRange = checkPlayerInRange(gameWorld);
+
+                if(playerInRange){
+                    owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
+                    weaponComponent.setFixedRange(getDistanceToPlayer());
+                    enemyAim(weaponComponent,gameWorld);
+                    weaponComponent.addAimLine(gameWorld);
+                    if(shootingTimer >= shootDelay)
+                        enemyShoot(weaponComponent, gameWorld);
+                    else shootingTimer += elapsedTime;
+                }
+                else targetingReset();
+            }else aimingTimer += elapsedTime;
+
+            /*setEnemyTarget(lastPlayerX, lastPlayerY);
             weaponComponent.setFixedRange(weaponComponent.getRange());
             playerInRange = checkPlayerInRange(gameWorld);
 
             if(playerInRange){
-                weaponComponent.setFixedRange(getDistance(lastPlayerX, lastPlayerY)-13);
+                weaponComponent.setFixedRange(getPlayerDistance()-13);
                 owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
                 if(aimingTimer >= aimDelay){
                     weaponComponent.addAimLine(gameWorld);
@@ -39,7 +56,7 @@ public class SniperAI extends AIComponent{
                     enemyTargetX = 0;
                     enemyTargetY = 0;
                 }
-            }
+            }*/
         }
         else{
             if(reloadingTimer >= reloadDelay){

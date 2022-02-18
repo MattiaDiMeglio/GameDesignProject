@@ -146,26 +146,16 @@ public class AIComponent extends Component{
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
         float range = enemyWeapon.getRange();
 
-        float distanceToPlayer = getDistance(lastPlayerX, lastPlayerY);
+        float distanceToPlayer = getDistanceToPlayer();
 
         if(distanceToPlayer <= range+18){
-            enemyAim(enemyWeapon, gameWorld, lastPlayerX, lastPlayerY);
-            if(enemyWeapon.checkLineOfFire(gameWorld))
-                return true;
+            enemyAim(enemyWeapon, gameWorld);
+            return enemyWeapon.checkLineOfFire(gameWorld);
         }
-
-        enemyTargetX = 0;
-        enemyTargetY = 0;
         return false;
     }
 
-    public void enemyAim(WeaponComponent weaponComponent, GameWorld gameWorld, int targetX, int targetY){
-
-        if(enemyTargetX == 0 || enemyTargetY == 0){
-            enemyTargetX = targetX;
-            enemyTargetY = targetY;
-        }
-
+    public void enemyAim(WeaponComponent weaponComponent, GameWorld gameWorld){
         float normalX = findNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         float normalY = findNormalY(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
 
@@ -175,20 +165,14 @@ public class AIComponent extends Component{
     }
 
     public void enemyShoot(WeaponComponent weaponComponent, GameWorld gameWorld){
-        enemyTargetX = 0;
-        enemyTargetY = 0;
-        aimingTimer = 0f;
-        shootingTimer = 0f;
+        targetingReset();
         weaponComponent.shoot(gameWorld);
     }
 
     public void reset(){
+        targetingReset();
         playerPositionTimer = 0f;
-        aimingTimer = 0f;
-        shootingTimer = 0f;
         reloadingTimer = 0f;
-        enemyTargetX = 0;
-        enemyTargetY = 0;
         playerInRange = false;
 
         WeaponComponent weaponComponent = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
@@ -199,9 +183,23 @@ public class AIComponent extends Component{
             emptyStack();
     }
 
-    public float getDistance(int targetX, int targetY) {
-        return (float) Math.sqrt(((targetX - getOwner().worldX) * (targetX - getOwner().worldX)) +
-                ((targetY - getOwner().worldY) * (targetY - getOwner().worldY)));
+    public void targetingReset(){
+        aimingTimer = 0;
+        shootingTimer = 0;
+        enemyTargetX = 0;
+        enemyTargetY = 0;
+    }
+
+    public float getDistanceToPlayer() {
+        return (float) Math.sqrt(((lastPlayerX - getOwner().worldX) * (lastPlayerX - getOwner().worldX)) +
+                ((lastPlayerY - getOwner().worldY) * (lastPlayerY - getOwner().worldY)));
+    }
+
+    public void setEnemyTarget(int targetX, int targetY){
+        if(enemyTargetX == 0 && enemyTargetY == 0){
+            this.enemyTargetX = targetX;
+            this.enemyTargetY = targetY;
+        }
     }
 
     @Override
