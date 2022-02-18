@@ -251,7 +251,12 @@ public class GameScreen extends Screen {
         //drawBodies();
         if(gameState == GameState.Running) {
             graphics.drawPixmap(AssetManager.PausePixmap, (int) gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
-            graphics.drawText(gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - (int)(0.114 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int)(0.20 * gameWorld.bufferHeight), Color.BLACK);
+            if(gameWorld.player.isReloading()){
+                graphics.drawText("Reloading...", (gameWorld.bufferWidth) - (int) (0.14 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.20 * gameWorld.bufferHeight), Color.BLACK);
+
+            } else {
+                graphics.drawText(gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - (int) (0.114 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.20 * gameWorld.bufferHeight), Color.BLACK);
+            }
         }
         if(gameState == GameState.Paused){
             graphics.drawPixmap(AssetManager.PlayPixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);

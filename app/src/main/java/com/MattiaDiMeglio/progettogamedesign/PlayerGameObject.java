@@ -11,6 +11,7 @@ public class PlayerGameObject extends GameObject {
     private WeaponComponent weaponComponent;
     protected boolean canMove = true;
     protected boolean killed = false;//has it been killed?
+    private boolean reloading  = false;
 
     float reloadingTimer = 0f;
     float reloadDelay = 0.8f;
@@ -47,8 +48,13 @@ public class PlayerGameObject extends GameObject {
         else if(reloadingTimer >= reloadDelay){
             weaponComponent.reload();
             reloadingTimer = 0;
+            reloading = false;
         }
-        else reloadingTimer += elapsedTime;
+        else {
+            reloadingTimer += elapsedTime;
+            reloading = true;
+        }
+
     }
 
     public void updatePosition(float x, float y, float rightAngle, float leftAngle, float deltaTime){
@@ -124,4 +130,5 @@ public class PlayerGameObject extends GameObject {
     public int getWorldX(){return worldX;}
     public int getWorldY(){return worldY;}
 
+    public boolean isReloading() { return reloading; }
 }
