@@ -1,7 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.Game;
@@ -66,8 +65,8 @@ public class LoadingScreen extends Screen {
             MapManager mapManager = new MapManager(gw, gameObjectFactory, context);
 
             //making the player
-            int x = mapManager.toActualCoordX(5);
-            int y = mapManager.toActualCoordX(5);
+            int x = mapManager.toActualCoord(5);
+            int y = mapManager.toActualCoord(5);
             if(gw.player == null) {
                 gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
@@ -87,8 +86,8 @@ public class LoadingScreen extends Screen {
             gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Sniper);
             gw.addGameObject(gw.testEnemy);
 
-            testEnemyX = mapManager.toActualCoordX(6);
-            testEnemyY = mapManager.toActualCoordX(4);
+            testEnemyX = mapManager.toActualCoord(6);
+            testEnemyY = mapManager.toActualCoord(4);
             gw.testEnemy2 = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
             gw.addGameObject(gw.testEnemy2);
             gw.enemyNum = (10 * gw.level) - (gw.level * 2);

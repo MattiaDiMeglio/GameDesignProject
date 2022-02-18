@@ -3,7 +3,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 //the enemyGo
 public class EnemyGameObject extends GameObject {
     private GameWorld gameWorld;//the gameWorld,
-    private PixMapComponent drawableComponent;//component saved for simplicity
+    private DrawableComponent drawableComponent;//component saved for simplicity
     private DynamicBodyComponent dynamicBodyComponent;
     private ControllableComponent controllableComponent;
     protected boolean killed = false;//has it been killed?
@@ -28,13 +28,10 @@ public class EnemyGameObject extends GameObject {
     //updates the graphical and physical positions
     @Override
     public void updatePosition(int x, int y){
-            drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
+            drawableComponent = (DrawableComponent) components.get(ComponentType.Drawable);
             drawableComponent.setPosition(x, y);
         if(!killed) {
             dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
-
-            //dynamicBodyComponent.update(0, 0, 0);
-
 
             float touchX = gameWorld.toPixelsTouchX(x);
             float touchY = gameWorld.toPixelsTouchY(y);
@@ -52,12 +49,6 @@ public class EnemyGameObject extends GameObject {
     public void update() { }
 
     public void update(int playerX, int playerY, float elapsedTime, Node[][] cells, GameWorld gWorld){
-        //drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
-        //dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
-
-        //drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
-          //      (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
-
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
 
         if(!killed){
@@ -85,20 +76,14 @@ public class EnemyGameObject extends GameObject {
             AIComponent aiComponent = (AIComponent) getComponent(ComponentType.AI);
             aiComponent.emptyStack();
             freeCurrentCell(cells);
-            //components.clear();
             killed = true;
-            //outOfView();
-            //gameWorld.removeActiveGameObject(this);
-            //gameWorld.removeGameObject(this);
             PhysicsComponent physicsComponent = (PhysicsComponent) getComponent(ComponentType.Physics);
             physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
             physicsComponent.body.delete();
-            //gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
             removeComponent(ComponentType.Physics);
             removeComponent(ComponentType.Controllable);
             removeComponent(ComponentType.AI);
-            //removeComponent(ComponentType.Drawable);
-            drawableComponent.pixmap = AssetManager.enemyKilled;
+            ((PixMapComponent)getComponent(ComponentType.Drawable)).pixmap = AssetManager.enemyKilled;
         }
     }
 

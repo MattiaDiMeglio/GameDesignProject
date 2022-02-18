@@ -28,8 +28,6 @@ public class GameObject {
 
     public void updatePosition(float x, float y, float angle){};
 
-    //public void updatePosition(int x, int y, int angle, int strength){};
-
     public void outOfView(){}
 
     public Component getComponent(ComponentType componentType){

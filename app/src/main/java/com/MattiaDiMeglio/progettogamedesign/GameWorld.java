@@ -78,10 +78,10 @@ public class GameWorld {
         if(enemyNum == 0)
             gameScreen.levelEnded();
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
-        player.updatePosition(gameScreen.getLeftX(), gameScreen.getLeftY(), gameScreen.getRightAngle(), gameScreen.getLeftAngle(), elapsedTime);
         for(GameObject gameObject : activeGameObjects){
             switch(gameObject.name){
                 case "Player":
+                    player.updatePosition(gameScreen.getLeftX(), gameScreen.getLeftY(), gameScreen.getRightAngle(), gameScreen.getLeftAngle(), elapsedTime);
                     if(gameScreen.isShooting()) {
                         player.update(gameScreen.getOldRightStrength(), gameScreen.getOldRightX(), gameScreen.getOldRightY(), gameScreen.getOldRightAngle(), gameScreen.isShooting(), this, elapsedTime);
                     }else {

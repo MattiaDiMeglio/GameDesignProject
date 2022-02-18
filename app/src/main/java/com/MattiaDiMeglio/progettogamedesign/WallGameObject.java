@@ -33,6 +33,7 @@ public class WallGameObject extends GameObject {
 
     @Override
     public void outOfView() {
+        staticBodyComponent = (StaticBodyComponent) this.getComponent(ComponentType.Physics);
         staticBodyComponent.setTrasform(40, 40);
     }
 }

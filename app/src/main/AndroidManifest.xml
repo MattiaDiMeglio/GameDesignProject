@@ -15,9 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProgettoGameEngine">
         <activity
-            android:name=".GamePlayActivity"
-            android:exported="false" />
-        <activity
             android:name=".ProgettoGameDesign"
             android:screenOrientation="sensorLandscape">
             <intent-filter>

@@ -21,18 +21,6 @@ public class MovableBoxGameObject extends GameObject {
         previousCellY = currentCellY;
     }
 
-    @Override
-    public void update() {
-        /*dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
-        dynamicBodyComponent.update(0, 0, 0);
-        int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
-        int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
-        drawableComponent.setPosition(currentGX, currentGY);
-
-        worldX = gameWorld.updateWorldX(drawableComponent.getPositionX());
-        worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());*/
-    }
-
     public void update(Node[][] cells, GameWorld gWorld){
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
         dynamicBodyComponent.update(0, 0, 0);

@@ -30,14 +30,6 @@ public class PlayerGameObject extends GameObject {
     public void CantMove(){
         canMove = false;
     }
-    @Override
-    public void update() {//update
-     //   drawableComponent = (PixMapComponent) components.get(ComponentType.Drawable);
-     //   dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
-
-     //   drawableComponent.setPosition((int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX()),
-       //         (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY()));
-    }
 
     public void update(float rightStrength, float rightX, float rightY, float rightAngle,
                        boolean isShooting, GameWorld gameWorld, float elapsedTime){
@@ -94,20 +86,6 @@ public class PlayerGameObject extends GameObject {
             dynamicBodyComponent.setTransform(gameWorld.toMetersX(touchX),
                     gameWorld.toMetersY(touchY));
         }
-    }
-
-    public float getMovedX(){
-        PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
-        if(!isInContact())
-            return Math.abs(component.getPositionX() - component.getLastPositionX());
-        return 0f;
-    }
-
-    public float getMovedY(){
-        PhysicsComponent component = (PhysicsComponent) getComponent(ComponentType.Physics);
-        if(!isInContact())
-            return Math.abs(component.getPositionY() - component.getLastPositionY());
-        return 0f;
     }
 
     public boolean isInContact(){

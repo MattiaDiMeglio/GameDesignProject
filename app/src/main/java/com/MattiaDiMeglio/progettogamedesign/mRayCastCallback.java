@@ -70,9 +70,6 @@ public class mRayCastCallback {
                     case "Wall"://met a wall
                         //hit wall
                         break;
-                    case "Door"://met a door
-                        //open door
-                        break;
                     case "HalfWall":
                         //Non dovrebbe mai succedere
                         break;

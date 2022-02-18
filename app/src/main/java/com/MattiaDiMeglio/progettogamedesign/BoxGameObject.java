@@ -30,6 +30,7 @@ public class BoxGameObject extends GameObject {
 
     @Override
     public void outOfView() {
+        staticBodyComponent = (StaticBodyComponent) this.getComponent(ComponentType.Physics);
         staticBodyComponent.setTrasform(40, 40);
     }
 
@@ -37,13 +38,10 @@ public class BoxGameObject extends GameObject {
         if(!destroyed) {
             life -= 1;
             if (life == 0) {
-                //components.clear();
                 outOfView();
                 destroyed = true;
                 gameWorld.levelGrid.removeBox(worldX, worldY);
-                //gameWorld.removeActiveGameObject(this);
                 gameWorld.removeGameObject(this);
-
                 PhysicsComponent physicsComponent = (PhysicsComponent) getComponent(ComponentType.Physics);
                 physicsComponent.body.destroyFixture(physicsComponent.body.getFixtureList());
                 physicsComponent.body.delete();

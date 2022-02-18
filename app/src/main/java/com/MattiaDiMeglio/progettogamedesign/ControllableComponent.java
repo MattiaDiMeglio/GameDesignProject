@@ -26,16 +26,12 @@ public class ControllableComponent extends Component {
         DynamicBodyComponent dynamicBodyComponent = (DynamicBodyComponent) owner.getComponent(ComponentType.Physics);
 
         dynamicBodyComponent.update(normalizedX, normalizedY, angle);
-        int prevGX = pixmapComp.getPositionX();
-        int prevGY = pixmapComp.getPositionY();
         int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
         int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
         pixmapComp.setPosition(currentGX, currentGY, angle);
 
         owner.worldX = gameWorld.updateWorldX(pixmapComp.getPositionX());
         owner.worldY = gameWorld.updateWorldY(pixmapComp.getPositionY());
-        //owner.worldX += currentGX - prevGX;
-        //owner.worldY += currentGY - prevGY;
     }
 
     public void setAngle(float angle){

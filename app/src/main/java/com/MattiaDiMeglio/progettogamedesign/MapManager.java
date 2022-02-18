@@ -18,7 +18,6 @@ public class MapManager {
 
     private GameWorld gameWorld;
     private GameObjectFactory gameObjectFactory;
-    private JSonParser jSonParser;
     private int mapWidth;
     private int mapHeight;
     Context context;
@@ -28,7 +27,6 @@ public class MapManager {
         this.gameWorld = gameWorld;
         this.gameObjectFactory = gameObjectFactory;
         this.context = context;
-        jSonParser = new JSonParser(context, this);
     }
 
     public int[][] initMapResized(int[][]map, int width, int height){
@@ -154,7 +152,7 @@ public class MapManager {
                     i++;
                 }
                 if(!playerFound){
-                    int type = (int)(Math.random() * 2) + 6;
+                    int type = (int)((Math.random() * 10) % 3) + 6;
                     map[randomX][randomY] = type;
                     enemyInPosition = true;
                 }
@@ -204,57 +202,36 @@ public class MapManager {
             for(int j = 0; j<height; j++){
                 switch (map[i][j]){
                     case 2:
-                        makeWall("horizontal", toActualCoordX(i), toActualCoordX(j));
+                        gameWorld.addGameObject(gameObjectFactory.makeHorizontalWall(toActualCoord(i), toActualCoord(j)));
                         break;
                     case 3:
-                        makeWall("horizontalHalf", toActualCoordX(i), toActualCoordX(j));
+                        gameWorld.addGameObject(gameObjectFactory.makeHorizontalHalfWall(toActualCoord(i), toActualCoord(j)));
                         break;
                     case 4:
-                        makeWall("verticalHalf", toActualCoordX(i), toActualCoordX(j));
+                        gameWorld.addGameObject(gameObjectFactory.makeVerticalHalfWall(toActualCoord(i), toActualCoord(j)));
                         break;
                     case 6:
-                        makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Dummy);
+                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoord(i), toActualCoord(j), AIType.Dummy));
                         break;
                     case 7:
-                        makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Sniper);
+                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoord(i), toActualCoord(j), AIType.Sniper));
                         break;
                     case 8:
-                        makeEnemy(toActualCoordX(i), toActualCoordX(j), AIType.Patrol);
-                        break;
+                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoord(i), toActualCoord(j), AIType.Patrol));                        break;
                     case 9:
-                        gameWorld.addGameObject(gameObjectFactory.makeBox(toActualCoordX(i), toActualCoordX(j)));
+                        gameWorld.addGameObject(gameObjectFactory.makeBox(toActualCoord(i), toActualCoord(j)));
                         break;
                     case 10:
-                        gameWorld.addGameObject(gameObjectFactory.makeMovableBox(toActualCoordX(i), toActualCoordX(j)));
+                        gameWorld.addGameObject(gameObjectFactory.makeMovableBox(toActualCoord(i), toActualCoord(j)));
                 }
             }
         }
 
     }
 
-    public int toActualCoordX(int x){return (AssetManager.WallPixmap.getWidth()/2 + x * AssetManager.WallPixmap.getWidth());}
-
-    //called by the parser. Calls the corrispondent factory method based on the wall type
-    public void makeWall(String type, int worldX, int worldY){
-        switch (type){
-            case "horizontal":
-                gameWorld.addGameObject(gameObjectFactory.makeHorizontalWall(worldX, worldY));
-                break;
-            case "vertical":
-                gameWorld.addGameObject(gameObjectFactory.makeVerticalWall(worldX, worldY));
-                break;
-            case "horizontalHalf":
-                gameWorld.addGameObject(gameObjectFactory.makeHorizontalHalfWall(worldX, worldY));
-                break;
-            case "verticalHalf":
-                gameWorld.addGameObject(gameObjectFactory.makeVerticalHalfWall(worldX, worldY));
-            default:
-                break;
-        }
-    }
+    public int toActualCoord(int x){return (AssetManager.WallPixmap.getWidth()/2 + x * AssetManager.WallPixmap.getWidth());}
 
     public void makeDoors(int[][] map, int startingX, int startingY, int endingX, int endingY){
-
         //lato della stanza dove mettere la porta
         //se il lato ha indice 0 o mapwidth/mapheight, cerchiamo un'altro lato
         boolean doorMade = false;
@@ -300,10 +277,5 @@ public class MapManager {
                     break;
             }
         }
-    }
-
-    //calls the factory to make the enemies
-    public void makeEnemy(int worldX, int worldY, AIType aiType){
-        gameWorld.addGameObject(gameObjectFactory.makeEnemy(worldX, worldY, aiType));
     }
 }
