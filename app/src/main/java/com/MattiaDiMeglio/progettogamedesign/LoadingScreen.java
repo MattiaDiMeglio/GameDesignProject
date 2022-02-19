@@ -56,6 +56,7 @@ public class LoadingScreen extends Screen {
                 AssetManager.PlayPixmap = graphics.newPixmap("PlayImg.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.ResumeButtonPixmap = graphics.newPixmap("ResumeButton.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.EndLevelPixmap = graphics.newPixmap("EndLevel.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.PlayerDeadPixmap = graphics.newPixmap("Dead.png", Graphics.PixmapFormat.ARGB4444);
             }
 
             AssetManager.GunShoot = audio.newSound("GunShoot.mp3");
@@ -90,17 +91,6 @@ public class LoadingScreen extends Screen {
                 if(!gw.activeGameObjects.contains(gw.player))
                     gw.addActiveGameObject(gw.player);
             }
-
-            //making test enemy
-            int testEnemyX = 250;
-            int testEnemyY = 300;
-            gw.testEnemy = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Sniper);
-            gw.addGameObject(gw.testEnemy);
-
-            testEnemyX = mapManager.toActualCoord(6);
-            testEnemyY = mapManager.toActualCoord(4);
-            gw.testEnemy2 = (EnemyGameObject) gameObjectFactory.makeEnemy(testEnemyX, testEnemyY, AIType.Dummy);
-            gw.addGameObject(gw.testEnemy2);
             gw.enemyNum = (10 * gw.level) - (gw.level * 2);
             gw.totalEnemies = gw.enemyNum;
             //making the map
@@ -110,18 +100,6 @@ public class LoadingScreen extends Screen {
                     AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth() - 1, (Math.random() * 6) % 2 == 0);
 
             mapManager.constructMap(gw.mapCells, 50, 50);
-            /*
-            int boxX = 63;
-            int boxY = 231;
-            for(int i = 0; i < 7; i++){
-                gw.addGameObject(gameObjectFactory.makeHorizontalHalfWall(boxX + (i * 42), boxY));
-                if(i == 6){
-                    for(int j = 1; j < 5; j++)
-                        //if(j!=3)
-                        gw.addGameObject(gameObjectFactory.makeVerticalHalfWall(boxX + (i * 42), boxY - (j * 42)));
-                }
-            }*/
-
             //pathfinding
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
             int levelHeight = AssetManager.backgroundPixmap.getHeight();

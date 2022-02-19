@@ -65,7 +65,7 @@ public class GameWorld {
 
         contactListener = new PhysicsContactListener();
         world.setContactListener(contactListener);
-        rayCastCallback = new mRayCastCallback(world);
+        rayCastCallback = new mRayCastCallback(world, this);
         gameObjects = new ArrayList<GameObject>();//list of all game objects
         activeGameObjects = new ArrayList<GameObject>(); //list of on-screen game objects
         bufferWidth = gameScreen.graphics.getWidth();
@@ -75,7 +75,7 @@ public class GameWorld {
 
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(float elapsedTime){
-        if(enemyNum == 0)
+        if(enemyNum == 0 || player.killed)
             gameScreen.levelEnded();
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATION, PARTICLE_ITERATION);
         for(GameObject gameObject : activeGameObjects){

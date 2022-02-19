@@ -24,16 +24,6 @@ public class GunComponent extends WeaponComponent{
 
         Fixture fixture = gameWorld.rayCastCallback.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
                 aimLineX[0], aimLineY[0],shooter, gameWorld.levelGrid);
-
-        if(shooter.equals("Enemy") && fixture != null){
-            Body castedBody = fixture.getBody();
-            if (castedBody != null) {
-                PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();
-
-                if (casteduserData.name.equals("Player"))
-                    gameWorld.killPlayer();
-                }
-            }
     }
 
     @Override

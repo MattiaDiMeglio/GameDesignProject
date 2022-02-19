@@ -2,6 +2,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.util.Log;
 
+import com.badlogic.androidgames.framework.Game;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
 import com.google.fpl.liquidfun.QueryCallback;
@@ -10,6 +11,7 @@ import com.google.fpl.liquidfun.World;
 
 public class mRayCastCallback {
     World world;
+    GameWorld gameWorld;
     private Fixture rayCastFixture;
     private Fixture lineOfFireFixture;
     private final QueryCallback touchQueryCallback = new TouchQueryCallback();
@@ -22,8 +24,9 @@ public class mRayCastCallback {
             return true;
         }
     }
-    public mRayCastCallback(World world){
+    public mRayCastCallback(World world, GameWorld gameWorld){
         this.world = world;
+        this.gameWorld = gameWorld;
     }
 
     public Fixture checkRaycast (float bodyX, float bodyY, float aimX, float aimY, String shooter, GridManager levelGrid){//does the raycast callback
@@ -64,8 +67,7 @@ public class mRayCastCallback {
                         //destroy enemy
                         break;
                     case "Player":
-                        /*PlayerGameObject playerGameObject = (PlayerGameObject) casteduserData.getOwner();
-                        playerGameObject.killed();*/
+                        gameWorld.killPlayer();
                         break;
                     case "Wall"://met a wall
                         //hit wall

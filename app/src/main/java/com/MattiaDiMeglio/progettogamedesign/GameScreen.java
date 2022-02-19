@@ -275,7 +275,12 @@ public class GameScreen extends Screen {
             graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
         }
         if(gameState == GameState.GameOver){
-            graphics.drawPixmap(AssetManager.EndLevelPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2, (int) gameWorld.bufferHeight/2 - AssetManager.EndLevelPixmap.getHeight()/2);
+            if(gameWorld.player.killed){
+                graphics.drawPixmap(AssetManager.PlayerDeadPixmap, (int) gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, (int) gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
+
+            } else {
+                graphics.drawPixmap(AssetManager.EndLevelPixmap, (int) gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, (int) gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
+            }
         }
         graphics.drawText(gameWorld.enemyNum + "/" + gameWorld.totalEnemies + " remaining", (gameWorld.bufferWidth/2) - 20, 10, Color.BLACK);
     }
@@ -385,7 +390,8 @@ public class GameScreen extends Screen {
     public float getBackgroundY(){return currentBackgroundY;}
 
     public void levelEnded(){
-        gameWorld.level++;
+        if(gameWorld.enemyNum == 0)
+            gameWorld.level++;
         gameState = GameState.GameOver;
         gameWorld.destroyGameWorld();
     }
