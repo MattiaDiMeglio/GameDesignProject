@@ -58,13 +58,18 @@ public class LoadingScreen extends Screen {
                 AssetManager.EndLevelPixmap = graphics.newPixmap("EndLevel.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.PlayerDeadPixmap = graphics.newPixmap("Dead.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.EndGamePixmap = graphics.newPixmap("EndGame.png", Graphics.PixmapFormat.ARGB4444);
+                AssetManager.BoxHit = audio.newSound("BoxHit.mp3");
+                AssetManager.BoxDestroyed = audio.newSound("BoxDestroyed.mp3");
                 AssetManager.GunShoot = audio.newSound("GunShoot.mp3");
+                AssetManager.GunReload = audio.newSound("GunReload.mp3");
                 AssetManager.RifleShoot = audio.newSound("RifleShoot.mp3");
+                AssetManager.RifleReload = audio.newSound("RifleReload.mp3");
                 AssetManager.ShotgunShoot = audio.newSound("ShotgunShoot.mp3");
+                AssetManager.ShotgunReload = audio.newSound("ShotgunReload.mp3");
+
                 AssetManager.GameMusic = audio.newMusic("gamemusic.wav");
                 AssetManager.GameMusic.setLooping(true);
             }
-
             //setting the screen and gameworld
 
             if(nextScreen == null) {

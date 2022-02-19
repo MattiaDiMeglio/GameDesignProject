@@ -39,9 +39,16 @@ public class AssetManager {
     public static Pixmap EndGamePixmap;
 
     //Sound effects
+    public static Sound BoxHit;
+    public static Sound BoxDestroyed;
     public static Sound GunShoot;
+    public static Sound GunReload;
     public static Sound RifleShoot;
+    public static Sound RifleReload;
     public static Sound ShotgunShoot;
+    public static Sound ShotgunReload;
+
+    //BGM
     public static Music MainMenuMusic;
     public static Music GameMusic;
 }

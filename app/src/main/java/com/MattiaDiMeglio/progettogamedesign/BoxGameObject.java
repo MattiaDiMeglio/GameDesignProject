@@ -38,6 +38,7 @@ public class BoxGameObject extends GameObject {
         if(!destroyed) {
             life -= 1;
             if (life == 0) {
+                AssetManager.BoxDestroyed.play(0.8f);
                 outOfView();
                 destroyed = true;
                 gameWorld.levelGrid.removeBox(worldX, worldY);
@@ -48,8 +49,8 @@ public class BoxGameObject extends GameObject {
                 gameWorld.gameScreen.removeDrawable((DrawableComponent) getComponent(ComponentType.Drawable));
                 removeComponent(ComponentType.Physics);
                 removeComponent(ComponentType.Drawable);
-
             }
+            else AssetManager.BoxHit.play(0.8f);
         }
     }
 

@@ -23,6 +23,9 @@ public class RifleComponent extends WeaponComponent{
         bullets--;
         AssetManager.RifleShoot.play(1);
 
+        if(bullets == 0)
+            AssetManager.RifleReload.play(1);
+
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
         Fixture fixture = gameWorld.rayCastCallback.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),

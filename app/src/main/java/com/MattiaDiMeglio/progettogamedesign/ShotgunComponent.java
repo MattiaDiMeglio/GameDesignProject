@@ -20,6 +20,9 @@ public class ShotgunComponent extends WeaponComponent{
         bullets--;
         AssetManager.ShotgunShoot.play(0.25f);
 
+        if(bullets == 0)
+            AssetManager.ShotgunReload.play(1);
+
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
         for(int i = 0; i < lineAmt; i++){
