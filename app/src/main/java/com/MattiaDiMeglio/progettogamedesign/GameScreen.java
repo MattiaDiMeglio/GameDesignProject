@@ -95,6 +95,7 @@ public class GameScreen extends Screen {
             public void onMove(int angle, int strength) {
                 leftX = (float) (leftJoystick.getNormalizedX() - 50) / 50;
                 leftY = (float) (leftJoystick.getNormalizedY() - 50) / 50;
+                leftX = leftX * ((float)height/(float)width);
                 leftAngle = angle;
                 leftStrength = strength;
             }
