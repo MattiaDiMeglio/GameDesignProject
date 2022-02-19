@@ -1,29 +1,20 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.app.Activity;
 import android.content.Context;
-import android.text.method.Touch;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.WindowMetrics;
 
-import androidx.appcompat.app.ActionBar;
-
+import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
-import com.badlogic.androidgames.framework.Input.TouchEvent;
 import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
-
-import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 //main menu screen. Not yet implemented
 public class MainMenuScreen extends Screen {
     String TAG;
     Graphics graphics;
+    Audio audio;
     int x, y, width, height;
     boolean touched = false;
     Context context;
@@ -37,11 +28,15 @@ public class MainMenuScreen extends Screen {
         this.context = context;
 
         graphics = game.getGraphics();
-        AssetManager.Lizard = graphics.newPixmap("Lizard.png", Graphics.PixmapFormat.ARGB4444);
+        audio = game.getAudio();
+
+        AssetManager.MainMenuBackground = graphics.newPixmap("menu.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.PlayButtonPixmap = graphics.newPixmap("PlayButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
-
+        AssetManager.MainMenuMusic = audio.newMusic("mainmenumusic.wav");
+        AssetManager.MainMenuMusic.setLooping(true);
+        AssetManager.MainMenuMusic.play();
         nextScreen = new LoadingScreen(game, width, height, context, this);
     }
 
@@ -60,6 +55,8 @@ public class MainMenuScreen extends Screen {
                         if (event.y > graphics.getHeight() / 2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
                                 && event.y < graphics.getHeight() / 2 - (AssetManager.PlayButtonPixmap.getHeight() * 2)
                                 + AssetManager.PlayButtonPixmap.getHeight()) {
+                            if(AssetManager.MainMenuMusic.isPlaying())
+                                AssetManager.MainMenuMusic.stop();
                             LoadingScreen loadingScreen = (LoadingScreen) nextScreen;
                             loadingScreen.setNonCreated();
                             game.setScreen(nextScreen);
@@ -77,7 +74,7 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
-        graphics.drawPixmap(AssetManager.Lizard, 0, 0);
+        graphics.drawPixmap(AssetManager.MainMenuBackground, 0, 0);
         graphics.drawPixmap(AssetManager.PlayButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.PlayButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2));
         graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.OptionsButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.OptionsButtonPixmap.getHeight()/2));
         graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.ExitButtonPixmap.getWidth()/2, graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight()/2) + AssetManager.ExitButtonPixmap.getHeight()/2);
@@ -85,16 +82,17 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void pause() {
-
+        if(AssetManager.MainMenuMusic.isPlaying())
+            AssetManager.MainMenuMusic.stop();
     }
 
     @Override
     public void resume() {
-
+        if(AssetManager.MainMenuMusic.isStopped())
+            AssetManager.MainMenuMusic.play();
     }
 
     @Override
     public void dispose() {
-
     }
 }

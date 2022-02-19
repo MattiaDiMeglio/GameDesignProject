@@ -55,9 +55,8 @@ public class MapManager {
         for(int i = 0; i<50; i++){
             for(int j = 0; j<50; j++){
                 s = s.concat((map[j][i]==2)? "|": (map[j][i]==3) ? "_" : (map[j][i]==4) ? "/" : (map[i][j]== 5)?"p" :
-                        (map[i][j]==6)? "e" : ".");
-
-
+                        (map[i][j]==6)? "e" : (map[i][j]==7)? "e" : (map[i][j]==8)? "e" :
+                                (map[i][j]==9)? "b" : (map[i][j]==10)? "b" : ".");
             }
             Log.w("map" + (int) i%10, s);
             s = "";

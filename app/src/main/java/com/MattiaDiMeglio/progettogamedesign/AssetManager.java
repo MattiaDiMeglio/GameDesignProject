@@ -1,5 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
 
@@ -32,11 +33,13 @@ public class AssetManager {
     public static Pixmap OptionsButtonPixmap;
     public static Pixmap ExitButtonPixmap;
     public static Pixmap PlayButtonPixmap;
-    public static Pixmap Lizard;
+    public static Pixmap MainMenuBackground;
     public static Pixmap EndLevelPixmap;
 
     //Sound effects
     public static Sound GunShoot;
     public static Sound RifleShoot;
     public static Sound ShotgunShoot;
+    public static Music MainMenuMusic;
+    public static Music GameMusic;
 }

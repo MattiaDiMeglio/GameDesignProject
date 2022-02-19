@@ -61,6 +61,8 @@ public class LoadingScreen extends Screen {
             AssetManager.GunShoot = audio.newSound("GunShoot.mp3");
             AssetManager.RifleShoot = audio.newSound("RifleShoot.mp3");
             AssetManager.ShotgunShoot = audio.newSound("ShotgunShoot.mp3");
+            AssetManager.GameMusic = audio.newMusic("gamemusic.wav");
+            AssetManager.GameMusic.setLooping(true);
 
             //setting the screen and gameworld
 

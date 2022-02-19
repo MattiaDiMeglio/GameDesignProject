@@ -132,6 +132,8 @@ public class GameScreen extends Screen {
                 else isShooting = true;
             }
         });
+
+        AssetManager.GameMusic.play();
     }
 
     //gamescreen update, calls the gameworld update
@@ -208,6 +210,8 @@ public class GameScreen extends Screen {
                         game.getLeftJoystick().setVisibility(View.GONE);
                     }
                 });
+                if(AssetManager.GameMusic.isPlaying())
+                    AssetManager.GameMusic.stop();
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
@@ -224,10 +228,16 @@ public class GameScreen extends Screen {
         }
     }
     @Override
-    public void pause() { }
+    public void pause() {
+        if(AssetManager.GameMusic.isPlaying())
+            AssetManager.GameMusic.stop();
+    }
 
     @Override
-    public void resume() { }
+    public void resume() {
+        if(AssetManager.GameMusic.isStopped())
+            AssetManager.GameMusic.play();
+    }
 
     @Override
     public void dispose() { }
