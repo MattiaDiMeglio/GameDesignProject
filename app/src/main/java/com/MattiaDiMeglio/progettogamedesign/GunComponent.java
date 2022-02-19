@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
 import android.graphics.Color;
@@ -19,9 +17,8 @@ public class GunComponent extends WeaponComponent{
 
     @Override
     public void shoot(GameWorld gameWorld) {
-        Log.d("GunComponent","bullets = " +bullets);
-        Log.d("GunComponent","shooting");
         bullets--;
+        AssetManager.GunShoot.play(1);
 
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
@@ -41,7 +38,6 @@ public class GunComponent extends WeaponComponent{
 
     @Override
     public void reload() {
-        Log.d("GunComponent","reloading");
         bullets = mag;
     }
 
@@ -71,15 +67,6 @@ public class GunComponent extends WeaponComponent{
     public float getRange() {
         return range;
     }
-
-    @Override
-    public int getLineAmt() { return lineAmt; }
-
-    @Override
-    public float[] getAimLineX() { return aimLineX; }
-
-    @Override
-    public float[] getAimLineY() { return aimLineY;}
 
     @Override
     public void setShooter(String shooter) {this.shooter = shooter;}

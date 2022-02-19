@@ -3,15 +3,18 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.content.Context;
 import android.util.Log;
 
+import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Screen;
+import com.badlogic.androidgames.framework.Sound;
 //the loading screen. Just loads the pixmaps for now
 
 public class LoadingScreen extends Screen {
     int width, height;
     Context context;
     Graphics graphics;
+    Audio audio;
     Screen nextScreen;
     boolean created = false;
     MainMenuScreen mainMenuScreen;
@@ -22,6 +25,7 @@ public class LoadingScreen extends Screen {
         this.context = context;
         this.mainMenuScreen = mainMenuScreen;
         graphics = game.getGraphics();
+        audio = game.getAudio();
     }
 
     //loads the pixmaps then passes to the main menu screen
@@ -53,6 +57,11 @@ public class LoadingScreen extends Screen {
                 AssetManager.ResumeButtonPixmap = graphics.newPixmap("ResumeButton.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.EndLevelPixmap = graphics.newPixmap("EndLevel.png", Graphics.PixmapFormat.ARGB4444);
             }
+
+            AssetManager.GunShoot = audio.newSound("GunShoot.mp3");
+            AssetManager.RifleShoot = audio.newSound("RifleShoot.mp3");
+            AssetManager.ShotgunShoot = audio.newSound("ShotgunShoot.mp3");
+
             //setting the screen and gameworld
 
             if(nextScreen == null) {

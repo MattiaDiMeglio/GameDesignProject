@@ -272,7 +272,7 @@ public class GameScreen extends Screen {
 
     private void drawBodies(){
         //for testing, draws the player body
-        for(GameObject gameObject : gameWorld.gameObjects){
+        for(GameObject gameObject : gameWorld.activeGameObjects){
             PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
             int color = Color.WHITE;
             switch (comp.name) {

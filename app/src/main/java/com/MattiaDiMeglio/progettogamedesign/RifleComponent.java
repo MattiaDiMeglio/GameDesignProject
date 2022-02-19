@@ -1,10 +1,8 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.graphics.Color;
-import android.util.Log;
-
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
+import android.graphics.Color;
 
 public class RifleComponent extends WeaponComponent{
 
@@ -22,12 +20,8 @@ public class RifleComponent extends WeaponComponent{
 
     @Override
     public void shoot(GameWorld gameWorld) {
-        Log.d("RifleComponent","bullets = " +bullets);
-        Log.d("RifleComponent","shooting");
         bullets--;
-
-        if(bullets == 0 && shooter.equals("Player"))
-            reload();
+        AssetManager.RifleShoot.play(1);
 
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
 
@@ -47,7 +41,6 @@ public class RifleComponent extends WeaponComponent{
 
     @Override
     public void reload() {
-        Log.d("RifleComponent","reloading");
         bullets = mag;
     }
 
@@ -62,10 +55,6 @@ public class RifleComponent extends WeaponComponent{
         PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
-
-        /*float percent = ((AIComponent) owner.getComponent(ComponentType.AI)).getPlayerDistance() / getRange();
-        aimLineX[0] = aimLineX[0] * percent;
-        aimLineY[0] = aimLineY[0] * percent;*/
         gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY, Color.RED);
     }
 
@@ -79,15 +68,6 @@ public class RifleComponent extends WeaponComponent{
     public float getRange() {
         return range;
     }
-
-    @Override
-    public int getLineAmt() { return lineAmt; }
-
-    @Override
-    public float[] getAimLineX() { return aimLineX; }
-
-    @Override
-    public float[] getAimLineY() { return aimLineY;}
 
     @Override
     public void setShooter(String shooter) {this.shooter = shooter;}

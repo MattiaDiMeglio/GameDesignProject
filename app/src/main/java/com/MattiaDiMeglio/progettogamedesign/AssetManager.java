@@ -1,6 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import com.badlogic.androidgames.framework.Pixmap;
+import com.badlogic.androidgames.framework.Sound;
 
 //static class cointaining all the pixmap of the game
 //they're loaded once in the loadingScreen and can be used everywhere without instanciating
@@ -33,4 +34,9 @@ public class AssetManager {
     public static Pixmap PlayButtonPixmap;
     public static Pixmap Lizard;
     public static Pixmap EndLevelPixmap;
+
+    //Sound effects
+    public static Sound GunShoot;
+    public static Sound RifleShoot;
+    public static Sound ShotgunShoot;
 }
