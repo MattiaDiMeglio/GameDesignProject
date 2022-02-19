@@ -44,8 +44,7 @@ public class GameScreen extends Screen {
     private static final float XMIN = -10, XMAX = 10, YMIN = -15, YMAX = 15;//physics world dimensions
 
     //background coordinates to move the world
-    int destinationX = 0, destinationY = 0, currentBackgroundX = 0, currentBackgroundY = 0;
-    float percentage = 0f;//movement percentage to lerp
+    int currentBackgroundX = 0, currentBackgroundY = 0;
     //division factor for the grid
     float orizontalFactor;
     float verticalFactor;
@@ -336,9 +335,7 @@ public class GameScreen extends Screen {
     }
 
     public float getLeftAngle() { return leftAngle; }
-
-    public float getLeftStrength() { return leftStrength; }
-
+    
     public float getRightX(){
         return  rightX;
     }
