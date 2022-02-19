@@ -36,6 +36,7 @@ public class AssetManager {
     public static Pixmap MainMenuBackground;
     public static Pixmap EndLevelPixmap;
     public static Pixmap PlayerDeadPixmap;
+    public static Pixmap EndGamePixmap;
 
     //Sound effects
     public static Sound GunShoot;
