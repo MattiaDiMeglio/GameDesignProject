@@ -253,10 +253,10 @@ public class GameScreen extends Screen {
         if(gameState == GameState.Running) {
             graphics.drawPixmap(AssetManager.PausePixmap, (int) gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
             if(gameWorld.player.isReloading()){
-                graphics.drawText("Reloading...", (gameWorld.bufferWidth) - (int) (0.14 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.20 * gameWorld.bufferHeight), Color.BLACK);
+                graphics.drawText("Reloading...", (gameWorld.bufferWidth) - (int) (0.14 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.25 * gameWorld.bufferHeight), Color.BLACK);
 
             } else {
-                graphics.drawText(gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - (int) (0.114 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.20 * gameWorld.bufferHeight), Color.BLACK);
+                graphics.drawText(gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - (int) (0.114 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.25 * gameWorld.bufferHeight), Color.BLACK);
             }
         }
         if(gameState == GameState.Paused){
