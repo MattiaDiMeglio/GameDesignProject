@@ -36,7 +36,7 @@ public class MovableBoxGameObject extends GameObject {
     public void updatePosition(int x, int y) {
         drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
-
+        dynamicBodyComponent.update(0, 0, 0);
         drawableComponent.setPosition(x, y);
 
         float physX = gameWorld.toPixelsTouchX(x);

@@ -75,8 +75,9 @@ public class DynamicBodyComponent extends PhysicsComponent{
 
     public void applyForce(float x, float y){
         Vec2 dir = new Vec2(x, y);
-        Vec2 point = new Vec2(width, height);
-        body.applyForce(dir, point, true);
+/*        Vec2 point = new Vec2(width/2, height/2);
+        body.applyForce(dir, point, true);*/
+        body.applyForceToCenter(dir, true);
     }
     @Override
     public void Draw(Graphics graphics, GameWorld gameWorld, int color) {
