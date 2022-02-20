@@ -126,11 +126,15 @@ public class GameScreen extends Screen {
                 rightAngle = angle;
                 rightStrength = strength;
 
-                if(!(rightJoystick.getNormalizedX() == 50 && rightJoystick.getNormalizedY() == 50)){
+                if(!(rightJoystick.getNormalizedX() >= 40 && rightJoystick.getNormalizedX()<=60
+                        && rightJoystick.getNormalizedY() >= 40 && rightJoystick.getNormalizedY()<=60)){
                     oldRightAngle = angle;
                     oldRightStrength = strength;
                 }
                 else isShooting = true;
+
+
+                Log.d("rightJ ", rightJoystick.getNormalizedX() + ", " + rightJoystick.getNormalizedY());
             }
         });
 
