@@ -215,6 +215,7 @@ public class GameScreen extends Screen {
                         game.getLeftJoystick().setVisibility(View.GONE);
                     }
                 });
+
                 if(AssetManager.GameMusic.isPlaying())
                     AssetManager.GameMusic.stop();
                 for(int i = 0; i < len; i++){
@@ -411,6 +412,8 @@ public class GameScreen extends Screen {
             }else {
                 isGameFinished = true;
             }
+        } else if(gameWorld.player.killed){
+            gameWorld.level = 1;
         }
         gameState = GameState.GameOver;
         gameWorld.destroyGameWorld();

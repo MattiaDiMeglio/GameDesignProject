@@ -89,6 +89,7 @@ public class LoadingScreen extends Screen {
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
             }else {
                 gw.player.updatePosition(x, y);
+                gs.isShooting = false;
                 gw.player.resetProjectiles();
                 if(gw.player.killed){
                     gw.player.killed();
