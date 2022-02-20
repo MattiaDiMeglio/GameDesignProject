@@ -285,7 +285,7 @@ public class GameScreen extends Screen {
         if(gameState == GameState.Paused){
             graphics.drawPixmap(AssetManager.PlayPixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
             graphics.drawPixmap(AssetManager.ResumeButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2));
-            graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight()/2));
+            //graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight()/2));
             graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
         }
         if(gameState == GameState.GameOver){

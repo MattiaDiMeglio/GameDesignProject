@@ -76,7 +76,7 @@ public class MainMenuScreen extends Screen {
     public void present(float deltaTime) {
         graphics.drawPixmap(AssetManager.MainMenuBackground, 0, 0);
         graphics.drawPixmap(AssetManager.PlayButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.PlayButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2));
-        graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.OptionsButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.OptionsButtonPixmap.getHeight()/2));
+       // graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.OptionsButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.OptionsButtonPixmap.getHeight()/2));
         graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.ExitButtonPixmap.getWidth()/2, graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight()/2) + AssetManager.ExitButtonPixmap.getHeight()/2);
     }
 
