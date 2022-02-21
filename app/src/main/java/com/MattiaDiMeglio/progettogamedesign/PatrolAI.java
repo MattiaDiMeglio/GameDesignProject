@@ -11,8 +11,8 @@ public class PatrolAI extends AIComponent{
 
     PatrolAI() {
         super(AIType.Patrol);
-        aimDelay = 0.45f;
-        shootDelay = 0.3f;
+        aimDelay = 0.3f;
+        shootDelay = 0.15f;
         reloadDelay = 0.5f;
     }
 

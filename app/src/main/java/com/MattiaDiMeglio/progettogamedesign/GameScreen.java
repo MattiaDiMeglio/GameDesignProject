@@ -131,7 +131,9 @@ public class GameScreen extends Screen {
                     oldRightAngle = angle;
                     oldRightStrength = strength;
                 }
-                else isShooting = true;
+
+                if(oldRightStrength != 0 && rightStrength == 0)
+                    isShooting = true;
 
 
                 Log.d("rightJ ", rightJoystick.getNormalizedX() + ", " + rightJoystick.getNormalizedY());

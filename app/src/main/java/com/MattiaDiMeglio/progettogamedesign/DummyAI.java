@@ -4,11 +4,11 @@ import android.util.Log;
 
 public class DummyAI extends AIComponent{
 
-    private static final float DEFAULT_AIM_DELAY = 0.4f;
-    private static final float DEFAULT_SHOOT_DELAY = 0.5f;
+    private static final float DEFAULT_AIM_DELAY = 0.25f;
+    private static final float DEFAULT_SHOOT_DELAY = 0.1f;
 
-    private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/4;
-    private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/4;
+    private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/3;
+    private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/3;
 
     boolean oldBoxOnPath = false;
 
