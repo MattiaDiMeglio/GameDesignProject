@@ -6,8 +6,8 @@ abstract class WeaponComponent extends Component{
     protected int bullets; //actual amount of bullets
     protected float range; //weapon range
     protected int lineAmt; //amount of aim lines drawn by the weapon
-    protected float[] aimLineX; //x-aim line length
-    protected float[] aimLineY; //x-aim line length
+    protected float[] aimLineX; //x-aim line
+    protected float[] aimLineY; //y-aim line
     protected String shooter; //Player/Enemy
 
     public abstract void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld); //compute aim lines

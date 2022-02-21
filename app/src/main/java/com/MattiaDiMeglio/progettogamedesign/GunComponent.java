@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import com.google.fpl.liquidfun.Body;
-import com.google.fpl.liquidfun.Fixture;
 import android.graphics.Color;
 
 public class GunComponent extends WeaponComponent{

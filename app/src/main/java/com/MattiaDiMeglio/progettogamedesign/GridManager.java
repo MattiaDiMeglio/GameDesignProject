@@ -8,7 +8,7 @@ public class GridManager {
 
     private int gridWidth;
     private int gridHeight;
-    private int gridSize; // cell size
+    private int gridSize;
     private Node[][] cells;
 
     public GridManager(int levelWidth, int levelHeight, int gridS){
@@ -19,6 +19,7 @@ public class GridManager {
         computeNodePositions();
     }
 
+    //to compute node xy coordinates, using cell center
     public void computeNodePositions(){
         int halfGridSize = gridSize / 2;
         int h = 0;
@@ -38,14 +39,13 @@ public class GridManager {
                     || go.name.equals("Enemy") || go.name.equals("MovableBox"))
                 addSingleObstacle(go);
         }
-        computeNeighbors(); // dopo aver aggiunto gli ostacoli, calcoliamo i vicini dei nodi
+        computeNeighbors();
     }
 
     public void addSingleObstacle(GameObject obstacle){
 
         int obstacleX = obstacle.worldX;
         int obstacleY = obstacle.worldY;
-
         int gridObstacleX = obstacleX / gridSize;
         int gridObstacleY = obstacleY / gridSize;
 
@@ -66,19 +66,14 @@ public class GridManager {
     public void computeNeighbors(){
 
         int edgeWeight = 1;
-        float obstacleNeighborWeight = 1000f; //h da assegnare ai nodi ad una cella di distanza dai muri
-
-        //Calcoliamo i vicini di tutti i nodi, tranne quelli appartenenti al bordo,
-        //poiché si presume che tutte le mappe abbiano sempre i muri perimetrali
+        float obstacleNeighborWeight = 1000f; //heuristic value to be assigned to nodes one cell away from obstacles
 
         for(int i = 1; i < gridWidth - 1 ; i++){
             for(int j = 1; j < gridHeight -1 ; j++){
 
-                // il nodo del quale vogliamo calcolare i vicini
-                // non deve contenere un muro
+                // nodes that contain obstacles will have no neighbors
                 if(!(cells[i][j].isObstacle())){
 
-                    //stesso discorso per ognuno dei vicini
                     // N = North, S = South, W = West, E = East
 
                     if(!(cells[i-1][j-1].isObstacle())) //NW Neighbor
@@ -120,7 +115,6 @@ public class GridManager {
                         cells[i][j].addBranch(edgeWeight, cells[i+1][j+1]);
                     else if(cells[i+1][j+1].isObstacle() && !(cells[i][j].h == obstacleNeighborWeight))
                         cells[i][j].h = obstacleNeighborWeight;
-
                 }
             }
         }
