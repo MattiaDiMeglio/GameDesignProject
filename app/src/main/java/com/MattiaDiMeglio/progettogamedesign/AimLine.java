@@ -1,6 +1,6 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import com.google.fpl.liquidfun.Color;
+//Support class used to draw weapon aimlines
 
 public class AimLine {
 

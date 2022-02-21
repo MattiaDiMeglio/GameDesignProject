@@ -34,7 +34,7 @@ public class GridManager {
 
     public void addObstacles(List<GameObject> gameObjects, GameWorld gameWorld){
         for(GameObject go : gameObjects){
-            if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("Box")
+            if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("DestructibleBox")
                     || go.name.equals("Enemy") || go.name.equals("MovableBox"))
                 addSingleObstacle(go);
         }
@@ -50,7 +50,7 @@ public class GridManager {
         int gridObstacleY = obstacleY / gridSize;
 
         switch (obstacle.name){
-            case "Box":
+            case "DestructibleBox":
             case "MovableBox":
                 cells[gridObstacleY][gridObstacleX].setBox(true);
                 break;

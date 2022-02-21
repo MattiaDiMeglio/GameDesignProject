@@ -18,9 +18,6 @@ public class Pathfinder {
         if(target.parent!=null)
             target.parent = null;
 
-        //Se la cella target contiene un muro, il nemico non si muove
-        //Se start e target corrispondono, quindi il nemico si è già spostato, il nemico non si muove (di nuovo)
-
         if(target.isObstacle() || ((start.getPosX() == target.getPosX()) && (start.getPosY() == target.getPosY())))
             return null;
 
@@ -36,10 +33,10 @@ public class Pathfinder {
             for(Node.Edge edge : n.neighbors){
                 Node m = edge.node;
 
-                if(m.isEnemy()) //vengono evitati i nodi con nemici al loro interno
+                if(m.isEnemy()) //skipped nodes with enemies
                     continue;
 
-                //I dummy sparano alle scatole lungo il loro cammino, gli altri nemici le evitano
+                //Dummies shoot at boxes on their path, other enemies avoid them
                 if(!aiType.equals(AIType.Dummy) && m.isBox())
                     continue;
 
@@ -76,12 +73,12 @@ public class Pathfinder {
 
         List<Node> path = new ArrayList<>();
 
-        while(n.parent != null){ // attraverso i parent del nodo destinazione, ricaviamo il path
+        while(n.parent != null){ // get the path through parents of resulting node
             path.add(n);
             n = n.parent;
         }
         path.add(n);
-        //Collections.reverse(path); //se questa è commentata, l'ordine del path sarà destinazione -> partenza
+        //Collections.reverse(path); //if this line is commented, the path will be sorted from destination to start
         return path;
     }
 }

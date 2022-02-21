@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import java.util.List;
 import java.util.Stack;
 
@@ -44,21 +42,24 @@ public class AIComponent extends Component{
     }
 
     public void pathfind(int targetX, int targetY, Node[][] cells){
-        Node start = findNode(owner.worldX, owner.worldY, gridSize,cells); // da wX e wY a celle
+        Node start = findNode(owner.worldX, owner.worldY, gridSize,cells);
         Node target = findNode(targetX, targetY, gridSize, cells);
         Node res = pathfinder.aStar(start, target, aiType);
         List<Node> path =  pathfinder.getPath(res);
         if(path != null)
-            initializeStack(targetX, targetY, path);
+            initializeStack(path);
     }
 
-    public void initializeStack(int targetX, int targetY, List<Node> path){
-        //Il path restituito dal pathfinder è "al contrario", ossia:
-        //se il percorso da far compiere al nemico è A->B->C,
-        //path sarà ordinato così: C-B-A
+    public void initializeStack(List<Node> path){
         if(!movementStack.isEmpty())
-            emptyStack(); //se c'era un vecchio path da percorrere, lo stack viene svuotato
-                          //per far posto al nuovo path
+            emptyStack();
+
+        // The path returned by the pathfinder is "backwards":
+        // if the enemy path is something like: A -> B -> C,
+        // the path will be sorted like this: C-B-A.
+        // So the last element in path (index = path.size()-1)
+        // will be the first node that the enemy will walk across,
+        // and it's skipped to avoid strange initial movements
 
         for(int i = 0; i<(path.size()-1); i++){
             Node n = path.get(i);
@@ -85,12 +86,14 @@ public class AIComponent extends Component{
 
             float threshold = enemySpeed + 2;
 
+            // if the enemy has not yet reached the node, it will move to it
             if(deltaX > threshold || deltaY > threshold){
                 if(deltaX > threshold)
                     normalX = findNormalX(owner.worldX, owner.worldY, nextX, nextY);
                 if(deltaY > threshold)
                     normalY = findNormalY(owner.worldX, owner.worldY, nextX, nextY);
             }
+            // else it will move to the next node
             else{
                 Movement newMovement = movementStack.pop();
                 int newX = newMovement.getCellX();
@@ -101,7 +104,7 @@ public class AIComponent extends Component{
             ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
             owner.updatePosition(normalX,normalY,((EnemyGameObject) owner).getFacingAngle());
 
-            if(movementStack.isEmpty()) //se si è appena svuotato lo stack, il nemico si ferma
+            if(movementStack.isEmpty())
                 owner.updatePosition(0,0,((EnemyGameObject) owner).getFacingAngle());
         }
     }
@@ -126,8 +129,8 @@ public class AIComponent extends Component{
         return deltaY/length;
     }
 
+    // To get node corresponding to xy coordinates
     public Node findNode(int x, int y, int gridSize, Node[][] cells){
-        //date le coordinate worldX e worldY, ricava il il relativo nodo della griglia
         int gridX = x / gridSize;
         int gridY = y / gridSize;
         return cells[gridY][gridX];
@@ -167,6 +170,7 @@ public class AIComponent extends Component{
         weaponComponent.shoot(gameWorld);
     }
 
+    // used when the enemy goes out screen
     public void reset(){
         targetingReset();
         playerPositionTimer = 0f;

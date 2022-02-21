@@ -1,6 +1,8 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-public class BoxGameObject extends GameObject {
+//Des
+
+public class DestructibleBoxGameObject extends GameObject {
     GameWorld gameWorld;
     private DrawableComponent drawableComponent;
     private StaticBodyComponent staticBodyComponent;
@@ -8,11 +10,11 @@ public class BoxGameObject extends GameObject {
     private boolean destroyed = false;
 
 
-    public BoxGameObject(GameWorld gameWorld, int worldX, int worldY){
+    public DestructibleBoxGameObject(GameWorld gameWorld, int worldX, int worldY){
         this.worldX = worldX;
         this.worldY = worldY;
         this.gameWorld = gameWorld;
-        this.name = "Box";
+        this.name = "DestructibleBox";
     }
 
     @Override
@@ -53,6 +55,4 @@ public class BoxGameObject extends GameObject {
             else AssetManager.BoxHit.play(0.8f);
         }
     }
-
-    public boolean isDestroyed(){return destroyed;}
 }

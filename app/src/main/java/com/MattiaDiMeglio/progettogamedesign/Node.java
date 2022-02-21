@@ -6,8 +6,8 @@ import java.util.List;
 public class Node implements Comparable<Node>{
 
     private int posX, posY; // cell center coordinates
-    private boolean isObstacle;
-    private boolean isBox;
+    private boolean isObstacle; //Wall/Halfwall
+    private boolean isBox; //BoxGO/MovableBoxGO
     private boolean isEnemy;
 
     // Parent in the path
@@ -76,5 +76,4 @@ public class Node implements Comparable<Node>{
     public boolean isObstacle() { return isObstacle; }
     public boolean isBox() { return isBox; }
     public boolean isEnemy() { return isEnemy; }
-
 }

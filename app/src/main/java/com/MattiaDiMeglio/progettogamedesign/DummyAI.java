@@ -1,7 +1,5 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.25f;

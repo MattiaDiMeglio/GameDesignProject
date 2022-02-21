@@ -2,10 +2,8 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.util.Log;
 
-import com.badlogic.androidgames.framework.Game;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.Fixture;
-import com.google.fpl.liquidfun.QueryCallback;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
 
@@ -64,9 +62,9 @@ public class mRayCastCallback {
                     case "HalfWall":
                         //Non dovrebbe mai succedere
                         break;
-                    case "Box":
-                        BoxGameObject boxGameObject = (BoxGameObject) casteduserData.getOwner();
-                        boxGameObject.Damage();
+                    case "DestructibleBox":
+                        DestructibleBoxGameObject destructibleBoxGameObject = (DestructibleBoxGameObject) casteduserData.getOwner();
+                        destructibleBoxGameObject.Damage();
                         break;
                     case "MovableBox":
                         MovableBoxGameObject movableBoxGameObject = (MovableBoxGameObject) casteduserData.getOwner();
