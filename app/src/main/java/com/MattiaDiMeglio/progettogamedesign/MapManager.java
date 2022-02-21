@@ -167,11 +167,11 @@ public class MapManager {
             randomX = (int)(Math.random() * (mapWidth-2)) + 1;
             randomY = (int)(Math.random() * (mapHeight-2)) + 1;
             if(map[randomX][randomY] == 0){
-                int i = Math.max(randomX - 2, 1);
-                int j = Math.max(randomY - 2, 1);
+                int i = Math.max(randomX - 4, 1);
+                int j = Math.max(randomY - 4, 1);
                 boolean playerFound = false;
-                while(i<randomX + 2 && i<mapWidth &&  !playerFound){
-                    while(j <randomY + 2 && j<mapHeight && !playerFound) {
+                while(i<randomX + 4 && i<mapWidth &&  !playerFound){
+                    while(j <randomY + 4 && j<mapHeight && !playerFound) {
                         if (map[i][j] >= 2) {
                             playerFound = true;
                         }

@@ -82,6 +82,8 @@ public class GameWorld {
             switch(gameObject.name){
                 case "Player":
                     player.updatePosition(gameScreen.getLeftX(), gameScreen.getLeftY(), gameScreen.getRightAngle(), gameScreen.getLeftAngle(), elapsedTime);
+                    Log.d("PlayerMov ", " coord" + player.getWorldX() + ", " + player.getWorldY());
+                    Log.d("PlayerMov ", " bg" + gameScreen.currentBackgroundX + ", " + gameScreen.currentBackgroundY);
                     if(gameScreen.isShooting()) {
                         player.update(gameScreen.getOldRightStrength(), gameScreen.getOldRightX(), gameScreen.getOldRightY(), gameScreen.getOldRightAngle(), gameScreen.isShooting(), this, elapsedTime);
                     }else {

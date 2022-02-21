@@ -17,9 +17,11 @@ public class GameObjectFactory {
     public GameObject makePlayer(float x, float y){
         PlayerGameObject player = new PlayerGameObject(gameWorld);//new player GO
         float playerSpeed = 16;
+        float touchX = gameWorld.toPixelsTouchX(x);
+        float touchY = gameWorld.toPixelsTouchY(y);
         //new physics component for playerGO
-        DynamicBodyComponent body = new DynamicBodyComponent(gameWorld.toMetersX(gameWorld.toPixelsTouchX(x)),
-                gameWorld.toMetersY(gameWorld.toPixelsTouchY(y)),
+        DynamicBodyComponent body = new DynamicBodyComponent(gameWorld.toMetersX(touchX),
+                gameWorld.toMetersY(touchY),
                 gameWorld.toMetersXLength(AssetManager.player.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.player.getHeight()),
                 world, player.name, playerSpeed);
@@ -27,6 +29,9 @@ public class GameObjectFactory {
 
         //new pixmap component
         PixMapComponent pixmap = new PixMapComponent(AssetManager.player, (int)x, (int)y);
+        player.worldX = (int)x;
+        player.worldY = (int)y;
+
 
         WeaponComponent weaponComponent = new GunComponent();
         //WeaponComponent weaponComponent = new ShotgunComponent();
@@ -89,7 +94,7 @@ public class GameObjectFactory {
     }
 
     public GameObject makeBox(int worldX, int worldY){
-        BoxGameObject box = new BoxGameObject(gameWorld, worldX, worldY);
+        DestructibleBoxGameObject box = new DestructibleBoxGameObject(gameWorld, worldX, worldY);
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
                 gameWorld.toMetersXLength(AssetManager.BoxPixmap.getWidth()),
                 gameWorld.toMetersYLength(AssetManager.BoxPixmap.getHeight()),

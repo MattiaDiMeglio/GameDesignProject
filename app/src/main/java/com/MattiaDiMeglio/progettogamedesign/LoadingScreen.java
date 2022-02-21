@@ -78,6 +78,8 @@ public class LoadingScreen extends Screen {
             GameScreen gs = (GameScreen) nextScreen;
             gs.gameState = GameScreen.GameState.Ready;
             GameWorld gw = gs.getGameWorld();
+            gs.currentBackgroundX = 0;
+            gs.currentBackgroundY = 0;
             GameObjectFactory gameObjectFactory = new GameObjectFactory(gw, gw.world);
             MapManager mapManager = new MapManager(gw, gameObjectFactory, context);
 
@@ -86,11 +88,17 @@ public class LoadingScreen extends Screen {
             int y = mapManager.toActualCoord(5);
             if(gw.player == null) {
                 gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
+                //gw.player.updatePosition(x, y);
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
+                Log.d("PlayerCreation ", " coord" + gw.player.getWorldX() + ", " + gw.player.getWorldY());
+                Log.d("PlayerCreation ", " bg" + gs.currentBackgroundX + ", " + gs.currentBackgroundY);
             }else {
                 gw.player.updatePosition(x, y);
                 gs.isShooting = false;
                 gw.player.resetProjectiles();
+                Log.d("PlayerReset ", " coord" + gw.player.getWorldX() + ", " + gw.player.getWorldY());
+                Log.d("PlayerReset ", " bg" + gs.currentBackgroundX + ", " + gs.currentBackgroundY);
+
                 if(gw.player.killed){
                     gw.player.killed();
                 }
