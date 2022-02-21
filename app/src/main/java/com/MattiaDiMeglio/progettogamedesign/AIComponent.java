@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.Stack;
 
@@ -73,7 +75,7 @@ public class AIComponent extends Component{
             movementStack.pop();
     }
 
-    public void movement(float enemySpeed){
+    public void movement(float enemySpeed, GameWorld gameWorld){
         if(!movementStack.isEmpty()){
             float normalX = 0f, normalY = 0f;
 
@@ -89,7 +91,7 @@ public class AIComponent extends Component{
             // if the enemy has not yet reached the node, it will move to it
             if(deltaX > threshold || deltaY > threshold){
                 if(deltaX > threshold)
-                    normalX = findNormalX(owner.worldX, owner.worldY, nextX, nextY);
+                    normalX = findMovementNormalX(owner.worldX, owner.worldY, nextX, nextY, gameWorld);
                 if(deltaY > threshold)
                     normalY = findNormalY(owner.worldX, owner.worldY, nextX, nextY);
             }
@@ -98,7 +100,7 @@ public class AIComponent extends Component{
                 Movement newMovement = movementStack.pop();
                 int newX = newMovement.getCellX();
                 int newY = newMovement.getCellY();
-                normalX = findNormalX(owner.worldX, owner.worldY , newX, newY);
+                normalX = findMovementNormalX(owner.worldX, owner.worldY , newX, newY, gameWorld);
                 normalY = findNormalY(owner.worldX, owner.worldY , newX, newY);
             }
             ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
@@ -109,13 +111,29 @@ public class AIComponent extends Component{
         }
     }
 
-    public float findNormalX(float startX, float startY, float targetX, float targetY){
+    public float findMovementNormalX(float startX, float startY, float targetX, float targetY, GameWorld gameWorld){
         if(startX == targetX)
             return 0f;
 
         float deltaX = targetX - startX;
         float deltaY = targetY - startY;
         float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+
+        float height = gameWorld.screenSize.height;
+        float width = gameWorld.screenSize.width;
+        deltaX = deltaX * (height/width);
+
+        return deltaX/length;
+    }
+
+    public float findAimNormalX(float startX, float startY, float targetX, float targetY){
+        if(startX == targetX)
+            return 0f;
+
+        float deltaX = targetX - startX;
+        float deltaY = targetY - startY;
+        float length = (float) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+
         return deltaX/length;
     }
 
@@ -159,7 +177,7 @@ public class AIComponent extends Component{
     }
 
     public void enemyAim(WeaponComponent weaponComponent, GameWorld gameWorld){
-        float normalX = findNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
+        float normalX = findAimNormalX(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         float normalY = findNormalY(owner.worldX, owner.worldY, enemyTargetX, enemyTargetY);
         ((EnemyGameObject) owner).setFacingAngle(-(float) Math.toDegrees(Math.atan2(normalY,normalX)));
         weaponComponent.aim(normalX,normalY,((EnemyGameObject) owner).getFacingAngle(), gameWorld);

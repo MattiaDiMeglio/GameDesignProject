@@ -13,7 +13,7 @@ public class GameObjectFactory {
         this.world = world;
     }
 
-//playerGO factory TODO piazzare tutte le posizioni basandosi sul worldpos
+//playerGO factory
     public GameObject makePlayer(float x, float y){
         PlayerGameObject player = new PlayerGameObject(gameWorld);//new player GO
         float playerSpeed = 16;
@@ -32,10 +32,7 @@ public class GameObjectFactory {
         player.worldX = (int)x;
         player.worldY = (int)y;
 
-
         WeaponComponent weaponComponent = new GunComponent();
-        //WeaponComponent weaponComponent = new ShotgunComponent();
-        //WeaponComponent weaponComponent = new RifleComponent();
 
         player.addComponent(body);
         player.addComponent(pixmap);
@@ -57,21 +54,20 @@ public class GameObjectFactory {
         if(aiType == AIType.Dummy){
             aiComponent = new DummyAI();
             weaponComponent = new ShotgunComponent();
-            enemySpeed = 7.5f;
+            enemySpeed = 12f;
         }
 
         else if(aiType == AIType.Sniper){
             pixmap = AssetManager.enemy2;
             aiComponent = new SniperAI();
             weaponComponent = new RifleComponent();
-            enemySpeed = 0.5f;
         }
 
         else{
             pixmap = AssetManager.enemy1;
             aiComponent = new PatrolAI();
             weaponComponent = new GunComponent();
-            enemySpeed = 5;
+            enemySpeed = 9.5f;
         }
 
         aiComponent.setGridSize(gameWorld.gridSize);

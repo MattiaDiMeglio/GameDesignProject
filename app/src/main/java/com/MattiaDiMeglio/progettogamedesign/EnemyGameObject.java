@@ -60,7 +60,7 @@ public class EnemyGameObject extends GameObject {
             updateCells(cells, gWorld);
 
             aiComponent.updateAI(playerX, playerY, elapsedTime, cells, gWorld);
-            aiComponent.movement(enemySpeed); //parte solo se lo stack dei movimenti non è vuoto
+            aiComponent.movement(enemySpeed, gameWorld); //parte solo se lo stack dei movimenti non è vuoto
         }
     }
 

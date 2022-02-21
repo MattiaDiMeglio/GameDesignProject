@@ -134,9 +134,6 @@ public class GameScreen extends Screen {
 
                 if(oldRightStrength != 0 && rightStrength == 0)
                     isShooting = true;
-
-
-                Log.d("rightJ ", rightJoystick.getNormalizedX() + ", " + rightJoystick.getNormalizedY());
             }
         });
 
