@@ -12,24 +12,15 @@ import com.google.fpl.liquidfun.World;
 public class mRayCastCallback {
     World world;
     GameWorld gameWorld;
-    private Fixture rayCastFixture;
-    private Fixture lineOfFireFixture;
-    private final QueryCallback touchQueryCallback = new TouchQueryCallback();
-    private Fixture touchedFixture;
+    private Fixture rayCastFixture = null;
+    private Fixture lineOfFireFixture = null;
 
-    private class TouchQueryCallback extends QueryCallback
-    {
-        public boolean reportFixture(Fixture fixture) {
-            touchedFixture = fixture;
-            return true;
-        }
-    }
     public mRayCastCallback(World world, GameWorld gameWorld){
         this.world = world;
         this.gameWorld = gameWorld;
     }
 
-    public Fixture checkRaycast (float bodyX, float bodyY, float aimX, float aimY, String shooter, GridManager levelGrid){//does the raycast callback
+    public void checkRaycast (float bodyX, float bodyY, float aimX, float aimY, String shooter, GridManager levelGrid){//does the raycast callback
 
         //raycast override. if the cast gets from the player to the enemy, we destroy the enemy
         com.google.fpl.liquidfun.RayCastCallback rayCastCallback = new com.google.fpl.liquidfun.RayCastCallback() {
@@ -50,8 +41,6 @@ public class mRayCastCallback {
 
         Log.d("raycast", "body: " + bodyX + ", " + bodyY + " and target: " + targetX + ", " + targetY);
         world.rayCast(rayCastCallback, bodyX, bodyY, targetX, targetY);//calls the raycast
-
-        Fixture returnFixture = rayCastFixture;
 
         if (rayCastFixture != null) {//if the ray met a fixture
             Body castedBody = rayCastFixture.getBody();//we get the body
@@ -89,11 +78,10 @@ public class mRayCastCallback {
                         Log.d("RaycastEvent", "raycast object with no name");
                         break;
                 }
-                rayCastFixture = null;
-                Log.d("Raycast", "Raycast terminato");
             }
+            rayCastFixture = null;
+            Log.d("Raycast", "Raycast terminato");
         }
-        return returnFixture;
     }
 
     public boolean checkLineOfFire(float bodyX, float bodyY, float aimX, float aimY){
@@ -129,8 +117,8 @@ public class mRayCastCallback {
                         freeLineOfFire = false;
                         break;
                 }
-                lineOfFireFixture = null;
             }
+            lineOfFireFixture = null;
         }
         return freeLineOfFire;
     }

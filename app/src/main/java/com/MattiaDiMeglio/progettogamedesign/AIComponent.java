@@ -1,5 +1,7 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.Stack;
 
@@ -20,8 +22,7 @@ public class AIComponent extends Component{
     int lastPlayerX, lastPlayerY;
     int enemyTargetX = 0, enemyTargetY = 0;//target coordinates
 
-
-    //timers Variables
+    //timers variables
     float playerPositionTimer;
     float aimingTimer = 0;
     float shootingTimer = 0;
@@ -59,7 +60,7 @@ public class AIComponent extends Component{
             emptyStack(); //se c'era un vecchio path da percorrere, lo stack viene svuotato
                           //per far posto al nuovo path
 
-        for(int i = 0; i<(path.size() - 1); i++){
+        for(int i = 0; i<(path.size()-1); i++){
             Node n = path.get(i);
                 Movement m = new Movement(n.getPosX(),n.getPosY());
                 movementStack.push(m);

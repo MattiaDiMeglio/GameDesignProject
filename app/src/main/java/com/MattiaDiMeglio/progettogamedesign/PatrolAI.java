@@ -45,7 +45,6 @@ public class PatrolAI extends AIComponent{
             }
             else{
                 targetingReset();
-
                 if(oldPlayerInRange){
                     randomPositionX = 0;
                     randomPositionY = 0;

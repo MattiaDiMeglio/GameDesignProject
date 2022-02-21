@@ -10,6 +10,8 @@ public class DummyAI extends AIComponent{
     private static final float BOX_AIM_DELAY = DEFAULT_AIM_DELAY/4;
     private static final float BOX_SHOOT_DELAY = DEFAULT_SHOOT_DELAY/4;
 
+    boolean oldBoxOnPath = false;
+
     DummyAI(){
         super(AIType.Dummy);
         aimDelay = DEFAULT_AIM_DELAY;
@@ -42,18 +44,17 @@ public class DummyAI extends AIComponent{
                     if(shootDelay != DEFAULT_SHOOT_DELAY)
                         shootDelay = DEFAULT_SHOOT_DELAY;
 
-                    if(shootingTimer >= shootDelay){
+                    if(shootingTimer >= shootDelay)
                         enemyShoot(weaponComponent, gameWorld);
-                    }
                     else shootingTimer += elapsedTime;
                 }
                 else aimingTimer += elapsedTime;
             }
             else{
-                targetingReset();
-
+                if(!oldBoxOnPath)
+                    targetingReset();
                 pathfind(lastPlayerX, lastPlayerY,cells);
-                checkBoxOnPath(weaponComponent, gameWorld, elapsedTime, cells);
+                oldBoxOnPath = checkBoxOnPath(weaponComponent, gameWorld, elapsedTime, cells);
             }
         }
         else{
@@ -65,13 +66,14 @@ public class DummyAI extends AIComponent{
         }
     }
 
-    public void checkBoxOnPath(WeaponComponent weaponComponent, GameWorld gameWorld, float elapsedTime, Node[][] cells){
+    public boolean checkBoxOnPath(WeaponComponent weaponComponent, GameWorld gameWorld, float elapsedTime, Node[][] cells){
         if(!movementStack.isEmpty()){
             Movement nextMovement = movementStack.peek();
             int nextCellX = nextMovement.cellX;
             int nextCellY = nextMovement.cellY;
             Node nextNode = findNode(nextCellX,nextCellY, gridSize, cells);
             if(nextNode.isBox()){
+
                 if(!movementStack.isEmpty())
                     emptyStack();
 
@@ -79,7 +81,6 @@ public class DummyAI extends AIComponent{
                     aimDelay = BOX_AIM_DELAY;
 
                 setEnemyTarget(nextCellX,nextCellY);
-
                 enemyAim(weaponComponent, gameWorld);
 
                 if(aimingTimer >= aimDelay){
@@ -92,10 +93,10 @@ public class DummyAI extends AIComponent{
                         enemyShoot(weaponComponent, gameWorld);
                     else shootingTimer += elapsedTime;
                 }
-                else{
-                    aimingTimer += elapsedTime;
-                }
+                else aimingTimer += elapsedTime;
+                return true;
             }
         }
+        return false;
     }
 }
