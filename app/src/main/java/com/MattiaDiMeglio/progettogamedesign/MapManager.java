@@ -153,7 +153,7 @@ public class MapManager {
                     i++;
                 }
                 if(!playerFound){
-                    int type = (int)((Math.random() * 10) % 3) + 6;
+                    int type = (int)((Math.random() * 9) % 3) + 6;
                     map[randomX][randomY] = type;
                     enemyInPosition = true;
                 }
@@ -218,9 +218,10 @@ public class MapManager {
                         gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoord(i), toActualCoord(j), AIType.Sniper));
                         break;
                     case 8:
-                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoord(i), toActualCoord(j), AIType.Patrol));                        break;
+                        gameWorld.addGameObject(gameObjectFactory.makeEnemy(toActualCoord(i), toActualCoord(j), AIType.Patrol));
+                        break;
                     case 9:
-                        gameWorld.addGameObject(gameObjectFactory.makeBox(toActualCoord(i), toActualCoord(j)));
+                        gameWorld.addGameObject(gameObjectFactory.makeDestructibleBox(toActualCoord(i), toActualCoord(j)));
                         break;
                     case 10:
                         gameWorld.addGameObject(gameObjectFactory.makeMovableBox(toActualCoord(i), toActualCoord(j)));

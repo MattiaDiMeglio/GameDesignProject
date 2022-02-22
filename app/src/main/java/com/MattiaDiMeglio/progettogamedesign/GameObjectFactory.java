@@ -85,7 +85,7 @@ public class GameObjectFactory {
         return enemy;
     }
 
-    public GameObject makeBox(int worldX, int worldY){
+    public GameObject makeDestructibleBox(int worldX, int worldY){
         DestructibleBoxGameObject box = new DestructibleBoxGameObject(gameWorld, worldX, worldY);
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
                 gameWorld.toMetersXLength(AssetManager.BoxPixmap.getWidth()),

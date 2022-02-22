@@ -85,7 +85,7 @@ public class PatrolAI extends AIComponent{
         Random random = new Random();
 
         int minRadius = gridSize * 3; // 42 * 3 = 126
-        //126 < randomRadius < 378
+        //126 < randomRadius < 377
         int randomRadius = (int) (minRadius + (minRadius * 2 * Math.sqrt(random.nextFloat())));
         //0 < randomAngle < 2 * PI
         float randomAngle = (float) (random.nextFloat()  * 2 * Math.PI);
