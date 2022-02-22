@@ -22,8 +22,6 @@ abstract class PhysicsComponent extends Component{
 
     public float getPositionX(){return x;}
     public float getPositionY(){return y;}
-    public float getLastPositionX(){return lastX;}
-    public float getLastPositionY(){return lastY;}
     public float getWidth(){return width;}
     public float getHeight(){return height;}
 }

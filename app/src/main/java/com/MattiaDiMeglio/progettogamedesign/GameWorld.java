@@ -126,7 +126,6 @@ public class GameWorld {
         }
     }
 
-
     //methods to add and remove GO
     public synchronized void addGameObject (GameObject gameObject){
         gameObjects.add(gameObject);
@@ -141,7 +140,7 @@ public class GameWorld {
         return gameObject;
     }
 
-    //to check if a GO is in view, based on it's world coordinates
+    //to check if a GO is in view, based on its world coordinates
     private boolean isInView (GameObject gameObject){
         PixMapComponent drawableComponent = (PixMapComponent) gameObject.getComponent(ComponentType.Drawable);
         return gameObject.worldX + (drawableComponent.pixmap.getWidth() / 2) > -gameScreen.getBackgroundX()
@@ -208,7 +207,6 @@ public class GameWorld {
             gameObject.removeComponent(ComponentType.Controllable);
             gameObject.removeComponent(ComponentType.Joint);
         }
-        //gameScreen.drawables.clear();
         activeGameObjects.clear();
         gameObjects.clear();
     }

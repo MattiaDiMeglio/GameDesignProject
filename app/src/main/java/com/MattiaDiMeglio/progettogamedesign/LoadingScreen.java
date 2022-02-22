@@ -39,11 +39,6 @@ public class LoadingScreen extends Screen {
                 AssetManager.enemy1 = graphics.newPixmap("Enemy1.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.enemy2 = graphics.newPixmap("Enemy2.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.enemyKilled = graphics.newPixmap("DeadEnemy.png", Graphics.PixmapFormat.ARGB4444);
-                AssetManager.horizontalWall = graphics.newPixmap("testWallHorizontal.png", Graphics.PixmapFormat.ARGB4444);
-                AssetManager.horizontalHalfWall = graphics.newPixmap("testWallHorizontalHalf.png", Graphics.PixmapFormat.ARGB4444);
-                AssetManager.verticalWall = graphics.newPixmap("testWallVertical.png", Graphics.PixmapFormat.ARGB4444);
-                AssetManager.verticalHalfWall = graphics.newPixmap("testWallVerticalHalf.png", Graphics.PixmapFormat.ARGB4444);
-                AssetManager.door = graphics.newPixmap("testDoor.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.WallPixmap = graphics.newPixmap("WallPixmap.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.VerticalHalfWallPixmap = graphics.newPixmap("VerticalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.HorizontalHalfWallPixmap = graphics.newPixmap("HorizontalHalfWallPixmap.png", Graphics.PixmapFormat.ARGB4444);
@@ -55,6 +50,7 @@ public class LoadingScreen extends Screen {
                 AssetManager.EndLevelPixmap = graphics.newPixmap("EndLevel.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.PlayerDeadPixmap = graphics.newPixmap("Dead.png", Graphics.PixmapFormat.ARGB4444);
                 AssetManager.EndGamePixmap = graphics.newPixmap("EndGame.png", Graphics.PixmapFormat.ARGB4444);
+
                 AssetManager.BoxHit = audio.newSound("BoxHit.mp3");
                 AssetManager.BoxDestroyed = audio.newSound("BoxDestroyed.mp3");
                 AssetManager.GunShoot = audio.newSound("GunShoot.mp3");
@@ -102,7 +98,7 @@ public class LoadingScreen extends Screen {
             gw.mapCells = mapManager.initMapResized(gw.mapCells, AssetManager.backgroundPixmap.getWidth() / AssetManager.WallPixmap.getWidth(),
                     AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth());
             gw.mapCells = mapManager.generateMapResized(gw.mapCells, 0, 0, AssetManager.backgroundPixmap.getWidth() / AssetManager.WallPixmap.getWidth() - 1,
-                    AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth() - 1, (Math.random() * 6) % 2 == 0);
+                    AssetManager.backgroundPixmap.getHeight() / AssetManager.WallPixmap.getWidth() - 1, true);
 
             mapManager.constructMap(gw.mapCells, 50, 50);
             //pathfinding

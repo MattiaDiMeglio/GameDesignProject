@@ -10,7 +10,6 @@ import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
 
-//main menu screen. Not yet implemented
 public class MainMenuScreen extends Screen {
     String TAG;
     Graphics graphics;
@@ -31,7 +30,6 @@ public class MainMenuScreen extends Screen {
 
         AssetManager.MainMenuBackground = graphics.newPixmap("menu.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.PlayButtonPixmap = graphics.newPixmap("PlayButton.png", Graphics.PixmapFormat.ARGB4444);
-        AssetManager.OptionsButtonPixmap = graphics.newPixmap("OptionsButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.ExitButtonPixmap = graphics.newPixmap("ExitButton.png", Graphics.PixmapFormat.ARGB4444);
         AssetManager.MainMenuMusic = audio.newMusic("mainmenumusic.wav");
         AssetManager.MainMenuMusic.setLooping(true);

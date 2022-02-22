@@ -42,8 +42,6 @@ public class ProgettoGameDesign extends AndroidGame {
         leftJ = new JoystickView(this);
         leftJ.setButtonColor(Color.RED);
         leftJ.setBackgroundColor(Color.BLACK);
-        //joystickView.setBackgroundSizeRatio(0.2f);
-        //joystickView.setButtonSizeRatio(0.1f);
 
         int jWidth =(int)(0.120 * width);
         int jHeight = (int)(0.22 * height);
@@ -61,13 +59,8 @@ public class ProgettoGameDesign extends AndroidGame {
         rightJ = new JoystickView(this);
         rightJ.setButtonColor(Color.YELLOW);
         rightJ.setBackgroundColor(Color.BLACK);
-        //joystickView.setBackgroundSizeRatio(0.2f);
-        //rightJ.setButtonSizeRatio(0.35f);
-        //leftJ.setButtonSizeRatio(0.35f);
 
-        //int left = 50;
         int rleft = width - jWidth - left;
-
 
         RelativeLayout.LayoutParams rightjParams=new RelativeLayout.LayoutParams(jWidth,jHeight);
         rightjParams.setMargins(rleft,top,right,bottom);
@@ -96,7 +89,6 @@ public class ProgettoGameDesign extends AndroidGame {
                 controller.hide(WindowInsets.Type.statusBars());
                 controller.hide(WindowInsets.Type.navigationBars());
             }
-
         }
         else {
             //noinspection deprecation

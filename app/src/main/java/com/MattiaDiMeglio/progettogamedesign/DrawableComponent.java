@@ -2,7 +2,7 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import com.badlogic.androidgames.framework.Graphics;
 
-//the drawable component contains all the possibile drawable elements, pixmap, sprite etc
+//the drawable component contains all the possible drawable elements, pixmap, sprite etc
 abstract class DrawableComponent extends Component{
     protected int x, y;//position
     protected boolean canBeDrawn;//if the element is on screen it can be drawn
