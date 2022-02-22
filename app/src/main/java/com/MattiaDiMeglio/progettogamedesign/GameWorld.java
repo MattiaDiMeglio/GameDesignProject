@@ -13,13 +13,10 @@ public class GameWorld {
     public GameScreen gameScreen;
     int bufferWidth, bufferHeight;
 
-    int resetCounter = 0;
-
     //GO pool
     protected List<GameObject> gameObjects;
     protected List<GameObject> activeGameObjects;
 
-    private PhysicsContactListener contactListener;
     public mRayCastCallback rayCastCallback;
     protected PlayerGameObject player;
 
@@ -51,8 +48,6 @@ public class GameWorld {
         this.world = new World(0, 0);//new physics world
         this.context = context;
 
-        contactListener = new PhysicsContactListener();
-        world.setContactListener(contactListener);
         rayCastCallback = new mRayCastCallback(world, this);
         gameObjects = new ArrayList<>();//list of all game objects
         activeGameObjects = new ArrayList<>(); //list of on-screen game objects
