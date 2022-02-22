@@ -174,12 +174,12 @@ public class MapManager {
                 boolean playerFound = false;
                 while(i<randomX + 4 && i<mapWidth &&  !playerFound){
                     while(j <randomY + 4 && j<mapHeight && !playerFound) {
-                        if (map[i][j] >= 2) {
+                        if (map[i][j] >= 5) {
                             playerFound = true;
                         }
                         j++;
                     }
-                    j = Math.max(randomY - 2, 1);
+                    j = Math.max(randomY - 4, 1);
                     i++;
                 }
                 if(!playerFound){
