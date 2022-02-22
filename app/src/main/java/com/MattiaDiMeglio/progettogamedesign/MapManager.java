@@ -2,18 +2,21 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
 import android.util.Log;
-//the map manager, calls the jsonparser and the factory to make the map
-//legenda
-//0 = cella vuota
-//2 muro normale
-//3 half wall orizzontale
-//4 half wall verticale
-//5 player
-//6 enemy1
-//7 enemy2
-//8 enemy3
-//9 ostacolo distruttibile
-//10 ostacolo mobile
+
+/*
+Index
+0 = empty cell
+2 = wall
+3 = horizontal half wall
+4 = vertical half wall
+5 = player
+6 = enemy1
+7 = enemy2
+8 = enemy3
+9 = destructible box
+10 = movable box
+ */
+
 public class MapManager {
 
     private GameWorld gameWorld;
@@ -21,7 +24,6 @@ public class MapManager {
     private int mapWidth;
     private int mapHeight;
     Context context;
-
 
     public MapManager(GameWorld gameWorld, GameObjectFactory gameObjectFactory, Context context){
         this.gameWorld = gameWorld;
@@ -33,7 +35,7 @@ public class MapManager {
         map = new int[width][height];//init
         mapWidth = width;
         mapHeight = height;
-        for(int i = 0; i<width; i++){ //settiamo tutto walkable
+        for(int i = 0; i<width; i++){ //all walkable
             for(int j = 0; j<height; j++){
                 map[i][j] = 0;
             }
@@ -201,7 +203,7 @@ public class MapManager {
             for(int j = 0; j<height; j++){
                 switch (map[i][j]){
                     case 2:
-                        gameWorld.addGameObject(gameObjectFactory.makeHorizontalWall(toActualCoord(i), toActualCoord(j)));
+                        gameWorld.addGameObject(gameObjectFactory.makeWall(toActualCoord(i), toActualCoord(j)));
                         break;
                     case 3:
                         gameWorld.addGameObject(gameObjectFactory.makeHorizontalHalfWall(toActualCoord(i), toActualCoord(j)));

@@ -13,8 +13,7 @@ import com.google.fpl.liquidfun.World;
 //implements a dynamic body from jliquidfun
 //represents all physics body that can be moved by forces
 public class DynamicBodyComponent extends PhysicsComponent{
-    private float speed;
-
+    private final float speed;
 
     public DynamicBodyComponent(float x, float y, float width, float height, World world, String name, float speed){
         this.x = x;//physical pos
@@ -58,7 +57,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
         body.setTransform(x, y, body.getAngle());
     }
 
-    public void update(float normalizedX, float normalizedY, float angle) {
+    public void update(float normalizedX, float normalizedY) {
         Vec2 velocity = new Vec2();
         velocity.set(normalizedX * speed, normalizedY * speed);
         body.setLinearVelocity(velocity);
@@ -75,8 +74,6 @@ public class DynamicBodyComponent extends PhysicsComponent{
 
     public void applyForce(float x, float y){
         Vec2 dir = new Vec2(x, y);
-/*        Vec2 point = new Vec2(width/2, height/2);
-        body.applyForce(dir, point, true);*/
         body.applyForceToCenter(dir, true);
     }
     @Override
@@ -86,6 +83,7 @@ public class DynamicBodyComponent extends PhysicsComponent{
         graphics.drawRect(sx, sy, (int)gameWorld.toPixelsXLength(width), (int) gameWorld.toPixelsYLength(height), color);
     }
 
-    public Body getBody(){return body;}//getter
+    //getters
+    public Body getBody(){return body;}
     public float getSpeed() { return speed; }
 }

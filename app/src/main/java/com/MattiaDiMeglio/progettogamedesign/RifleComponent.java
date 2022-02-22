@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 public class RifleComponent extends WeaponComponent{
 
-    private float fixedRange;
+    private float fixedRange; //used by Snipers, to shoot without revealing the maximum range of the rifle
 
     public RifleComponent(){
         mag = 1;
@@ -25,14 +25,8 @@ public class RifleComponent extends WeaponComponent{
             AssetManager.RifleReload.play(1);
 
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
-
         gameWorld.rayCastCallback.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
                 aimLineX[0], aimLineY[0],shooter, gameWorld.levelGrid);
-    }
-
-    @Override
-    public void reload() {
-        bullets = mag;
     }
 
     @Override
@@ -51,17 +45,8 @@ public class RifleComponent extends WeaponComponent{
 
     public boolean checkLineOfFire(GameWorld gameWorld){
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
-
         return gameWorld.rayCastCallback.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
     }
-
-    @Override
-    public float getRange() {
-        return range;
-    }
-
-    @Override
-    public void setShooter(String shooter) {this.shooter = shooter;}
 
     public void setFixedRange(float fixedRange) { this.fixedRange = fixedRange; }
 }

@@ -1,8 +1,13 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import java.util.Random;
+
+/*
+Major behaviours:
+
+-If the player is in range: aims and shoots at it (note: it has the same weapon as the player)
+-Else it moves to a random position in the level
+ */
 
 public class PatrolAI extends AIComponent{
 
@@ -50,16 +55,16 @@ public class PatrolAI extends AIComponent{
                     randomPositionY = 0;
                 }
 
-                //se il nemico non ha una posizione da raggiungere, ne cerchiamo una con setRandomPosition
+                //if Patrol doesn't have a position to reach, search it using setRandomPosition
                 if(randomPositionX == 0 && randomPositionY == 0)
                     setRandomPosition(cells);
 
-                //la funzione precedente non è detto che trovi una posizione valida, potrebbe trovare una posizione fuori mappa,
-                //oppure una cella contenente un ostacolo, quindi il controllo nell'if è necessario
+                //setRandomPosition might find an invalid position, such as out of map or a cell containing an obstacle,
+                //so before moving Patrol to the position, do a check on it
                 if(!(randomPositionX == 0 && randomPositionY == 0))
                     pathfind(randomPositionX, randomPositionY, cells);
 
-                //per controllare che abbia raggiunto la destinazione, così al prossimo frame ne cercherà un'altra
+                //if Patrol reached position, reset the position
                 if(checkPatrolDestination()){
                     randomPositionX = 0;
                     randomPositionY = 0;
@@ -80,9 +85,9 @@ public class PatrolAI extends AIComponent{
         Random random = new Random();
 
         int minRadius = gridSize * 3; // 42 * 3 = 126
-        //Il raggio è compreso tra 126 e 378
+        //126 < randomRadius < 378
         int randomRadius = (int) (minRadius + (minRadius * 2 * Math.sqrt(random.nextFloat())));
-        //L'angolo è compreso tra 0 e 2 PI
+        //0 < randomAngle < 2 * PI
         float randomAngle = (float) (random.nextFloat()  * 2 * Math.PI);
 
         int centerX = owner.worldX;
@@ -94,15 +99,15 @@ public class PatrolAI extends AIComponent{
         int cellX = x / gridSize;
         int cellY = y / gridSize;
 
-        //controllo che sia all'interno della griglia
+        //check that the cell is inside the map
         if((cellX >= 0 && cellX < cells.length) && (cellY >= 0 && cellY < cells.length)){
-            //controllo che sia una cella libera
+            //check that the cell is free
             if(!cells[cellY][cellX].isEnemy() && !cells[cellY][cellX].isBox() && !cells[cellY][cellX].isObstacle()){
                 randomPositionX = cells[cellY][cellX].getPosX();
                 randomPositionY = cells[cellY][cellX].getPosY();
             }
         }
-        //se non trova una posizione valida, riproverà al prossimo frame
+        //if it doesn't find a valid position, it will try again at next frame
     }
 
     public boolean checkPatrolDestination(){

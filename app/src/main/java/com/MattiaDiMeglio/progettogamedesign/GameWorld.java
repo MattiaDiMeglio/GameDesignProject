@@ -1,27 +1,19 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.badlogic.androidgames.framework.Game;
-import com.google.fpl.liquidfun.Body;
-import com.google.fpl.liquidfun.Draw;
-import com.google.fpl.liquidfun.Fixture;
-import com.google.fpl.liquidfun.ParticleSystem;
-import com.google.fpl.liquidfun.ParticleSystemDef;
-import com.google.fpl.liquidfun.QueryCallback;
-import com.google.fpl.liquidfun.RayCastCallback;
-import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//Gestione degli elementi in gioco
+////Managing in-game elements
 public class GameWorld {
     protected World world;
     public GameScreen gameScreen;
     int bufferWidth, bufferHeight;
+
+    int resetCounter = 0;
 
     //GO pool
     protected List<GameObject> gameObjects;
@@ -40,12 +32,9 @@ public class GameWorld {
     private static final int POSITION_ITERATION = 3;
     private static final int PARTICLE_ITERATION = 3;
 
-
-
     //grid variables and parameters
     GridManager levelGrid;
     int gridSize = 42;
-    EnemyGameObject testEnemy, testEnemy2; // pathfinding test
 
     int[][]mapCells;
 
@@ -53,25 +42,23 @@ public class GameWorld {
     int totalEnemies;
     int level = 1;
 
-
     public GameWorld(GameScreen gameScreen, Context context, Box physicalSize, Box screenSize){
         //sizes
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
         this.currentView = physicalSize;
         this.gameScreen = gameScreen;//the main game screen
-        this.world = new World(0, 0);//new phyisics world
+        this.world = new World(0, 0);//new physics world
         this.context = context;
 
         contactListener = new PhysicsContactListener();
         world.setContactListener(contactListener);
         rayCastCallback = new mRayCastCallback(world, this);
-        gameObjects = new ArrayList<GameObject>();//list of all game objects
-        activeGameObjects = new ArrayList<GameObject>(); //list of on-screen game objects
+        gameObjects = new ArrayList<>();//list of all game objects
+        activeGameObjects = new ArrayList<>(); //list of on-screen game objects
         bufferWidth = gameScreen.graphics.getWidth();
         bufferHeight = gameScreen.graphics.getHeight();
     }
-
 
     //Game World update, calls the world step, then responds to touch events
     public synchronized void update(float elapsedTime){
@@ -81,14 +68,11 @@ public class GameWorld {
         for(GameObject gameObject : activeGameObjects){
             switch(gameObject.name){
                 case "Player":
-                    player.updatePosition(gameScreen.getLeftX(), gameScreen.getLeftY(), gameScreen.getRightAngle(), gameScreen.getLeftAngle(), elapsedTime);
-                    Log.d("PlayerMov ", " coord" + player.getWorldX() + ", " + player.getWorldY());
-                    Log.d("PlayerMov ", " bg" + gameScreen.currentBackgroundX + ", " + gameScreen.currentBackgroundY);
-                    if(gameScreen.isShooting()) {
+                    player.updatePosition(gameScreen.getLeftX(), gameScreen.getLeftY(), gameScreen.getRightAngle(), gameScreen.getLeftAngle());
+                    if(gameScreen.isShooting())
                         player.update(gameScreen.getOldRightStrength(), gameScreen.getOldRightX(), gameScreen.getOldRightY(), gameScreen.getOldRightAngle(), gameScreen.isShooting(), this, elapsedTime);
-                    }else {
+                    else
                         player.update(gameScreen.getRightStrength(), gameScreen.getRightX(), gameScreen.getRightY(), gameScreen.getRightAngle(), gameScreen.isShooting(), this, elapsedTime);
-                    }
                     break;
                 case "Enemy":
                     EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
@@ -96,14 +80,13 @@ public class GameWorld {
                     break;
                 case "MovableBox":
                     MovableBoxGameObject movableBoxGameObject = (MovableBoxGameObject) gameObject;
-                    movableBoxGameObject.update(levelGrid.getCells(), this);
+                    movableBoxGameObject.update(levelGrid.getCells());
                 default:
                     gameObject.update();
                     break;
             }
         }
         checkOutOfBound();
-        //gameScreen.setWorldDestination(gameScreen.getLeftX(), gameScreen.getLeftY(), elapsedTime);
     }
 
     private void checkOutOfBound(){
@@ -113,17 +96,16 @@ public class GameWorld {
                     if(!activeGameObjects.contains(gameObject)) {
                         if (gameObject.name.equals("Enemy")) {
                             EnemyGameObject enemyGameObject = (EnemyGameObject) gameObject;
-                            if (!enemyGameObject.isKilled()) {
+                            if (!enemyGameObject.isKilled())
                                 addActiveGameObject(gameObject);
-                            }
-                        } else {
+                        } else
                             addActiveGameObject(gameObject);
-                        }
+
                         DrawableComponent component = (DrawableComponent) gameObject.getComponent(ComponentType.Drawable);
                         if (component != null && !gameScreen.drawables.contains(component)) {//we check not to insert a drawable multiple times
                             //inits the position of the GO in view
-                            gameObject.updatePosition((int) (inViewPositionX(gameObject.worldX)),
-                                    (int) (inViewPositionY(gameObject.worldY)));
+                            gameObject.updatePosition(inViewPositionX(gameObject.worldX),
+                                    inViewPositionY(gameObject.worldY));
                             gameScreen.addDrawable(component);
                         }
                     }
@@ -135,7 +117,7 @@ public class GameWorld {
                             aiComponent.reset();
                         }
                     }
-                    if(gameScreen.drawables.contains((DrawableComponent)gameObject.getComponent(ComponentType.Drawable))) {
+                    if(gameScreen.drawables.contains(gameObject.getComponent(ComponentType.Drawable))) {
                         gameScreen.removeDrawable((DrawableComponent) gameObject.getComponent(ComponentType.Drawable));
                         gameObject.outOfView();
                     }
@@ -146,22 +128,17 @@ public class GameWorld {
 
 
     //methods to add and remove GO
-    public synchronized GameObject addGameObject (GameObject gameObject){
+    public synchronized void addGameObject (GameObject gameObject){
         gameObjects.add(gameObject);
-        return gameObject;
-    }
-
-    public synchronized GameObject addActiveGameObject (GameObject gameObject){
-        activeGameObjects.add(gameObject);
-        return gameObject;
     }
 
     public synchronized void removeGameObject (GameObject gameObject){
         gameObjects.remove(gameObject);
     }
 
-    public synchronized void removeActiveGameObject (GameObject gameObject){
-        activeGameObjects.remove(gameObject);
+    public synchronized GameObject addActiveGameObject (GameObject gameObject){
+        activeGameObjects.add(gameObject);
+        return gameObject;
     }
 
     //to check if a GO is in view, based on it's world coordinates
@@ -173,21 +150,14 @@ public class GameWorld {
                 && gameObject.worldY - (drawableComponent.pixmap.getHeight() / 2) < -((gameScreen.currentBackgroundY) - bufferHeight);
     }
 
-    //called by gamescreen, calls movement in playergo
-    public void movePlayer (float normalizedX, float normalizedY, float rightAngle, float leftAngle, float deltaTime){
-        player.updatePosition(normalizedX, normalizedY, rightAngle, leftAngle, deltaTime);
-    }
-
-    public void killPlayer(){
-        player.killed();
-    }
+    public void killPlayer(){ player.killed(); }
 
     public void addAimLine(int lineAmt, float sx, float sy, float[] aimLineX, float[] aimLineY, int color){
 
         int startX = (int) toPixelsX(sx);
         int startY = (int) toPixelsY(sy);
-        int targetX = 0;
-        int targetY = 0;
+        int targetX;
+        int targetY;
 
         for(int i = 0; i < lineAmt; i++){
             targetX = (int)(toPixelsX(aimLineX[i] + sx));
@@ -217,21 +187,11 @@ public class GameWorld {
         return y / currentView.height * bufferHeight;
     }
 
-    public float toPixelsXLengthNonBuffer(float x){return x/currentView.width*screenSize.width;}
-    public float toPixelsYLengthNonBuffer(float y){return y/currentView.height*screenSize.height;}
-
     public float toMetersXLength(float x){return x * currentView.width/bufferWidth;}
     public float toMetersYLength(float y){return y * currentView.height/bufferHeight;}
 
-    public float pixelsToMetersLengthX ( float x){return x * currentView.width / screenSize.width;}
-    public float pixelsToMetersLengthY ( float y){return y * currentView.height / screenSize.height;}
-
     public float toPixelsTouchX ( float x){return x / (gameScreen.graphics.getWidth() / screenSize.width);}
     public float toPixelsTouchY ( float y){return y / (gameScreen.graphics.getHeight() / screenSize.height);}
-
-    public float toPixelScaleX ( float x){ return x * (gameScreen.graphics.getWidth() / screenSize.width); }
-    public float toPixelScaleY ( float y){return y * (gameScreen.graphics.getHeight() / screenSize.height);}
-
 
     public void destroyGameWorld(){
         for (GameObject gameObject: gameObjects) {

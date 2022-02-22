@@ -1,5 +1,14 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+/*
+Major behaviours:
+
+-If the player is in range: aims and shoots at it
+-Else it moves towards the player
+
+In addition, Dummies shoot at box on their path to reach the player
+ */
+
 public class DummyAI extends AIComponent{
 
     private static final float DEFAULT_AIM_DELAY = 0.25f;
@@ -23,7 +32,6 @@ public class DummyAI extends AIComponent{
         super.updateAI(playerX,playerY,elapsedTime,cells, gameWorld);
 
         if(weaponComponent.bullets > 0){
-
             setEnemyTarget(lastPlayerX, lastPlayerY);
             playerInRange = checkPlayerInRange(gameWorld);
 
@@ -56,11 +64,11 @@ public class DummyAI extends AIComponent{
             }
         }
         else{
-            reloadingTimer += elapsedTime;
             if(reloadingTimer > reloadDelay){
                 weaponComponent.reload();
                 reloadingTimer = 0f;
             }
+            else reloadingTimer += elapsedTime;
         }
     }
 

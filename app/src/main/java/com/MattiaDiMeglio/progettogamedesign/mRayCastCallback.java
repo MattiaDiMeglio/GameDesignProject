@@ -37,14 +37,12 @@ public class mRayCastCallback {
         float targetX = bodyX + (aimX);
         float targetY = bodyY + (aimY);
 
-        Log.d("raycast", "body: " + bodyX + ", " + bodyY + " and target: " + targetX + ", " + targetY);
         world.rayCast(rayCastCallback, bodyX, bodyY, targetX, targetY);//calls the raycast
 
         if (rayCastFixture != null) {//if the ray met a fixture
             Body castedBody = rayCastFixture.getBody();//we get the body
             PhysicsComponent casteduserData = (PhysicsComponent) castedBody.getUserData();//we get the component
             if (casteduserData != null) {//if there's user data
-                Log.d("Raycast", "hit : " + casteduserData.name);
                 switch (casteduserData.name) {
                     case "Enemy"://raycast met an enemy first
                         if(shooter.equals("Enemy"))
@@ -55,12 +53,6 @@ public class mRayCastCallback {
                         break;
                     case "Player":
                         gameWorld.killPlayer();
-                        break;
-                    case "Wall"://met a wall
-                        //hit wall
-                        break;
-                    case "HalfWall":
-                        //Non dovrebbe mai succedere
                         break;
                     case "DestructibleBox":
                         DestructibleBoxGameObject destructibleBoxGameObject = (DestructibleBoxGameObject) casteduserData.getOwner();
@@ -73,12 +65,10 @@ public class mRayCastCallback {
                         }
                         break;
                     default:
-                        Log.d("RaycastEvent", "raycast object with no name");
                         break;
                 }
             }
             rayCastFixture = null;
-            Log.d("Raycast", "Raycast terminato");
         }
     }
 

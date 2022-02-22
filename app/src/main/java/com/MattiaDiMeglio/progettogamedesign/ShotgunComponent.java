@@ -26,15 +26,11 @@ public class ShotgunComponent extends WeaponComponent{
         for(int i = 0; i < lineAmt; i++){
             gameWorld.rayCastCallback.checkRaycast(ownerBody.getPositionX(),ownerBody.getPositionY(),
                     aimLineX[i], aimLineY[i],shooter, gameWorld.levelGrid);
-
         }
     }
 
     @Override
     public void aim(float normalizedX, float normalizedY, float rightAngle, GameWorld gameWorld) {
-
-        //con 5 pallini sparati alla volta e un offset di 15°,
-        //il cono dello shotgun sarà di 60°
 
         //using an angle offset of 15° and 5 bullets fired at a time,
         //the shotgun cone will be 60°
@@ -73,21 +69,7 @@ public class ShotgunComponent extends WeaponComponent{
     public boolean checkLineOfFire(GameWorld gameWorld){
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
         int centralAimLine = lineAmt/2; //check line of fire just using the central aim line
-
         return gameWorld.rayCastCallback.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(),
                 aimLineX[centralAimLine], aimLineY[centralAimLine]);
     }
-
-    @Override
-    public void reload() {
-        bullets = mag;
-    }
-
-    @Override
-    public float getRange() {
-        return range;
-    }
-
-    @Override
-    public void setShooter(String shooter) {this.shooter = shooter;}
 }

@@ -6,9 +6,9 @@ import java.util.List;
 
 public class GridManager {
 
-    private int gridWidth;
-    private int gridHeight;
-    private int gridSize;
+    private final int gridWidth;
+    private final int gridHeight;
+    private final int gridSize;
     private Node[][] cells;
 
     public GridManager(int levelWidth, int levelHeight, int gridS){
@@ -33,7 +33,7 @@ public class GridManager {
         }
     }
 
-    public void addObstacles(List<GameObject> gameObjects, GameWorld gameWorld){
+    public void addObstacles(List<GameObject> gameObjects){
         for(GameObject go : gameObjects){
             if(go.name.equals("Wall") || go.name.equals("HalfWall") || go.name.equals("DestructibleBox")
                     || go.name.equals("Enemy") || go.name.equals("MovableBox"))
@@ -120,7 +120,7 @@ public class GridManager {
         }
     }
 
-    public void removeBox(int boxX, int boxY){
+    public void removeBoxFromGrid(int boxX, int boxY){
         int gridBoxX = boxX / gridSize;
         int gridBoxY = boxY / gridSize;
         cells[gridBoxY][gridBoxX].setBox(false);

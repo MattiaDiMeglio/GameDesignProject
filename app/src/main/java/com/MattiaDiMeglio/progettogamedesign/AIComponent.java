@@ -1,21 +1,19 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
-import android.util.Log;
-
 import java.util.List;
 import java.util.Stack;
 
-enum AIType {Dummy, Sniper, Patrol};
+enum AIType {Dummy, Sniper, Patrol}
 
 public class AIComponent extends Component{
 
     //Pathfinding Variables
-    private Pathfinder pathfinder;
+    private final Pathfinder pathfinder;
     protected Stack<Movement> movementStack;
     protected int gridSize;
 
     //AiType
-    private AIType aiType;
+    private final AIType aiType;
 
     //targeting
     boolean playerInRange = false;
@@ -166,7 +164,7 @@ public class AIComponent extends Component{
 
     public boolean checkPlayerInRange(GameWorld gameWorld){
         WeaponComponent enemyWeapon = (WeaponComponent) owner.getComponent(ComponentType.Weapon);
-        float range = enemyWeapon.getRange();
+        float range = enemyWeapon.range;
         float distanceToPlayer = getDistanceToPlayer();
 
         if(distanceToPlayer <= range+18){

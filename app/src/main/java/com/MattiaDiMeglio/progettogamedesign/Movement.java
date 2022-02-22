@@ -1,8 +1,10 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
+//Support class for movementStack (AIComponent)
+
 public class Movement {
 
-    int cellX, cellY; // coordinate della cella
+    int cellX, cellY; // cell coordinates
 
     public Movement(int x, int y){
         this.cellX = x;

@@ -19,9 +19,9 @@ public class MovableBoxGameObject extends GameObject {
         previousCellY = currentCellY;
     }
 
-    public void update(Node[][] cells, GameWorld gWorld){
+    public void update(Node[][] cells){
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
-        dynamicBodyComponent.update(0, 0, 0);
+        dynamicBodyComponent.update(0, 0);
         int currentGX = (int)gameWorld.toPixelsX(dynamicBodyComponent.getPositionX());
         int currentGY = (int)gameWorld.toPixelsY(dynamicBodyComponent.getPositionY());
         drawableComponent.setPosition(currentGX, currentGY);
@@ -29,14 +29,14 @@ public class MovableBoxGameObject extends GameObject {
         worldX = gameWorld.updateWorldX(drawableComponent.getPositionX());
         worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());
 
-        updateCells(cells, gameWorld);
+        updateCells(cells);
     }
 
     @Override
     public void updatePosition(int x, int y) {
         drawableComponent = (DrawableComponent) this.getComponent(ComponentType.Drawable);
         dynamicBodyComponent = (DynamicBodyComponent) this.getComponent(ComponentType.Physics);
-        dynamicBodyComponent.update(0, 0, 0);
+        dynamicBodyComponent.update(0, 0);
         drawableComponent.setPosition(x, y);
 
         float physX = gameWorld.toPixelsTouchX(x);
@@ -63,14 +63,12 @@ public class MovableBoxGameObject extends GameObject {
         worldY = gameWorld.updateWorldY(drawableComponent.getPositionY());
     }
 
-    public void updateCells(Node[][] cells, GameWorld gameWorld){
+    public void updateCells(Node[][] cells){
 
         int newCellX = worldX / gameWorld.gridSize;
         int newCellY = worldY / gameWorld.gridSize;
 
-        if(newCellX >= 0 && newCellX < gameWorld.levelGrid.getCells().length &&
-                newCellY >= 0 && newCellY < gameWorld.levelGrid.getCells().length){
-
+        if(newCellX >= 0 && newCellX < cells.length && newCellY >= 0 && newCellY < cells.length){
             currentCellX = newCellX;
             currentCellY = newCellY;
 

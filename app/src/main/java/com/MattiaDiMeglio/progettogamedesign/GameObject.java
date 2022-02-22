@@ -24,15 +24,10 @@ public class GameObject {
         components.remove(componentType);
     }
 
-    public void updatePosition(int x, int y){};
-
-    public void updatePosition(float x, float y, float angle){};
-
+    public void update(){}
+    public void updatePosition(int x, int y){}
+    public void updatePosition(float x, float y, float angle){}
     public void outOfView(){}
 
-    public Component getComponent(ComponentType componentType){
-        return components.get(componentType);
-    }
-
-    public void update(){}
+    public Component getComponent(ComponentType componentType){ return components.get(componentType); }
 }

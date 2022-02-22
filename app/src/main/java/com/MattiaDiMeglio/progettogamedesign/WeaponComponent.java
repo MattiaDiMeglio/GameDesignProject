@@ -14,10 +14,9 @@ abstract class WeaponComponent extends Component{
     public abstract void addAimLine(GameWorld gameWorld); //draw aim lines
     public abstract void shoot(GameWorld gameWorld); //shoot calling raycast
     public abstract boolean checkLineOfFire(GameWorld gameWorld); //to check that the line of fire is free (used by enemies)
-    public abstract void reload();
 
-    public abstract float getRange();
-    public abstract void setShooter(String shooter);
+    public void reload(){ bullets = mag; }
+    public void setShooter(String shooter){ this.shooter = shooter;} //used by raycast and addAimLine (GunComponent)
 
     @Override
     public ComponentType getType() {

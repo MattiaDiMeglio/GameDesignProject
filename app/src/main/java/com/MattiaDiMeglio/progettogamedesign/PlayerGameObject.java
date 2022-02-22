@@ -57,9 +57,8 @@ public class PlayerGameObject extends GameObject {
 
     }
 
-    public void updatePosition(float x, float y, float rightAngle, float leftAngle, float deltaTime){
+    public void updatePosition(float x, float y, float rightAngle, float leftAngle){
         if(canMove) {
-           // Log.d("playerPos1", "world: " + worldX + ", " + worldY);
             controllableComponent = (ControllableComponent) components.get(ComponentType.Controllable);
             assert controllableComponent != null;
 
@@ -73,10 +72,6 @@ public class PlayerGameObject extends GameObject {
                 lastAngle = leftAngle;
             }
             else controllableComponent.moveCharacter(x, y, lastAngle);
-
-
-
-          //  Log.d("playerPos2", "world: " + worldX + ", " + worldY);
         }
     }
 

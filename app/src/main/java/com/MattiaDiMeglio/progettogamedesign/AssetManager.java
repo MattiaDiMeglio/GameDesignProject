@@ -4,11 +4,11 @@ import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
 
-//static class cointaining all the pixmap of the game
-//they're loaded once in the loadingScreen and can be used everywhere without instanciating
-//the class
+//static class containing all the pixmaps, sounds and musics of the game
+//they're loaded once in the loadingScreen and can be used everywhere without instantiating the class
 
 public class AssetManager {
+    //Pixmaps
     public static Pixmap background;
     public static Pixmap backgroundPixmap;
     public static Pixmap player;

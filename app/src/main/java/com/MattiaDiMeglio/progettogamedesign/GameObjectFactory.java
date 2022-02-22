@@ -39,7 +39,6 @@ public class GameObjectFactory {
         player.addComponent(controllableComponent);
         player.addComponent(weaponComponent);
         weaponComponent.setShooter(player.name);
-
         return player;
     }
 
@@ -49,20 +48,18 @@ public class GameObjectFactory {
         float enemySpeed = 0;
 
         AIComponent aiComponent;
-        WeaponComponent weaponComponent = null;
+        WeaponComponent weaponComponent;
         Pixmap pixmap = AssetManager.enemy;
         if(aiType == AIType.Dummy){
             aiComponent = new DummyAI();
             weaponComponent = new ShotgunComponent();
             enemySpeed = 12f;
         }
-
         else if(aiType == AIType.Sniper){
             pixmap = AssetManager.enemy2;
             aiComponent = new SniperAI();
             weaponComponent = new RifleComponent();
         }
-
         else{
             pixmap = AssetManager.enemy1;
             aiComponent = new PatrolAI();
@@ -71,7 +68,6 @@ public class GameObjectFactory {
         }
 
         aiComponent.setGridSize(gameWorld.gridSize);
-
         weaponComponent.setShooter(enemy.name);
 
         DynamicBodyComponent bodyComponent = new DynamicBodyComponent(40, 40,
@@ -115,8 +111,8 @@ public class GameObjectFactory {
         return box;
     }
 
-    //horizontal wall factory
-    public GameObject makeHorizontalWall(int worldX, int worldY){
+    //wall factory
+    public GameObject makeWall(int worldX, int worldY){
         WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
 
         StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
@@ -130,7 +126,7 @@ public class GameObjectFactory {
         return wall;
     }
 
-    //horizontal half wall (the ones you can shoot through
+    //horizontal half wall (the ones you can shoot through)
     public GameObject makeHorizontalHalfWall(int worldX, int worldY){
         HalfWallGameObject wall = new HalfWallGameObject(gameWorld, worldX, worldY);
 
@@ -139,21 +135,6 @@ public class GameObjectFactory {
                 gameWorld.toMetersYLength(AssetManager.HorizontalHalfWallPixmap.getHeight()),
                 world, wall.name);
         PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.HorizontalHalfWallPixmap, -100, -100);
-
-        wall.addComponent(staticBodyComponent);
-        wall.addComponent(pixMapComponent);
-        return wall;
-    }
-
-    //vertical wall
-    public GameObject makeVerticalWall(int worldX, int worldY){
-        WallGameObject wall = new WallGameObject(gameWorld, worldX, worldY);
-
-        StaticBodyComponent staticBodyComponent = new StaticBodyComponent(40, 40, 0f,
-                gameWorld.toMetersXLength(AssetManager.WallPixmap.getWidth()),
-                gameWorld.toMetersYLength(AssetManager.WallPixmap.getHeight()),
-                world, wall.name);
-        PixMapComponent pixMapComponent = new PixMapComponent(AssetManager.WallPixmap, -100, -100);
 
         wall.addComponent(staticBodyComponent);
         wall.addComponent(pixMapComponent);
@@ -174,6 +155,4 @@ public class GameObjectFactory {
         wall.addComponent(pixMapComponent);
         return wall;
     }
-
-
 }

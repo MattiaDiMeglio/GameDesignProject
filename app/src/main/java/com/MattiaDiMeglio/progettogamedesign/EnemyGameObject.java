@@ -2,14 +2,13 @@ package com.MattiaDiMeglio.progettogamedesign;
 
 //the enemyGo
 public class EnemyGameObject extends GameObject {
-    private GameWorld gameWorld;//the gameWorld,
+    private GameWorld gameWorld;//the gameWorld
     private DrawableComponent drawableComponent;//component saved for simplicity
     private DynamicBodyComponent dynamicBodyComponent;
     private ControllableComponent controllableComponent;
     protected boolean killed = false;//has it been killed?
 
     private float facingAngle = 0f;
-
     private int previousCellX, previousCellY, currentCellX, currentCellY;
 
     public EnemyGameObject(GameWorld gameWorld, int worldX, int worldY){//constructor
@@ -52,7 +51,7 @@ public class EnemyGameObject extends GameObject {
         AIComponent aiComponent = (AIComponent) components.get(ComponentType.AI);
 
         if(!killed){
-            dynamicBodyComponent.update(0, 0, 0);
+            dynamicBodyComponent.update(0, 0);
 
             dynamicBodyComponent = (DynamicBodyComponent) components.get(ComponentType.Physics);
             float enemySpeed = dynamicBodyComponent.getSpeed();
@@ -60,7 +59,7 @@ public class EnemyGameObject extends GameObject {
             updateCells(cells, gWorld);
 
             aiComponent.updateAI(playerX, playerY, elapsedTime, cells, gWorld);
-            aiComponent.movement(enemySpeed, gameWorld); //parte solo se lo stack dei movimenti non è vuoto
+            aiComponent.movement(enemySpeed, gameWorld);
         }
     }
 

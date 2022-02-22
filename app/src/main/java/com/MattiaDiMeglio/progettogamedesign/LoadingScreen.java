@@ -1,14 +1,11 @@
 package com.MattiaDiMeglio.progettogamedesign;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Screen;
-import com.badlogic.androidgames.framework.Sound;
-//the loading screen. Just loads the pixmaps for now
 
 public class LoadingScreen extends Screen {
     int width, height;
@@ -28,7 +25,7 @@ public class LoadingScreen extends Screen {
         audio = game.getAudio();
     }
 
-    //loads the pixmaps then passes to the main menu screen
+    //loads stuff then passes to the main menu screen
     @Override
     public void update(float deltaTime) {
         if(!created) {
@@ -71,7 +68,6 @@ public class LoadingScreen extends Screen {
                 AssetManager.GameMusic.setLooping(true);
             }
             //setting the screen and gameworld
-
             if(nextScreen == null) {
                 nextScreen = new GameScreen(game, width, height, context, mainMenuScreen, this);
             }
@@ -88,20 +84,15 @@ public class LoadingScreen extends Screen {
             int y = mapManager.toActualCoord(5);
             if(gw.player == null) {
                 gw.player = (PlayerGameObject) gw.addActiveGameObject(gameObjectFactory.makePlayer(x, y));
-                //gw.player.updatePosition(x, y);
                 gs.addDrawable((DrawableComponent) gw.player.getComponent(ComponentType.Drawable));
-                Log.d("PlayerCreation ", " coord" + gw.player.getWorldX() + ", " + gw.player.getWorldY());
-                Log.d("PlayerCreation ", " bg" + gs.currentBackgroundX + ", " + gs.currentBackgroundY);
             }else {
                 gw.player.updatePosition(x, y);
                 gs.isShooting = false;
                 gw.player.resetProjectiles();
-                Log.d("PlayerReset ", " coord" + gw.player.getWorldX() + ", " + gw.player.getWorldY());
-                Log.d("PlayerReset ", " bg" + gs.currentBackgroundX + ", " + gs.currentBackgroundY);
 
-                if(gw.player.killed){
+                if(gw.player.killed)
                     gw.player.killed();
-                }
+
                 if(!gw.activeGameObjects.contains(gw.player))
                     gw.addActiveGameObject(gw.player);
             }
@@ -118,36 +109,24 @@ public class LoadingScreen extends Screen {
             int levelWidth = AssetManager.backgroundPixmap.getWidth();
             int levelHeight = AssetManager.backgroundPixmap.getHeight();
             gw.levelGrid = new GridManager(levelWidth, levelHeight, gw.gridSize);
-            gw.levelGrid.addObstacles(gw.gameObjects, gw);
+            gw.levelGrid.addObstacles(gw.gameObjects);
             created = true;
-            Log.d("loading", "level: " + gw.level + " enemies: " + gw.enemyNum);
         }
-
         //sets the next screen
         game.setScreen(nextScreen);
-
-
     }
 
     @Override
-    public void present(float deltaTime) {
-
-    }
+    public void present(float deltaTime) { }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() { }
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() { }
 
     public void setNonCreated(){
         created = false;

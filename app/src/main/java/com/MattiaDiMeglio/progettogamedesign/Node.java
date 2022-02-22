@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Node implements Comparable<Node>{
 
-    private int posX, posY; // cell center coordinates
+    private final int posX, posY; //cell center coordinates
     private boolean isObstacle; //Wall/Halfwall
     private boolean isBox; //BoxGO/MovableBoxGO
     private boolean isEnemy;

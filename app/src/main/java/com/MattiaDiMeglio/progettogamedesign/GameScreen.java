@@ -3,7 +3,6 @@ package com.MattiaDiMeglio.progettogamedesign;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 import com.badlogic.androidgames.framework.Game;
@@ -18,9 +17,7 @@ import java.util.Stack;
 
 import io.github.controlwear.virtual.joystick.android.JoystickView;
 
-
 //The main game screen
-//everything graphical and the actual touch input is implemented here
 public class GameScreen extends Screen {
     enum GameState {//game states
         Ready,
@@ -45,17 +42,11 @@ public class GameScreen extends Screen {
 
     //background coordinates to move the world
     int currentBackgroundX = 0, currentBackgroundY = 0;
-    //division factor for the grid
-    float orizontalFactor;
-    float verticalFactor;
-    //player looking direction
-    float initialPlayerLookX, initialPlayerLookY;
-    boolean onBorderX = false, onBorderY = false;
-    float scale;
     Context context;//android context
 
     Stack<AimLine> aimLineStack;
 
+    //Joystick variables
     float leftX = 0, leftY = 0, leftAngle = 0, leftStrength = 0;
     float rightX = 0, rightY = 0, oldRightX = 0, oldRightY = 0, rightAngle = 0, rightStrength = 0, oldRightAngle = 0, oldRightStrength = 0;
 
@@ -75,14 +66,9 @@ public class GameScreen extends Screen {
         physicalSize = new Box(XMIN, YMIN, XMAX, YMAX);
         screenSize   = new Box(0, 0, width,height);
         //list of active drawables
-        drawables = new ArrayList<DrawableComponent>();
+        drawables = new ArrayList<>();
         gameWorld = new GameWorld(this, context, physicalSize, screenSize);//creates a new GameWorld
 
-        orizontalFactor = gameWorld.toMetersXLength(AssetManager.player.getWidth());// 20f/13f;
-        verticalFactor = gameWorld.toMetersYLength(AssetManager.player.getHeight());// 30f/20f;
-        //initial direction
-        initialPlayerLookY = graphics.getHeight();
-        initialPlayerLookX = 0;
         renderView = game.getRenderView();
 
         aimLineStack = new Stack<>();
@@ -163,7 +149,7 @@ public class GameScreen extends Screen {
                 if(isShooting){
                     isShooting = false;
                 }
-                setWorldDestination(leftX, leftY, deltaTime);
+                setWorldDestination();
                 for(int i = 0; i < len; i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
@@ -172,10 +158,8 @@ public class GameScreen extends Screen {
                         }
                     }
                 }
-
                 break;
             case Paused:
-                Log.d("Paused", "paused");
                 ((Activity)game).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -202,7 +186,6 @@ public class GameScreen extends Screen {
                                 game.setScreen(mainMenuScreen);
                             }
                         }
-
                     }
                 }
                 break;
@@ -261,8 +244,8 @@ public class GameScreen extends Screen {
         graphics.clear(Color.WHITE);
 
         //draw the background
-        graphics.drawPixmap(AssetManager.background, (int)currentBackgroundX - 250, (int)currentBackgroundY - 250);
-        graphics.drawPixmap(AssetManager.backgroundPixmap, (int)currentBackgroundX, (int)currentBackgroundY);
+        graphics.drawPixmap(AssetManager.background, currentBackgroundX - 250, currentBackgroundY - 250);
+        graphics.drawPixmap(AssetManager.backgroundPixmap, currentBackgroundX, currentBackgroundY);
         //draw the drawables
         if(!drawables.isEmpty()) {
             for (DrawableComponent drawable : drawables) {
@@ -270,56 +253,55 @@ public class GameScreen extends Screen {
             }
         }
         drawAimLines();
-        //To test the body positions
         //drawBodies();
         if(gameState == GameState.Running) {
-            graphics.drawPixmap(AssetManager.PausePixmap, (int) gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+            graphics.drawPixmap(AssetManager.PausePixmap, gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
             if(gameWorld.player.isReloading()){
                 graphics.drawText("Reloading...", (gameWorld.bufferWidth) - (int) (0.14 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.25 * gameWorld.bufferHeight), Color.BLACK);
 
-            } else {
+            } else
                 graphics.drawText(gameWorld.player.getCurrentProjectiles() + "/" + gameWorld.player.getMaxProjectiles(), (gameWorld.bufferWidth) - (int) (0.114 * gameWorld.bufferWidth), gameWorld.bufferHeight - (int) (0.25 * gameWorld.bufferHeight), Color.BLACK);
-            }
+
         }
         if(gameState == GameState.Paused){
-            graphics.drawPixmap(AssetManager.PlayPixmap, (int)gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
-            graphics.drawPixmap(AssetManager.ResumeButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2));
-            //graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight()/2));
-            graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)gameWorld.bufferWidth/2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
+            graphics.drawPixmap(AssetManager.PlayPixmap, gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 16, 16);
+            graphics.drawPixmap(AssetManager.ResumeButtonPixmap, gameWorld.bufferWidth /2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 - (AssetManager.ResumeButtonPixmap.getHeight() * 2));
+            graphics.drawPixmap(AssetManager.ExitButtonPixmap, gameWorld.bufferWidth /2 - AssetManager.ResumeButtonPixmap.getWidth()/2, gameWorld.bufferHeight/2 + (AssetManager.ResumeButtonPixmap.getHeight()/2) + AssetManager.ResumeButtonPixmap.getHeight()/2);
         }
         if(gameState == GameState.GameOver){
             if(gameWorld.player.killed){
-                graphics.drawPixmap(AssetManager.PlayerDeadPixmap, (int) gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, (int) gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
+                graphics.drawPixmap(AssetManager.PlayerDeadPixmap, gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
 
-            } else if (!isGameFinished){
-                graphics.drawPixmap(AssetManager.EndLevelPixmap, (int) gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, (int) gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
-            } else {
-                graphics.drawPixmap(AssetManager.EndGamePixmap, (int) gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, (int) gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
-            }
+            } else if (!isGameFinished)
+                graphics.drawPixmap(AssetManager.EndLevelPixmap, gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
+              else
+                graphics.drawPixmap(AssetManager.EndGamePixmap, gameWorld.bufferWidth / 2 - AssetManager.EndLevelPixmap.getWidth() / 2, gameWorld.bufferHeight / 2 - AssetManager.EndLevelPixmap.getHeight() / 2);
         }
         graphics.drawText(gameWorld.enemyNum + "/" + gameWorld.totalEnemies + " remaining", (gameWorld.bufferWidth/2) - 20, 10, Color.BLACK);
     }
 
+    //for testing, draws objects bodies
     private void drawBodies(){
-        //for testing, draws the player body
         for(GameObject gameObject : gameWorld.activeGameObjects){
-            PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
-            int color = Color.WHITE;
-            switch (comp.name) {
-                case "Enemy":
-                    color = Color.RED;
-                    break;
-                case "Wall":
-                    color = Color.GREEN;
-                    break;
-                case "HalfWall":
-                    color = Color.CYAN;
-                    break;
-                case "Player":
-                    color = Color.BLUE;
-                    break;
+            if(gameObject.components.containsKey(ComponentType.Physics)){
+                PhysicsComponent comp = (PhysicsComponent) gameObject.getComponent(ComponentType.Physics);
+                int color = Color.WHITE;
+                switch (comp.name) {
+                    case "Enemy":
+                        color = Color.RED;
+                        break;
+                    case "Wall":
+                        color = Color.GREEN;
+                        break;
+                    case "HalfWall":
+                        color = Color.CYAN;
+                        break;
+                    case "Player":
+                        color = Color.BLUE;
+                        break;
+                }
+                comp.Draw(graphics, gameWorld, color);
             }
-            comp.Draw(graphics, gameWorld, color);
         }
     }
 
@@ -337,22 +319,19 @@ public class GameScreen extends Screen {
     }
 
     public void removeDrawable(DrawableComponent drawable){
-        if(drawables.contains(drawable))
-            drawables.remove(drawable);
+        drawables.remove(drawable);
     }
 
     //sets the destination for the world movement. It moves the map and all the GO other than the player
-    public void setWorldDestination(float jx, float jy, float deltaTime){
+    public void setWorldDestination(){
         gameWorld.player.CantMove();
         currentBackgroundX = -(gameWorld.player.worldX - gameWorld.bufferWidth/2);
         currentBackgroundY = -(gameWorld.player.worldY - gameWorld.bufferHeight/2);
         for (DrawableComponent drawable : drawables) {
             GameObject gameObject = drawable.owner;
-                gameObject.updatePosition((int) (gameWorld.inViewPositionX(gameObject.worldX)),
-                        (int) (gameWorld.inViewPositionY(gameObject.worldY)));
-
+                gameObject.updatePosition(gameWorld.inViewPositionX(gameObject.worldX),
+                        gameWorld.inViewPositionY(gameObject.worldY));
         }
-
         gameWorld.player.CanMove();
     }
 

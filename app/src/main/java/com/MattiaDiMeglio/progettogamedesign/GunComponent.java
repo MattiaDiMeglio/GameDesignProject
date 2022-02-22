@@ -28,11 +28,6 @@ public class GunComponent extends WeaponComponent{
     }
 
     @Override
-    public void reload() {
-        bullets = mag;
-    }
-
-    @Override
     public void aim(float normalizedX, float normalizedY, float angle, GameWorld gameWorld) {
         aimLineX[0] = gameWorld.toMetersXLength(range) * normalizedX;
         aimLineY[0] = gameWorld.toMetersYLength(range) * normalizedY;
@@ -44,19 +39,12 @@ public class GunComponent extends WeaponComponent{
         float bodyX = physicsComponent.getPositionX();
         float bodyY = physicsComponent.getPositionY();
         int aimLineColor = (shooter.equals("Player")) ? Color.BLUE: Color.RED;
-
         gameWorld.addAimLine(lineAmt, bodyX, bodyY, aimLineX, aimLineY, aimLineColor);
     }
 
     public boolean checkLineOfFire(GameWorld gameWorld){
         PhysicsComponent ownerBody = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
-
         return gameWorld.rayCastCallback.checkLineOfFire(ownerBody.getPositionX(), ownerBody.getPositionY(), aimLineX[0], aimLineY[0]);
-    }
-
-    @Override
-    public float getRange() {
-        return range;
     }
 
     @Override

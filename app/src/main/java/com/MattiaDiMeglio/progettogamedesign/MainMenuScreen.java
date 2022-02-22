@@ -15,8 +15,7 @@ public class MainMenuScreen extends Screen {
     String TAG;
     Graphics graphics;
     Audio audio;
-    int x, y, width, height;
-    boolean touched = false;
+    int width, height;
     Context context;
     Screen nextScreen;
 
@@ -40,7 +39,6 @@ public class MainMenuScreen extends Screen {
         nextScreen = new LoadingScreen(game, width, height, context, this);
     }
 
-    //for now just goes to the gamescreen
     @Override
     public void update(float deltaTime) {
 
@@ -75,9 +73,8 @@ public class MainMenuScreen extends Screen {
     @Override
     public void present(float deltaTime) {
         graphics.drawPixmap(AssetManager.MainMenuBackground, 0, 0);
-        graphics.drawPixmap(AssetManager.PlayButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.PlayButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2));
-       // graphics.drawPixmap(AssetManager.OptionsButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.OptionsButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.OptionsButtonPixmap.getHeight()/2));
-        graphics.drawPixmap(AssetManager.ExitButtonPixmap, (int)graphics.getWidth()/2 - AssetManager.ExitButtonPixmap.getWidth()/2, graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight()/2) + AssetManager.ExitButtonPixmap.getHeight()/2);
+        graphics.drawPixmap(AssetManager.PlayButtonPixmap, graphics.getWidth() /2 - AssetManager.PlayButtonPixmap.getWidth()/2, graphics.getHeight()/2 - (AssetManager.PlayButtonPixmap.getHeight() * 2));
+        graphics.drawPixmap(AssetManager.ExitButtonPixmap, graphics.getWidth() /2 - AssetManager.ExitButtonPixmap.getWidth()/2, graphics.getHeight()/2 + (AssetManager.ExitButtonPixmap.getHeight()/2) + AssetManager.ExitButtonPixmap.getHeight()/2);
     }
 
     @Override
@@ -93,6 +90,5 @@ public class MainMenuScreen extends Screen {
     }
 
     @Override
-    public void dispose() {
-    }
+    public void dispose() { }
 }
