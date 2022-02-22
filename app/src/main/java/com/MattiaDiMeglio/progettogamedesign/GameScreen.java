@@ -130,8 +130,6 @@ public class GameScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        game.getInput().getKeyEvents();
-        int len = touchEvents.size();
 
         switch(gameState) {
             case Ready:
@@ -150,7 +148,7 @@ public class GameScreen extends Screen {
                     isShooting = false;
                 }
                 setWorldDestination();
-                for(int i = 0; i < len; i++){
+                for(int i = 0; i < touchEvents.size(); i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
                         if(event.x > gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 48 && event.y < 48){
@@ -167,7 +165,7 @@ public class GameScreen extends Screen {
                         game.getLeftJoystick().setVisibility(View.GONE);
                     }
                 });
-                for(int i = 0; i < len; i++){
+                for(int i = 0; i < touchEvents.size(); i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
                         if(event.x > gameWorld.bufferWidth - AssetManager.PausePixmap.getWidth() - 48 && event.y < 48){
@@ -200,7 +198,7 @@ public class GameScreen extends Screen {
 
                 if(AssetManager.GameMusic.isPlaying())
                     AssetManager.GameMusic.stop();
-                for(int i = 0; i < len; i++){
+                for(int i = 0; i < touchEvents.size(); i++){
                     Input.TouchEvent event = touchEvents.get(i);
                     if(event.type == Input.TouchEvent.TOUCH_DOWN){
                         if(event.x > gameWorld.bufferWidth/2 - AssetManager.EndLevelPixmap.getWidth()/2 && event.x < gameWorld.bufferWidth/2 + AssetManager.EndLevelPixmap.getWidth()/2

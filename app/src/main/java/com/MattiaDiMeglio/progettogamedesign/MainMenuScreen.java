@@ -39,11 +39,9 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void update(float deltaTime) {
-
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        game.getInput().getKeyEvents();
-        int len = touchEvents.size();
-        for(int i = 0; i < len; i++){
+
+        for(int i = 0; i < touchEvents.size(); i++){
             if(!touchEvents.isEmpty()) {
                 Input.TouchEvent event = touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_DOWN) {
